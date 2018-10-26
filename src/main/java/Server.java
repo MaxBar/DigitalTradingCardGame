@@ -5,7 +5,7 @@ public class Server {
 
     // Fields
     private int round;
-    private Player[2];
+    private Player[] players;
     private String command;
     private int turn;
     private List<BasicCard> playerADeck;
@@ -13,7 +13,7 @@ public class Server {
     private List<List> playerDecks;
     private List<BasicCard> playerAGraveyard;
     private List<BasicCard> playerBGraveyard;
-    private Array[] playerGraveyards;
+    private List<BasicCard>[] playerGraveyards;
 
     // Getters & Setters
     public int getRound() { return round; }
