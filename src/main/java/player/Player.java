@@ -7,10 +7,10 @@ import java.util.List;
 public class Player {
 
     // Fields
-    private int id;
-    private String name;
-    private int health;
-    private int mana;
+    private int id = 1;
+    private String name = "player";
+    private int health = 10;
+    private int mana = 2;
     private List<BasicCard> hand;
 
     public Player(int id, String name, int health, int mana, List<BasicCard> hand) {

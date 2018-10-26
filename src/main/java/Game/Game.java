@@ -1,27 +1,30 @@
 package Game;
 
 import card.BasicCard;
+import player.Player;
+import repository.DummyDB;
 
 import java.util.List;
 
 public class Game {
-    private List<BasicCard> playerATableCards; // Remove A when multiplayer
-    private List<BasicCard> playerBTableCards; // Remove when multiplayer
+    DummyDB dummy = new DummyDB();
+    private List<? extends BasicCard> playerATableCards = dummy.database; // Remove A when multiplayer
+    private List<? extends BasicCard> playerBTableCards = dummy.database; // Remove when multiplayer
     
     private Player playerA; // Remove A when multiplayer
     private Player playerB; // Remove when multiplayer
     
-    private int playerAGraveyard; // Remove A when multiplayer
-    private int playerBGraveyard; // Remove when multiplayer
+    private int playerAGraveyard = 5; // Remove A when multiplayer
+    private int playerBGraveyard = 2; // Remove when multiplayer
     
-    private int playerADeck; // Remove A when multiplayer
-    private int playerBDeck; // Remove when multiplayer
+    private int playerADeck = 8; // Remove A when multiplayer
+    private int playerBDeck = 10; // Remove when multiplayer
     
-    public List<BasicCard> getPlayerATableCards() {
+    public List<? extends BasicCard> getPlayerATableCards() {
         return playerATableCards;
     }
     
-    public List<BasicCard> getPlayerBTableCards() {
+    public List<? extends BasicCard> getPlayerBTableCards() {
         return playerBTableCards;
     }
     
