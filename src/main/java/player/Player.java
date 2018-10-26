@@ -37,7 +37,15 @@ public class Player {
     public void receiveStartCards(){ }
     public void drawCard(){ }
     public void useCard(){ }
-    public void placeCard(){ }
+    boolean player = true;
+    public boolean placeCard(){
+        if(player){
+            player = !player;
+            return true;
+        } else {
+        return false;
+        }
+    }
     public void receiveCard(){ }
     public void attack(){ }
     public int randomizeCreatureHp(){ return 0; }
