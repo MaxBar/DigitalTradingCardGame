@@ -30,13 +30,14 @@ class BasicCreatureCardTest {
     }
 
     @Test
-    void getDefence() {
-        assertEquals(1, card.getDefence());
+    void getDefense() {
+        assertEquals(1, card.getDefense());
+
     }
 
     @Test
-    void setDefence() {
-        card.setDefence(5);
-        assertEquals(5, card.getDefence());
+    void setDefense() {
+        card.setDefense(5);
+        assertEquals(5, card.getDefense());
     }
 }
