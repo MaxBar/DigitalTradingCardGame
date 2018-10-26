@@ -1,6 +1,7 @@
 package player;
 
 import card.BasicCard;
+import server.Server;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ public class Player {
     private int health = 10;
     private int mana = 2;
     private List<BasicCard> hand;
+    Server server;
 
     public Player(int id, String name, int health, int mana, List<BasicCard> hand) {
         this.id = id;
@@ -19,6 +21,7 @@ public class Player {
         this.health = health;
         this.mana = mana;
         this.hand = hand;
+        this.server = new Server();
     }
 
     // Getters & Setters
@@ -37,14 +40,8 @@ public class Player {
     public void receiveStartCards(){ }
     public void drawCard(){ }
     public void useCard(){ }
-    boolean player = true;
-    public boolean placeCard(){
-        if(player){
-            player = !player;
-            return true;
-        } else {
-        return false;
-        }
+    public void placeCard(int handIndex){
+        server.receiveCommand("PLACE_CARD " + handIndex);
     }
     public void receiveCard(){ }
     public void attack(){ }
