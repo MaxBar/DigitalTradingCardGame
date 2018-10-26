@@ -1,6 +1,8 @@
 package player;
 
 import card.BasicCard;
+import card.BasicCreatureCard;
+import repository.DummyDB;
 import server.Server;
 
 import java.util.List;
@@ -23,40 +25,82 @@ public class Player {
         this.hand = hand;
         this.server = new Server();
     }
+  
+    // Getters & Setters
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    //region Getters & Setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public int getHealth() { return health; }
-    public void setHealth(int health) { this.health = health; }
-    public int getMana() { return mana; }
-    public void setMana(int mana) { this.mana = mana; }
-    public List<BasicCard> getHand() { return hand; }
-    public void setHand(List<BasicCard> hand) { this.hand = hand; }
-    //endregion
+    public String getName() {
+        return name;
+    }
 
-    //region Player Functions
-    public void receiveStartCards(){ }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public void drawCard(){ }
+    public int getHealth() {
+        return health;
+    }
 
-    public void useCard(){ }
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public int getMana() {
+        return mana;
+    }
+
+    public void setMana(int mana) {
+        this.mana = mana;
+    }
+
+    public List<BasicCard> getHand() {
+        return hand;
+    }
+
+    public void setHand(List<BasicCard> hand) {
+        this.hand = hand;
+    }
+
+    // Player Functions
+    public void receiveCard(int id) {
+        DummyDB db = new DummyDB();
+
+        hand.add(db.database.get(id));
+
+    }
+
+    public void receiveStartCards(int[] arrayOfId) {
+        for(int i = 0; i < 5; i++){
+            for (int j = 0; j < 5; j++){
+                receiveCard(arrayOfId[j]);
+            }
+        }
+    }
+
+    public void drawCard() {
+    }
+
+    public void useCard() {
+    }
 
     public void placeCard(int handIndex){
         server.receiveCommand("PLACE_CARD " + handIndex);
     }
 
-    public void receiveCard(){ }
-
     public void attack(int friendlyBoardIndex, int enemyBoardIndex){
         server.receiveCommand("ATTACK " + friendlyBoardIndex + " ON ENEMY_CREATURE " + enemyBoardIndex);
     }
 
-    public int randomizeCreatureHp(){ return 0; }
-
-    public void finishTurn(){ }
+    public int randomizeCreatureHp() {
+        return 0;
     }
-    //endregion
+
+    public void finishTurn() {
+    }
+}

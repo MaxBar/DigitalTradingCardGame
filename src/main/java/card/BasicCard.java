@@ -1,7 +1,7 @@
 package card;
 
 public class BasicCard {
-    int id;
+  public int id;
     String name;
     String flavourText;
     String image;
@@ -14,6 +14,7 @@ public class BasicCard {
     }
 
     public int getId() {
+
         return id;
     }
 

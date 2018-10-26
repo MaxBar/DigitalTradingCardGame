@@ -1,35 +1,43 @@
 package player;
 
 import card.BasicCard;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import repository.DummyDB;
+
+import java.util.ArrayList;
 import card.BasicCreatureCard;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class PlayerTest {
+    Player player = new Player(1, "player", 10,2);
 
-    Player player;
-    List<BasicCard> playerHand;
+    @Mock
+    List<BasicCard> hand;
 
-    @BeforeEach
-    void setUp() {
-        playerHand = Arrays.asList(
-                new BasicCreatureCard(1, "Marshmallow", "White soft treat", "does not exist yet", 3, 1, 2),
-                new BasicCreatureCard(2, "Plopp","Chocolate with gooey caramel center", "does not excist", 2, 2, 1),
-                new BasicCreatureCard(3, "Smash", "Crispy chocolate treat", "does not exist yet", 1, 5, 1),
-                new BasicCreatureCard(4, "Crazy face", "Sour chewy candy", "does not exist yet", 4, 1, 1),
-                new BasicCreatureCard(5, "Djungelvrål", "Licorice candy that makes you scream", "does not exist yet", 2, 2, 2));
+    @Test
+    void receiveCardTest() {
+        DummyDB db = new DummyDB();
+        int id =1;
 
-                player = new Player(1,"Player",10,5, playerHand);
+        hand.add(db.database.get(id));
+
+
+        when(hand.size()).thenReturn(1);
+        assertTrue(hand.size()==1);
+
     }
 
     @Test
-    void placeCard() {
-        assertTrue(player.placeCard());
-        assertFalse(player.placeCard());
+    void receiveStartCardsTest() {
     }
 }
