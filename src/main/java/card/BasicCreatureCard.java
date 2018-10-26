@@ -3,15 +3,15 @@ package card;
 public class BasicCreatureCard extends BasicCard {
     private int health;
     private int attack;
-    private int defence;
+    private int defense;
 
 
 
-    public BasicCreatureCard(int id, String name, String flavourText, String image, int health, int attack, int defence) {
+    public BasicCreatureCard(int id, String name, String flavourText, String image, int health, int attack, int defense) {
         super(id, name, flavourText, image);
         this.health = health;
         this.attack = attack;
-        this.defence = defence;
+        this.defense = defense;
     }
 
     public int getHealth() {
@@ -31,11 +31,11 @@ public class BasicCreatureCard extends BasicCard {
     }
 
     public int getDefence() {
-        return defence;
+        return defense;
     }
 
     public void setDefence(int defence) {
-        this.defence = defence;
+        this.defense = defence;
     }
 
 

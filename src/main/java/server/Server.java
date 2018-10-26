@@ -12,7 +12,7 @@ public class Server {
     private int turn;
     private List<BasicCard> playerADeck;
     private List<BasicCard> playerBDeck;
-    private List<List> playerDecks;
+    private List<BasicCard>[] playerDecks;
     private List<BasicCard> playerAGraveyard;
     private List<BasicCard> playerBGraveyard;
     private List<BasicCard>[] playerGraveyards;
