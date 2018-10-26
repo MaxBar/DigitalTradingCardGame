@@ -1,9 +1,9 @@
 package card;
 
 public class BasicCreatureCard extends BasicCard {
-    int health;
-    int attack;
-    int defence;
+    private int health;
+    private int attack;
+    private int defence;
 
 
 
