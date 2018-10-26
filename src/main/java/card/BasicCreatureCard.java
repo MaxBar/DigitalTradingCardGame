@@ -30,11 +30,11 @@ public class BasicCreatureCard extends BasicCard {
         this.attack = attack;
     }
 
-    public int getDefence() {
+    public int getDefense() {
         return defense;
     }
 
-    public void setDefence(int defence) {
+    public void setDefense(int defence) {
         this.defense = defence;
     }
 

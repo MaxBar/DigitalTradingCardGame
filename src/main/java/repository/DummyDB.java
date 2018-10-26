@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DummyDB {
-   public List<BasicCreatureCard> database = Arrays.asList(
+   public List<BasicCard> database = Arrays.asList(
         new BasicCreatureCard(1, "Marshmallow", "White soft treat", "does not exist yet", 3, 1, 2),
         new BasicCreatureCard(2, "Plopp","Chocolate with gooey caramel center", "does not excist", 2, 2, 1),
         new BasicCreatureCard(3, "Smash", "Crispy chocolate treat", "does not exist yet", 1, 5, 1),
