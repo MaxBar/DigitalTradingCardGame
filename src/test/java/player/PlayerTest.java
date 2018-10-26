@@ -17,23 +17,24 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
 class PlayerTest {
-    Player player = new Player(1, "player", 10,2);
+    List<BasicCard> hand  = new ArrayList<BasicCard>();
+    Player player = new Player(1, "player", 10,hand);
 
-    @Mock
-    List<BasicCard> hand;
 
     @Test
     void receiveCardTest() {
         DummyDB db = new DummyDB();
-        int id =1;
-
-        hand.add(db.database.get(id));
 
 
-        when(hand.size()).thenReturn(1);
-        assertTrue(hand.size()==1);
+        int id = 1;
+        for (BasicCard card: db.database) {
+            if(id == card.getId()){
+                hand.add(card);
+            }
+        }
+
+        assertEquals(1, hand.size());
 
     }
 
