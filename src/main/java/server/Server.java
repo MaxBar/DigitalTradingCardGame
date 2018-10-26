@@ -1,3 +1,5 @@
+package server;
+
 import java.lang.reflect.Array;
 import java.util.List;
 
@@ -35,7 +37,7 @@ public class Server {
     public List<List> getPlayerGraveyards() { return playerGraveyards; }
     public void setPlayerGraveyards(List<List> playerGraveyards) { this.playerGraveyards = playerGraveyards; }
 
-    // Server functions
+    // server.Server functions
     public String receiveCommand(String s) {
         return "";
     }
