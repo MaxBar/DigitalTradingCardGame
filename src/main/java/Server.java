@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.List;
 
 public class Server {
@@ -12,7 +13,7 @@ public class Server {
     private List<List> playerDecks;
     private List<BasicCard> playerAGraveyard;
     private List<BasicCard> playerBGraveyard;
-    private List<List> playerGraveyards;
+    private Array[] playerGraveyards;
 
     // Getters & Setters
     public int getRound() { return round; }
@@ -39,8 +40,8 @@ public class Server {
         return "";
     }
 
-    public String rollDice(String s) {
-        return "";
+    public int rollDice() {
+        return 0;
     }
 
     public String dealCards(String s) {
