@@ -8,8 +8,8 @@ import java.util.List;
 
 public class Game {
     DummyDB dummy = new DummyDB();
-    private List<? extends BasicCard> playerATableCards = dummy.database; // Remove A when multiplayer
-    private List<? extends BasicCard> playerBTableCards = dummy.database; // Remove when multiplayer
+    private List<BasicCard> playerATableCards = dummy.database; // Remove A when multiplayer
+    private List<BasicCard> playerBTableCards = dummy.database; // Remove when multiplayer
     
     private Player playerA; // Remove A when multiplayer
     private Player playerB; // Remove when multiplayer
@@ -20,11 +20,11 @@ public class Game {
     private int playerADeck = 8; // Remove A when multiplayer
     private int playerBDeck = 10; // Remove when multiplayer
     
-    public List<? extends BasicCard> getPlayerATableCards() {
+    public List<BasicCard> getPlayerATableCards() {
         return playerATableCards;
     }
     
-    public List<? extends BasicCard> getPlayerBTableCards() {
+    public List<BasicCard> getPlayerBTableCards() {
         return playerBTableCards;
     }
     
