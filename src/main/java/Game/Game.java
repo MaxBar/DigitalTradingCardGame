@@ -23,7 +23,7 @@ public class Game {
     public List<BasicCard> getPlayerATableCards() {
         return playerATableCards;
     }
-    
+
     public List<BasicCard> getPlayerBTableCards() {
         return playerBTableCards;
     }

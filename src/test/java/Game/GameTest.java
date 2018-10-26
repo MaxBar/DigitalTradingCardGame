@@ -1,4 +1,3 @@
-
 package Game;
 
 import card.BasicCard;
@@ -18,7 +17,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class GameTest {
     
-    ArrayList<BasicCard> playerTableCards = new ArrayList<>();
+    ArrayList<BasicCard> playerTableCards = new ArrayList<BasicCard>();
     
     @Mock
     Game game = new Game();
@@ -91,3 +90,4 @@ class GameTest {
         assertEquals(playerTableCards.size(), game.getPlayerBDeck());
     }
 }
+

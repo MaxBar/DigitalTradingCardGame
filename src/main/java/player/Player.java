@@ -71,7 +71,12 @@ public class Player {
     public void receiveCard(int id) {
         DummyDB db = new DummyDB();
 
-        hand.add(db.database.get(id));
+        for (BasicCard card: db.database) {
+            if(id == card.getId()){
+                hand.add(card);
+            }
+
+        }
 
     }
 
