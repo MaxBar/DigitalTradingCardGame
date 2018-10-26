@@ -9,7 +9,7 @@ class BasicCreatureCardTest {
 
     @Test
     void getHealth() {
-        assertEquals(2, card.health);
+        assertEquals(2, card.getHealth());
     }
 
     @Test
@@ -20,7 +20,7 @@ class BasicCreatureCardTest {
 
     @Test
     void getAttack() {
-        assertEquals(4, card.attack);
+        assertEquals(4, card.getAttack());
     }
 
     @Test
@@ -31,7 +31,8 @@ class BasicCreatureCardTest {
 
     @Test
     void getDefense() {
-        assertEquals(1, card.defense);
+        assertEquals(1, card.getDefense());
+
     }
 
     @Test
