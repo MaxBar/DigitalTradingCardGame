@@ -35,7 +35,7 @@ class BasicCreatureCardTest {
     }
 
     @Test
-    void setDefence() {
+    void setDefense() {
         card.setDefense(5);
         assertEquals(5, card.getDefense());
     }
