@@ -15,7 +15,7 @@ public class Player {
     private int mana = 2;
     private List<BasicCard> hand;
 
-    public Player(int id, String name, int health, int mana) {
+    public Player(int id, String name, int health, int mana, List<BasicCard> hand) {
         this.id = id;
         this.name = name;
         this.health = health;
