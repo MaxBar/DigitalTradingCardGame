@@ -119,8 +119,8 @@ public class Server {
         return "";
     }
 
-    public String quitGame(String s) {
-        return "";
+    public void quitGame() {
+        System.exit(0);
     }
 
 }
