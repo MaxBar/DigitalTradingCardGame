@@ -13,9 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class ServerTest {
+
+    @Mock
+    Server server = new Server();
 
     @BeforeEach
     void setUp() {
@@ -31,6 +37,13 @@ class ServerTest {
 
     @Test
     void dealCards() {
+        server.dealCard();
+        server.dealCard();
+        server.dealCard();
+        server.dealCard();
+        server.dealCard();
+
+        verify(server, times(5)).dealCard();
     }
 
     @Test
