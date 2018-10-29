@@ -15,7 +15,7 @@ public class Player {
     private int health;
     private int mana = 2;
     private List<BasicCard> hand;
-    private Server server;
+    //private Server server = new Server();
 
     public Player(int id, String name, int mana, List<BasicCard> hand) {
         this.id = id;
@@ -23,7 +23,7 @@ public class Player {
         this.health = 10;
         this.mana = mana;
         this.hand = hand;
-        this.server = new Server();
+        //this.server = new Server();
     }
   
     // Getters & Setters
@@ -95,10 +95,12 @@ public class Player {
     }
 
     public void placeCard(int handIndex){
+        Server server = new Server();
         server.receiveCommand("PLACE_CARD " + handIndex);
     }
 
     public void attack(int friendlyBoardIndex, int enemyBoardIndex){
+        Server server = new Server();
         server.receiveCommand("ATTACK " + friendlyBoardIndex + " ON ENEMY_CREATURE " + enemyBoardIndex);
     }
 

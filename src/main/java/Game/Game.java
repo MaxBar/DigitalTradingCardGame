@@ -51,6 +51,14 @@ public class Game {
     public int getPlayerBDeck() {
         return playerBDeck;
     }
+    
+    public void decrementPlayerADeck() {
+        --playerADeck;
+    }
+    
+    public void decrementPlayerBDeck() {
+        --playerBDeck;
+    }
     //TODO add when changing to multiplayer
     /*
     private List<BasicCard> EnemyTableCards;
