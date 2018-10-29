@@ -21,7 +21,7 @@ class ServerTest {
     @Test
     void rollDice() {
         for(int i = 0; i <= 10000; ++i) {
-            assertThat(server.rollDice(6,1)).isBetween(1, 6);
+            assertThat(server.rollDice(1,6)).isBetween(1, 6);
         }
     }
 
