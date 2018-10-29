@@ -67,8 +67,13 @@ public class Server {
         return 0;
     }
 
-    public String dealCards(String s) {
-        return "";
+    public int[] dealCards() {
+        
+        int ids[] = new int[5];
+        for (int i = 0; i < 5; i++) {
+            ids[i] = dealCard();
+        }
+        return ids;
     }
 
     public int dealCard() {
