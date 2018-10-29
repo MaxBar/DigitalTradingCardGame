@@ -3,16 +3,18 @@ package server;
 import card.BasicCard;
 import card.BasicCreatureCard;
 import player.Player;
+import Game.Game;
 
 import java.lang.reflect.Array;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Server {
 
     // Fields
     private int round;
-    private Player[] players;
+    public Player[] players;
     private String command;
     private int turn;
     private List<BasicCard> playerADeck;
@@ -21,6 +23,31 @@ public class Server {
     private List<BasicCard> playerAGraveyard;
     private List<BasicCard> playerBGraveyard;
     private List<BasicCard>[] playerGraveyards;
+    
+    public Server() {
+        players = new Player[2];
+        players[0] = new Player(1, "playerA", 1, null);
+        players[1] = new Player(2, "playerB", 1, null);
+    }
+    
+    public List<BasicCard> getPlayerATableCards() {
+        return playerATableCards;
+    }
+    
+    public void setPlayerATableCards(List<BasicCard> playerATableCards) {
+        this.playerATableCards = playerATableCards;
+    }
+    
+    public List<BasicCard> getPlayerBTableCards() {
+        return playerBTableCards;
+    }
+    
+    public void setPlayerBTableCards(List<BasicCard> playerBTableCards) {
+        this.playerBTableCards = playerBTableCards;
+    }
+    
+    private List<BasicCard> playerATableCards = new ArrayList<>();
+    private List<BasicCard> playerBTableCards = new ArrayList<>();
 
     //region Getters & Setters
     public int getRound() { return round; }
@@ -96,9 +123,19 @@ public class Server {
     public String sendCard(String s) {
         return "";
     }
-
-    public String placeCard(String s) {
-        return "";
+    
+    private Game game = new Game();
+    
+    public void placeCard(int index) {
+        if(turn == 0) {
+            BasicCard card = players[0].getHand().get(index);
+            players[0].getHand().remove(index);
+            playerATableCards.add(card);
+        } else {
+            BasicCard card = players[1].getHand().get(index);
+            players[1].getHand().remove(index);
+            playerBTableCards.add(card);
+        }
     }
 
     public String attackEnemyPlayer(String s) {
