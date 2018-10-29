@@ -71,12 +71,26 @@ public class Server {
         return sRandom.nextInt(max)+ min;
     }
 
-    public String dealCards(String s) {
-        return "";
+    public int[] dealCards() {
+
+        int ids[] = new int[5];
+        for (int i = 0; i < 5; i++) {
+            ids[i] = dealCard();
+        }
+        return ids;
     }
 
-    public String dealCard(String s) {
-        return "";
+    public int dealCard() {
+
+        int id;
+        if (turn == 0) {
+            id = playerADeck.get(0).id;
+            playerADeck.remove(0);
+            return id;
+        }
+        id = playerBDeck.get(0).id;
+        playerBDeck.remove(0);
+        return id;
     }
 
     public String sendCard(String s) {
