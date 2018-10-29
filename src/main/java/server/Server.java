@@ -4,6 +4,7 @@ import card.BasicCard;
 import player.Player;
 
 import java.lang.reflect.Array;
+import java.security.SecureRandom;
 import java.util.List;
 
 public class Server {
@@ -63,8 +64,10 @@ public class Server {
         return "";
     }
 
-    public int rollDice() {
-        return 0;
+    SecureRandom sRandom = new SecureRandom();
+
+    public int rollDice(int min, int max) {
+        return sRandom.nextInt(max)+ min;
     }
 
     public String dealCards(String s) {
