@@ -1,6 +1,7 @@
 package server;
 
 import card.BasicCard;
+import card.BasicCreatureCard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import player.Player;
@@ -63,7 +64,6 @@ class ServerTest {
 
     @Test
     void checkPlayerAlive() {
-        Server server = new Server();
         Player p = new Player(1, "Gary",3, null);
         assertTrue(server.checkPlayerAlive(p));
         p.setHealth(0);
@@ -74,6 +74,14 @@ class ServerTest {
 
     @Test
     void checkCreatureAlive() {
+        BasicCreatureCard creature = new BasicCreatureCard(2, "abc", "abc", "abc", 5, 2, 3);
+        assertTrue(server.checkCreatureAlive(creature));
+        creature.setHealth(0);
+        assertFalse(server.checkCreatureAlive(creature));
+        creature.setHealth(8);
+        assertTrue(server.checkCreatureAlive(creature));
+        BasicCreatureCard creature2 = new BasicCreatureCard(3, "abc", "abc", "abc", 0, 2, 1);
+        assertFalse(server.checkCreatureAlive(creature2));
     }
 
     @Test

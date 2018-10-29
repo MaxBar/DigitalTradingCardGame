@@ -1,6 +1,7 @@
 package server;
 
 import card.BasicCard;
+import card.BasicCreatureCard;
 import player.Player;
 
 import java.lang.reflect.Array;
@@ -106,8 +107,8 @@ public class Server {
         return p.getHealth() > 0;
     }
 
-    public String checkCreatureAlive(String s) {
-        return "";
+    public boolean checkCreatureAlive(BasicCreatureCard creature) {
+        return creature.getHealth() > 0;
     }
 
     public String moveToGraveyard(String s) {
