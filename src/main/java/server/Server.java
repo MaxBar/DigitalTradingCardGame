@@ -99,8 +99,8 @@ public class Server {
         return "";
     }
 
-    public String checkPlayerAlive(String s) {
-        return "";
+    public boolean checkPlayerAlive(Player p) {
+        return p.getHealth() > 0;
     }
 
     public String checkCreatureAlive(String s) {
