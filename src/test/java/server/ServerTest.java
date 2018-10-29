@@ -53,16 +53,21 @@ class ServerTest {
         deckA.add(0, new BasicCard(1,"candy","asd","url"));
         deckA.add(1, new BasicCard(2,"candy","asd","url"));
 
+        deckA.remove(1);
         assertEquals(1,deckA.get(0).id);
-        assertEquals(2,deckA.get(1).id);
+        assertEquals(1,deckA.size());
 
         List<BasicCard> deckB = new ArrayList<BasicCard>();
 
         deckB.add(0, new BasicCard(1,"candy","asd","url"));
         deckB.add(1, new BasicCard(2,"candy","asd","url"));
 
-        assertEquals(1,deckB.get(0).id);
-        assertEquals(2,deckB.get(1).id);
+        deckB.remove(0);
+
+        assertEquals(1,deckB.size());
+        deckB.remove(0);
+
+        assertEquals(0,deckB.size());
 
     }
 

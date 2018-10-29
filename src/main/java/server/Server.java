@@ -68,7 +68,7 @@ public class Server {
     }
 
     public int[] dealCards() {
-        
+
         int ids[] = new int[5];
         for (int i = 0; i < 5; i++) {
             ids[i] = dealCard();
