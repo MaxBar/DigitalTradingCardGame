@@ -100,10 +100,7 @@ public class Server {
     }
 
     public boolean checkPlayerAlive(Player p) {
-        if (p.getHealth() > 0) {
-            return true;
-        }
-        return false;
+        return p.getHealth() > 0;
     }
 
     public String checkCreatureAlive(String s) {
