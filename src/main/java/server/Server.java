@@ -78,10 +78,15 @@ public class Server {
 
     public int dealCard() {
 
+        int id;
         if (turn == 0) {
-            return playerADeck.get(0).id;
+            id = playerADeck.get(0).id;
+            playerADeck.remove(0);
+            return id;
         }
-        return playerBDeck.get(0).id;
+        id = playerBDeck.get(0).id;
+        playerBDeck.remove(0);
+        return id;
     }
 
     public String sendCard(String s) {
