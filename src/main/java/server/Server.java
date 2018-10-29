@@ -71,8 +71,12 @@ public class Server {
         return "";
     }
 
-    public String dealCard(String s) {
-        return "";
+    public int dealCard() {
+
+        if (turn == 0) {
+            return playerADeck.get(0).id;
+        }
+        return playerBDeck.get(0).id;
     }
 
     public String sendCard(String s) {

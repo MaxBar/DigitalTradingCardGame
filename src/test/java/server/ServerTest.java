@@ -35,11 +35,22 @@ class ServerTest {
 
     @Test
     void dealCard() {
-        List<BasicCard> cards = new ArrayList<BasicCard>();
+        List<BasicCard> deckA = new ArrayList<BasicCard>();
 
-        cards.add(0, new BasicCard(1,"candy","asd","url"));
+        deckA.add(0, new BasicCard(1,"candy","asd","url"));
+        deckA.add(1, new BasicCard(2,"candy","asd","url"));
 
-        assertEquals(1,cards.get(0).id);
+        assertEquals(1,deckA.get(0).id);
+        assertEquals(2,deckA.get(1).id);
+
+        List<BasicCard> deckB = new ArrayList<BasicCard>();
+
+        deckB.add(0, new BasicCard(1,"candy","asd","url"));
+        deckB.add(1, new BasicCard(2,"candy","asd","url"));
+
+        assertEquals(1,deckB.get(0).id);
+        assertEquals(2,deckB.get(1).id);
+
     }
 
     @Test
