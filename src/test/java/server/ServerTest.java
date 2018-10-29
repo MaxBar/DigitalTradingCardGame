@@ -1,9 +1,19 @@
 package server;
 
+import Game.Game;
+import card.BasicCard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import repository.DummyDB;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 class ServerTest {
 
@@ -25,6 +35,11 @@ class ServerTest {
 
     @Test
     void dealCard() {
+        List<BasicCard> cards = new ArrayList<BasicCard>();
+
+        cards.add(0, new BasicCard(1,"candy","asd","url"));
+
+        assertEquals(1,cards.get(0).id);
     }
 
     @Test
