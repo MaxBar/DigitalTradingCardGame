@@ -68,7 +68,8 @@ public class Server {
 
     public int getTurn() { return turn; }
 
-    public void setTurn(int turn) { this.turn = turn; }
+    public void setTurn(int turn) {
+        this.turn = turn; }
 
     public List<BasicCard> getPlayerADeck() { return playerADeck; }
 
@@ -103,7 +104,7 @@ public class Server {
     SecureRandom sRandom = new SecureRandom();
 
     public int rollDice(int min, int max) {
-        return sRandom.nextInt(max)+ min;
+        return sRandom.nextInt(max - min + 1)+ min;
     }
 
     public int[] dealCards() {
@@ -144,8 +145,30 @@ public class Server {
         }
     }
 
-    public String attackEnemyPlayer(String s) {
-        return "";
+    public boolean attackEnemyPlayer() {
+        if(turn == 0 ){
+            if(playerBTableCards.size() == 0){
+                int health = -rollDice(1,6);
+                players[1].changeHealth(health);
+                Game.getInstance().getPlayerB().changeHealth(health);
+
+                //Should we return a string, example: SUCCESS PLAYER ALIVE/SUCCESS PLAYER DEAD?
+
+                return true;
+
+            }
+            return false;
+        }
+        else {
+            if(playerATableCards.size() == 0) {
+                int health = -rollDice(1,6);
+                players[0].changeHealth(health);
+                Game.getInstance().getPlayerA().changeHealth(health);
+                return true;
+            }
+
+            return false;
+        }
     }
 
     public String attackEnemyCreature(BasicCreatureCard playerACreature, BasicCreatureCard playerBCreature) {

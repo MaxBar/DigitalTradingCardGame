@@ -51,6 +51,10 @@ public class Player {
         this.health = health;
     }
 
+    public void changeHealth(int change){
+        health += change;
+    }
+
     public int getMana() {
         return mana;
     }
