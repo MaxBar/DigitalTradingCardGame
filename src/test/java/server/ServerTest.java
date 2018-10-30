@@ -164,7 +164,7 @@ class ServerTest {
     
     @Test
     void moveToGraveyard() {
-        //Server server = new Server();
+        //region code
         List<BasicCard> playerA = new ArrayList<>(Arrays.asList(
                 new BasicCreatureCard(1, "Marshmallow", "White soft treat", "does not exist yet", 3, 1, 2),
                 new BasicCreatureCard(2, "Plopp","Chocolate with gooey caramel center", "does not excist", 2, 2, 1),
@@ -191,6 +191,21 @@ class ServerTest {
         assertEquals(3, Server.getInstance().getPlayerBTableCards().size());
         assertEquals(3, Game.getInstance().getPlayerBTableCards().size());
         assertEquals(1, Game.getInstance().getPlayerBGraveyard());
+
+        Server.getInstance().moveToGraveyard(2, 0);
+
+        //endregion
+        assertEquals(1, Server.getInstance().getPlayerAGraveyard().size());
+        assertEquals(3, Server.getInstance().getPlayerATableCards().size());
+        assertEquals(3, Game.getInstance().getPlayerATableCards().size());
+        assertEquals(1, Game.getInstance().getPlayerAGraveyard());
+
+        Server.getInstance().moveToGraveyard(1, 0);
+        assertEquals(2, Server.getInstance().getPlayerAGraveyard().size());
+        assertEquals(2, Server.getInstance().getPlayerATableCards().size());
+        assertEquals(2, Game.getInstance().getPlayerATableCards().size());
+        assertEquals(2, Game.getInstance().getPlayerAGraveyard());
+
         
     }
 

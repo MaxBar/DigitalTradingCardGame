@@ -170,13 +170,22 @@ public class Server {
     
     public void moveToGraveyard(int index, int player) {
         if (player == 0) {
-        
+            BasicCard card = playerATableCards.get(index);
+
+            playerAGraveyard.add(card);
+            playerATableCards.remove(index);
+
+            Game.getInstance().getPlayerATableCards().remove(index);
+            Game.getInstance().incrementPlayerAGraveyard();
+
         } else {
             BasicCard card = playerBTableCards.get(index);
             playerBGraveyard.add(card);
             playerBTableCards.remove(index);
             Game.getInstance().getPlayerBTableCards().remove(index);
             Game.getInstance().incrementPlayerBGraveyard();
+
+
         }
         //System.out.println(playerBTableCards.get(index));
     }

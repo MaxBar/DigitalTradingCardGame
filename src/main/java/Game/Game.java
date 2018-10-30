@@ -17,7 +17,7 @@ public class Game {
     private Player playerA; // Remove A when multiplayer
     private Player playerB; // Remove when multiplayer
     
-    private int playerAGraveyard = 5; // Remove A when multiplayer
+    private int playerAGraveyard; // Remove A when multiplayer
     private int playerBGraveyard; // Remove when multiplayer
     
     private int playerADeck = 8; // Remove A when multiplayer
