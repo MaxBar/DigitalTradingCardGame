@@ -148,7 +148,7 @@ public class Server {
     public boolean attackEnemyPlayer() {
         if(turn == 0 ){
             if(playerBTableCards.size() == 0){
-                int health = -2;
+                int health = -rollDice(1,6);
                 players[1].changeHealth(health);
                 Game.getInstance().getPlayerB().changeHealth(health);
 
@@ -161,7 +161,7 @@ public class Server {
         }
         else {
             if(playerATableCards.size() == 0) {
-                int health = -1;
+                int health = -rollDice(1,6);
                 players[0].changeHealth(health);
                 Game.getInstance().getPlayerA().changeHealth(health);
                 return true;

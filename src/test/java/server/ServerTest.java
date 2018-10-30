@@ -176,7 +176,7 @@ class ServerTest {
         for(int i = 0; i < 8; i++){
             Server.getInstance().attackEnemyPlayer();
         }
-       
+
         assertFalse(Server.getInstance().checkPlayerAlive(Server.getInstance().players[0]));
 
 
