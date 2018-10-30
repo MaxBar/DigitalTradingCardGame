@@ -5,19 +5,20 @@ import player.Player;
 import repository.DummyDB;
 import server.Server;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
     private static Game game;
     DummyDB dummy = new DummyDB();
-    private List<BasicCard> playerATableCards = dummy.database; // Remove A when multiplayer
-    private List<BasicCard> playerBTableCards = dummy.database; // Remove when multiplayer
+    private List<BasicCard> playerATableCards = new ArrayList<>(); // Remove A when multiplayer
+    private List<BasicCard> playerBTableCards = new ArrayList<>(); // Remove when multiplayer
     
     private Player playerA; // Remove A when multiplayer
     private Player playerB; // Remove when multiplayer
     
-    private int playerAGraveyard = 5; // Remove A when multiplayer
-    private int playerBGraveyard = 2; // Remove when multiplayer
+    private int playerAGraveyard; // Remove A when multiplayer
+    private int playerBGraveyard; // Remove when multiplayer
     
     private int playerADeck = 8; // Remove A when multiplayer
     private int playerBDeck = 10; // Remove when multiplayer
@@ -55,6 +56,14 @@ public class Game {
     
     public int getPlayerBGraveyard() {
         return playerBGraveyard;
+    }
+    
+    public void incrementPlayerAGraveyard() {
+        ++playerAGraveyard;
+    }
+    
+    public void incrementPlayerBGraveyard() {
+        ++playerBGraveyard;
     }
     
     public int getPlayerADeck() {
