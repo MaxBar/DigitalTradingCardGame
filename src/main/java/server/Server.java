@@ -54,8 +54,8 @@ public class Server {
         this.playerBTableCards = playerBTableCards;
     }
     
-    private List<BasicCard> playerATableCards = new ArrayList<>();
-    private List<BasicCard> playerBTableCards = new ArrayList<>();
+    private List<BasicCard> playerATableCards = new ArrayList<BasicCard>();
+    private List<BasicCard> playerBTableCards = new ArrayList<BasicCard>();
 
     //region Getters & Setters
     public int getRound() { return round; }
@@ -148,10 +148,29 @@ public class Server {
         return "";
     }
 
-    public String attackEnemyCreature(String s) {
-        return "";
-    }
+    public String attackEnemyCreature(BasicCreatureCard playerACreature, BasicCreatureCard playerBCreature) {
+        int playerARoll;
+        int playerBRoll;
+        int dmg;
+        String attackMsg = "Attack succeeded, creature is still alive";
+        String successMsg ="Attack succeeded, creature died";
 
+        do{
+            playerARoll = Server.getInstance().rollDice(1, 6);
+            playerBRoll = Server.getInstance().rollDice(1, 6);
+        } while(playerARoll == playerBRoll);
+
+        if (playerARoll > playerBRoll) {
+            dmg = playerARoll - playerBRoll;
+            playerBCreature.setHealth((playerBCreature.getHealth() - dmg));
+            return !checkCreatureAlive(playerBCreature) ? successMsg : attackMsg;
+        } else{
+            dmg = playerBRoll - playerARoll;
+            playerACreature.setHealth((playerACreature.getHealth() - dmg));
+            checkCreatureAlive(playerACreature);
+            return !checkCreatureAlive(playerACreature) ? successMsg : attackMsg;
+        }
+    }
     public String healPlayer(String s) {
         return "";
     }
