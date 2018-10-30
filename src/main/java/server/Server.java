@@ -166,8 +166,9 @@ public class Server {
         return "";
     }
 
-    public String endTurn(String s) {
-        return "";
+    public void endTurn() {
+        turn = turn == 0 ? 1 : 0;
+        round++;
     }
 
     public void quitGame() {
