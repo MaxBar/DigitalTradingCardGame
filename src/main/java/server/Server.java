@@ -157,13 +157,17 @@ public class Server {
                 return true;
 
             }
-            else {
-                return false;
-            }
+            return false;
         }
         else {
+            if(playerATableCards.size() == 0) {
+                int health = -1;
+                players[0].changeHealth(health);
+                Game.getInstance().getPlayerA().changeHealth(health);
+                return true;
+            }
 
-            return true;
+            return false;
         }
     }
 
