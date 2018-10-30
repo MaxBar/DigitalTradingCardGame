@@ -161,9 +161,52 @@ class ServerTest {
         BasicCreatureCard creature2 = new BasicCreatureCard(3, "abc", "abc", "abc", 0, 2, 1);
         assertFalse(Server.getInstance().checkCreatureAlive(creature2));
     }
-
+    
     @Test
     void moveToGraveyard() {
+        //region code
+        List<BasicCard> playerA = new ArrayList<>(Arrays.asList(
+                new BasicCreatureCard(1, "Marshmallow", "White soft treat", "does not exist yet", 3, 1, 2),
+                new BasicCreatureCard(2, "Plopp","Chocolate with gooey caramel center", "does not excist", 2, 2, 1),
+                new BasicCreatureCard(3, "Smash", "Crispy chocolate treat", "does not exist yet", 1, 5, 1),
+                new BasicCreatureCard(4, "Crazy face", "Sour chewy candy", "does not exist yet", 4, 1, 1)));
+        List<BasicCard> playerB = new ArrayList<>(Arrays.asList(
+                new BasicCreatureCard(1, "Marshmallow", "White soft treat", "does not exist yet", 3, 1, 2),
+                new BasicCreatureCard(2, "Plopp","Chocolate with gooey caramel center", "does not excist", 2, 2, 1),
+                new BasicCreatureCard(3, "Smash", "Crispy chocolate treat", "does not exist yet", 1, 5, 1),
+                new BasicCreatureCard(4, "Crazy face", "Sour chewy candy", "does not exist yet", 4, 1, 1)));
+        for (int i = 0; i < 4; i++) {
+            Game.getInstance().getPlayerATableCards().add(playerA.get(i));
+            Server.getInstance().getPlayerATableCards().add(playerA.get(i));
+            Game.getInstance().getPlayerBTableCards().add(playerB.get(i));
+            Server.getInstance().getPlayerBTableCards().add(playerB.get(i));
+            
+            //System.out.println(game.getPlayerATableCards().get(i).getName());
+        }
+        assertEquals(0, Server.getInstance().getPlayerAGraveyard().size());
+        assertEquals(0, Server.getInstance().getPlayerBGraveyard().size());
+        Server.getInstance().moveToGraveyard(2, 1);
+        //verify(server, times(1)).moveToGraveyard(2, 1);
+        assertEquals(1, Server.getInstance().getPlayerBGraveyard().size());
+        assertEquals(3, Server.getInstance().getPlayerBTableCards().size());
+        assertEquals(3, Game.getInstance().getPlayerBTableCards().size());
+        assertEquals(1, Game.getInstance().getPlayerBGraveyard());
+
+        Server.getInstance().moveToGraveyard(2, 0);
+
+        //endregion
+        assertEquals(1, Server.getInstance().getPlayerAGraveyard().size());
+        assertEquals(3, Server.getInstance().getPlayerATableCards().size());
+        assertEquals(3, Game.getInstance().getPlayerATableCards().size());
+        assertEquals(1, Game.getInstance().getPlayerAGraveyard());
+
+        Server.getInstance().moveToGraveyard(1, 0);
+        assertEquals(2, Server.getInstance().getPlayerAGraveyard().size());
+        assertEquals(2, Server.getInstance().getPlayerATableCards().size());
+        assertEquals(2, Game.getInstance().getPlayerATableCards().size());
+        assertEquals(2, Game.getInstance().getPlayerAGraveyard());
+
+        
     }
 
     @Test
