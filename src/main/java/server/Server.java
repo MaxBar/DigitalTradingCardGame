@@ -104,7 +104,7 @@ public class Server {
     SecureRandom sRandom = new SecureRandom();
 
     public int rollDice(int min, int max) {
-        return sRandom.nextInt(max)+ min;
+        return sRandom.nextInt(max - min + 1)+ min;
     }
 
     public int[] dealCards() {
