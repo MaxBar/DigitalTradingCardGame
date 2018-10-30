@@ -23,6 +23,9 @@ public class Game {
     private int playerBDeck = 10; // Remove when multiplayer
     
     private Game() {
+
+        playerA = new Player(1, "playerA", 1, null);
+        playerB = new Player(2, "playerB", 1, null);
     
     }
     

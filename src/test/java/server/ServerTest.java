@@ -126,6 +126,30 @@ class ServerTest {
 
     @Test
     void attackEnemyPlayer() {
+        assertEquals(0, Server.getInstance().getPlayerBTableCards().size());
+        assertTrue(Server.getInstance().attackEnemyPlayer());
+
+        Server.getInstance().getPlayerBTableCards().add( new BasicCreatureCard(6, "Nick's", "Sugar-free candy", "does not exist yet", 1, 3, 3));
+        assertFalse(Server.getInstance().attackEnemyPlayer());
+
+        assertEquals(8, Server.getInstance().players[1].getHealth());
+        assertEquals(8, Game.getInstance().getPlayerB().getHealth());
+
+        Server.getInstance().getPlayerBTableCards().clear();
+        assertTrue(Server.getInstance().attackEnemyPlayer());
+
+        assertEquals(6, Server.getInstance().players[1].getHealth());
+        assertEquals(6, Game.getInstance().getPlayerB().getHealth());
+
+
+
+        assertTrue(Server.getInstance().checkPlayerAlive(Server.getInstance().players[1]));
+
+        Server.getInstance().attackEnemyPlayer();
+        Server.getInstance().attackEnemyPlayer();
+        Server.getInstance().attackEnemyPlayer();
+        assertFalse(Server.getInstance().checkPlayerAlive(Server.getInstance().players[1]));
+        Server.getInstance().setTurn(1);
     }
 
     @Test
