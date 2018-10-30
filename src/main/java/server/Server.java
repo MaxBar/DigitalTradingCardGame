@@ -13,6 +13,7 @@ import java.util.List;
 public class Server {
 
     // Fields
+    private static Server server = null;
     private int round;
     public Player[] players;
     private String command;
@@ -24,10 +25,17 @@ public class Server {
     private List<BasicCard> playerBGraveyard;
     private List<BasicCard>[] playerGraveyards;
     
-    public Server() {
+    private Server() {
         players = new Player[2];
         players[0] = new Player(1, "playerA", 1, null);
         players[1] = new Player(2, "playerB", 1, null);
+    }
+    
+    public static Server getInstance() {
+        if (server == null) {
+            server = new Server();
+        }
+        return server;
     }
     
     public List<BasicCard> getPlayerATableCards() {
@@ -123,8 +131,6 @@ public class Server {
     public String sendCard(String s) {
         return "";
     }
-    
-    private Game game = new Game();
     
     public void placeCard(int index) {
         if(turn == 0) {

@@ -95,13 +95,11 @@ public class Player {
     }
 
     public void placeCard(int handIndex){
-        Server server = new Server();
-        server.receiveCommand("PLACE_CARD " + handIndex);
+        Server.getInstance().receiveCommand("PLACE_CARD " + handIndex);
     }
 
     public void attack(int friendlyBoardIndex, int enemyBoardIndex){
-        Server server = new Server();
-        server.receiveCommand("ATTACK " + friendlyBoardIndex + " ON ENEMY_CREATURE " + enemyBoardIndex);
+        Server.getInstance().receiveCommand("ATTACK " + friendlyBoardIndex + " ON ENEMY_CREATURE " + enemyBoardIndex);
     }
 
     public int randomizeCreatureHp() {

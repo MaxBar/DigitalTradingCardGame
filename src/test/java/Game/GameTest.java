@@ -18,9 +18,6 @@ import static org.mockito.Mockito.when;
 class GameTest {
     ArrayList<BasicCard> playerTableCards = new ArrayList<BasicCard>();
     
-    @Mock
-    Game game = new Game();
-    
     @BeforeEach
     void setUp() {
         BasicCreatureCard card1 = new BasicCreatureCard(1, "Hallon", "hej", "qwerty", 5, 5, 5);
@@ -31,18 +28,18 @@ class GameTest {
     
     @Test
     void getPlayerATableCards() {
-        when(game.getPlayerATableCards()).thenReturn(playerTableCards);
-        assertEquals(playerTableCards, game.getPlayerATableCards());
+        when(Game.getInstance().getPlayerATableCards()).thenReturn(playerTableCards);
+        assertEquals(playerTableCards, Game.getInstance().getPlayerATableCards());
         playerTableCards.add(new BasicCreatureCard(3, "Lakrits", "ses", "abc", 2, 2, 2));
-        assertEquals(playerTableCards, game.getPlayerATableCards());
+        assertEquals(playerTableCards, Game.getInstance().getPlayerATableCards());
     }
     
     @Test
     void getPlayerBTableCards() {
-        when(game.getPlayerBTableCards()).thenReturn(playerTableCards);
-        assertEquals(playerTableCards, game.getPlayerBTableCards());
+        when(Game.getInstance().getPlayerBTableCards()).thenReturn(playerTableCards);
+        assertEquals(playerTableCards, Game.getInstance().getPlayerBTableCards());
         playerTableCards.add(new BasicCreatureCard(3, "Lakrits", "ses", "abc", 2, 2, 2));
-        assertEquals(playerTableCards, game.getPlayerBTableCards());
+        assertEquals(playerTableCards, Game.getInstance().getPlayerBTableCards());
     }
     
     @Test
@@ -55,38 +52,38 @@ class GameTest {
     
     @Test
     void getPlayerAGraveyard() {
-        when(game.getPlayerAGraveyard()).thenReturn(playerTableCards.size());
-        assertEquals(playerTableCards.size(), game.getPlayerAGraveyard());
+        when(Game.getInstance().getPlayerAGraveyard()).thenReturn(playerTableCards.size());
+        assertEquals(playerTableCards.size(), Game.getInstance().getPlayerAGraveyard());
         playerTableCards.add(new BasicCreatureCard(3, "Lakrits", "ses", "abc", 2, 2, 2));
-        when(game.getPlayerAGraveyard()).thenReturn(playerTableCards.size());
-        assertEquals(playerTableCards.size(), game.getPlayerAGraveyard());
+        when(Game.getInstance().getPlayerAGraveyard()).thenReturn(playerTableCards.size());
+        assertEquals(playerTableCards.size(), Game.getInstance().getPlayerAGraveyard());
     }
     
     @Test
     void getPlayerBGraveyard() {
-        when(game.getPlayerBGraveyard()).thenReturn(playerTableCards.size());
-        assertEquals(playerTableCards.size(), game.getPlayerBGraveyard());
+        when(Game.getInstance().getPlayerBGraveyard()).thenReturn(playerTableCards.size());
+        assertEquals(playerTableCards.size(), Game.getInstance().getPlayerBGraveyard());
         playerTableCards.add(new BasicCreatureCard(3, "Lakrits", "ses", "abc", 2, 2, 2));
-        when(game.getPlayerBGraveyard()).thenReturn(playerTableCards.size());
-        assertEquals(playerTableCards.size(), game.getPlayerBGraveyard());
+        when(Game.getInstance().getPlayerBGraveyard()).thenReturn(playerTableCards.size());
+        assertEquals(playerTableCards.size(), Game.getInstance().getPlayerBGraveyard());
     }
     
     @Test
     void getPlayerADeck() {
-        when(game.getPlayerADeck()).thenReturn(playerTableCards.size());
-        assertEquals(playerTableCards.size(), game.getPlayerADeck());
+        when(Game.getInstance().getPlayerADeck()).thenReturn(playerTableCards.size());
+        assertEquals(playerTableCards.size(), Game.getInstance().getPlayerADeck());
         playerTableCards.add(new BasicCreatureCard(3, "Lakrits", "ses", "abc", 2, 2, 2));
-        when(game.getPlayerADeck()).thenReturn(playerTableCards.size());
-        assertEquals(playerTableCards.size(), game.getPlayerADeck());
+        when(Game.getInstance().getPlayerADeck()).thenReturn(playerTableCards.size());
+        assertEquals(playerTableCards.size(), Game.getInstance().getPlayerADeck());
     }
     
     @Test
     void getPlayerBDeck() {
-        when(game.getPlayerBDeck()).thenReturn(playerTableCards.size());
-        assertEquals(playerTableCards.size(), game.getPlayerBDeck());
+        when(Game.getInstance().getPlayerBDeck()).thenReturn(playerTableCards.size());
+        assertEquals(playerTableCards.size(), Game.getInstance().getPlayerBDeck());
         playerTableCards.add(new BasicCreatureCard(3, "Lakrits", "ses", "abc", 2, 2, 2));
-        when(game.getPlayerBDeck()).thenReturn(playerTableCards.size());
-        assertEquals(playerTableCards.size(), game.getPlayerBDeck());
+        when(Game.getInstance().getPlayerBDeck()).thenReturn(playerTableCards.size());
+        assertEquals(playerTableCards.size(), Game.getInstance().getPlayerBDeck());
     }
 }
 
