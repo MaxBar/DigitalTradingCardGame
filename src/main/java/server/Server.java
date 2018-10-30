@@ -183,8 +183,8 @@ public class Server {
         }
     }
 
-    public String attackEnemyCreature(int attackingCreature, int defendingCreature) {
-        int playerARoll;
+    public void attackEnemyCreature(int attackingCreature, int defendingCreature) {
+        /*int playerARoll;
         int playerBRoll;
         int dmg;
 
@@ -200,21 +200,20 @@ public class Server {
         } while(playerARoll == playerBRoll);
 
         if (turn == 0) {
-
+            // Player A turn
             playerACreature = (BasicCreatureCard)playerATableCards.get(attackingCreature);
             playerBCreature = (BasicCreatureCard)playerBTableCards.get(defendingCreature);
             if (playerARoll > playerBRoll) {
                 dmg = playerARoll - playerBRoll;
                 playerBCreature.setHealth((playerBCreature.getHealth() - dmg));
-                return !checkCreatureAlive(playerBCreature) ? successMsg : attackMsg;
+                return !checkCreatureAlive(playerBCreature,) ? successMsg : attackMsg;
             } else{
                 dmg = playerBRoll - playerARoll;
                 playerACreature.setHealth((playerACreature.getHealth() - dmg));
-                checkCreatureAlive(playerACreature);
                 return !checkCreatureAlive(playerACreature) ? successMsg : attackMsg;
             }
         } else {
-
+            // Player B turn
             playerBCreature = (BasicCreatureCard)playerBTableCards.get(attackingCreature);
             playerACreature = (BasicCreatureCard)playerATableCards.get(defendingCreature);
             if (playerARoll > playerBRoll) {
@@ -226,7 +225,7 @@ public class Server {
                 playerBCreature.setHealth((playerBCreature.getHealth() - dmg));
                 return !checkCreatureAlive(playerBCreature) ? successMsg : attackMsg;
             }
-        }
+        }*/
 
 
 
@@ -244,12 +243,29 @@ public class Server {
         return p.getHealth() > 0;
     }
 
-    public boolean checkCreatureAlive(BasicCreatureCard creature) {
-        if (creature.getHealth() > 0) {
-            return true;
-        }
-        //moveToGraveyard();
-        return false;
+    public void checkCreatureAlive(int index, int player) {
+        // Player A turn
+        // WRITE TEST FOR THIS FIRST
+        /*if (turn == 0) {
+            BasicCreatureCard card = (BasicCreatureCard) playerATableCards.get(index);
+
+            if (card.getHealth() > 0) {
+                return true;
+            } else {
+                moveToGraveyard(index, player);
+                return false;
+            }
+            // Player B turn
+        } else {
+            BasicCreatureCard card = (BasicCreatureCard) playerBTableCards.get(index);
+
+            if (card.getHealth() > 0) {
+                return true;
+            } else {
+                moveToGraveyard(index, player);
+                return false;
+            }
+        }*/
     }
     
     public void moveToGraveyard(int index, int player) {
