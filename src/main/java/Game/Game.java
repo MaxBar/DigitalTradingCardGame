@@ -3,10 +3,12 @@ package Game;
 import card.BasicCard;
 import player.Player;
 import repository.DummyDB;
+import server.Server;
 
 import java.util.List;
 
 public class Game {
+    private static Game game;
     DummyDB dummy = new DummyDB();
     private List<BasicCard> playerATableCards = dummy.database; // Remove A when multiplayer
     private List<BasicCard> playerBTableCards = dummy.database; // Remove when multiplayer
@@ -19,6 +21,17 @@ public class Game {
     
     private int playerADeck = 8; // Remove A when multiplayer
     private int playerBDeck = 10; // Remove when multiplayer
+    
+    private Game() {
+    
+    }
+    
+    public static Game getInstance() {
+        if (game == null) {
+            game = new Game();
+        }
+        return game;
+    }
     
     public List<BasicCard> getPlayerATableCards() {
         return playerATableCards;
