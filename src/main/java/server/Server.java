@@ -54,8 +54,8 @@ public class Server {
         this.playerBTableCards = playerBTableCards;
     }
     
-    private List<BasicCard> playerATableCards = new ArrayList<>();
-    private List<BasicCard> playerBTableCards = new ArrayList<>();
+    private List<BasicCard> playerATableCards = new ArrayList<BasicCard>();
+    private List<BasicCard> playerBTableCards = new ArrayList<BasicCard>();
 
     //region Getters & Setters
     public int getRound() { return round; }

@@ -130,6 +130,22 @@ class ServerTest {
 
     @Test
     void attackEnemyCreature() {
+//        int roll1= Server.getInstance().rollDice(1,6);
+//        int roll2=Server.getInstance().rollDice(1,6);
+        int playerARoll = 6;
+        int playerBRoll = 4;
+        assertThat(playerARoll).isGreaterThan(playerBRoll);
+
+        int playerARoll2 = 2;
+        int playerBRoll2 = 4;
+        assertThat(playerBRoll2).isGreaterThan(playerARoll2);
+
+        int dmg = playerARoll2-playerBRoll2;
+        int playerACreatureHP= 10;
+        playerACreatureHP =-dmg;
+        assertThat(playerACreatureHP).isLessThan(10);
+
+
     }
 
     @Test
