@@ -30,6 +30,24 @@ class ServerTest {
     
     @BeforeEach
     void setUp() {
+        List<BasicCard> playerA = new ArrayList<>(Arrays.asList(
+                new BasicCreatureCard(1, "Marshmallow", "White soft treat", "does not exist yet", 1, 1, 2),
+                new BasicCreatureCard(2, "Plopp","Chocolate with gooey caramel center", "does not excist", 8, 2, 1),
+                new BasicCreatureCard(3, "Smash", "Crispy chocolate treat", "does not exist yet", 1, 5, 1),
+                new BasicCreatureCard(4, "Crazy face", "Sour chewy candy", "does not exist yet", 1, 1, 1)));
+        List<BasicCard> playerB = new ArrayList<>(Arrays.asList(
+                new BasicCreatureCard(1, "Marshmallow", "White soft treat", "does not exist yet", 1, 1, 2),
+                new BasicCreatureCard(2, "Plopp","Chocolate with gooey caramel center", "does not excist", 8, 2, 1),
+                new BasicCreatureCard(3, "Smash", "Crispy chocolate treat", "does not exist yet", 8, 5, 1),
+                new BasicCreatureCard(4, "Crazy face", "Sour chewy candy", "does not exist yet", 8, 1, 1)));
+        for (int i = 0; i < 4; i++) {
+            Game.getInstance().getPlayerATableCards().add(playerA.get(i));
+            Server.getInstance().getPlayerATableCards().add(playerA.get(i));
+            Game.getInstance().getPlayerBTableCards().add(playerB.get(i));
+            Server.getInstance().getPlayerBTableCards().add(playerB.get(i));
+
+            //System.out.println(game.getPlayerATableCards().get(i).getName());
+        }
     }
 
     @Test
@@ -185,21 +203,45 @@ class ServerTest {
 
     @Test
     void attackEnemyCreature() {
-//        int roll1= Server.getInstance().rollDice(1,6);
-//        int roll2=Server.getInstance().rollDice(1,6);
+       /* List<BasicCard> playerAHand = new ArrayList<>();
+        playerAHand.add(new BasicCreatureCard(1,"asd","asd","asd",1,2,2));
+        playerAHand.add(new BasicCreatureCard(2,"asd","asd","asd",8,2,2));
+
+        List<BasicCard> playerBHand = new ArrayList<>();
+        playerBHand.add(new BasicCreatureCard(2,"asd","asd","asd",1,2,2));
+        playerBHand.add(new BasicCreatureCard(1,"asd","asd","asd",8,2,2));
+*/
+        /*int attackingCreatureIndex = 0;
+        int defendingCreatureIndex = 0;
+        BasicCreatureCard attackingCreature = (BasicCreatureCard)playerAHand.get(attackingCreatureIndex);
+        BasicCreatureCard defendingCreature = (BasicCreatureCard)playerBHand.get(defendingCreatureIndex);
+
         int playerARoll = 6;
         int playerBRoll = 4;
+        int dmg = playerARoll - playerBRoll;
         assertThat(playerARoll).isGreaterThan(playerBRoll);
+
+        defendingCreature.setHealth(defendingCreature.getHealth() - dmg);
+        assertEquals(2,defendingCreature.getHealth());
 
         int playerARoll2 = 2;
         int playerBRoll2 = 4;
-        assertThat(playerBRoll2).isGreaterThan(playerARoll2);
+        int dmg2 = playerBRoll2 - playerARoll2;
+        assertThat(playerARoll2).isLessThan(playerBRoll2);
 
-        int dmg = playerARoll2-playerBRoll2;
-        int playerACreatureHP= 10;
-        playerACreatureHP =-dmg;
-        assertThat(playerACreatureHP).isLessThan(10);
+        attackingCreature.setHealth(attackingCreature.getHealth() - dmg2);
+        assertEquals(2,attackingCreature.getHealth());*/
 
+        /*Server.getInstance().setPlayerATableCards(playerAHand);
+        Server.getInstance().setPlayerBTableCards(playerBHand);*/
+
+        /*for (int i = 0; i < 2; i++) {
+            Game.getInstance().getPlayerATableCards().add(playerAHand.get(i));
+            Game.getInstance().getPlayerBTableCards().add(playerBHand.get(i));
+        }*/
+        assertEquals("SUCCESS ALIVE", Server.getInstance().attackEnemyCreature(1, 1));
+
+        assertEquals("SUCCESS DEAD", Server.getInstance().attackEnemyCreature(0,0));
 
     }
 
@@ -223,14 +265,10 @@ class ServerTest {
 
     @Test
     void checkCreatureAlive() {
-        BasicCreatureCard creature = new BasicCreatureCard(2, "abc", "abc", "abc", 5, 2, 3);
-        assertTrue(Server.getInstance().checkCreatureAlive(creature));
-        creature.setHealth(0);
-        assertFalse(Server.getInstance().checkCreatureAlive(creature));
-        creature.setHealth(8);
-        assertTrue(Server.getInstance().checkCreatureAlive(creature));
-        BasicCreatureCard creature2 = new BasicCreatureCard(3, "abc", "abc", "abc", 0, 2, 1);
-        assertFalse(Server.getInstance().checkCreatureAlive(creature2));
+
+        assertTrue(Server.getInstance().checkCreatureAlive(3, 0));
+        ((BasicCreatureCard)Server.getInstance().getPlayerATableCards().get(3)).setHealth(-1);
+        assertFalse(Server.getInstance().checkCreatureAlive(3,0));
     }
     
     @Test

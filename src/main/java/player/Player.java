@@ -102,8 +102,12 @@ public class Player {
         Server.getInstance().receiveCommand("PLACE_CARD " + handIndex);
     }
 
-    public void attack(int friendlyBoardIndex, int enemyBoardIndex){
+    public void attackCreature(int friendlyBoardIndex, int enemyBoardIndex){
         Server.getInstance().receiveCommand("ATTACK " + friendlyBoardIndex + " ON ENEMY_CREATURE " + enemyBoardIndex);
+    }
+
+    public void attackPlayer(int friendlyBoardIndex) {
+        Server.getInstance().receiveCommand("ATTACK " + friendlyBoardIndex + " ON ENEMY_PLAYER");
     }
 
     public int randomizeCreatureHp() {
@@ -111,5 +115,10 @@ public class Player {
     }
 
     public void finishTurn() {
+        Server.getInstance().receiveCommand("END_TURN");
+    }
+
+    public void quitGame() {
+        Server.getInstance().receiveCommand("QUIT_GAME");
     }
 }
