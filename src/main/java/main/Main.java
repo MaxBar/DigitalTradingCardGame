@@ -11,12 +11,13 @@ public class Main {
     private static Scanner sc = new Scanner(System.in);
     private static Server server = Server.getInstance();
     private static Game game = Game.getInstance();
+    private static Player[] players = {new Player(1,"Johan",1), new Player(2,"Linn",1)};
     public static void main(String[] args) {
 
 
 
         //region initialize players and set hand
-        Player[] players = {new Player(1,"Johan",1), new Player(2,"Linn",1)};
+
         server.setPlayers(players);
 
         game.setPlayerA(server.getPlayers()[0]);
@@ -60,7 +61,16 @@ public class Main {
 
     private static void printCaseOne() {
         System.out.println("---------- PLACE CARD ----------");
-        
+
+        if (server.getTurn() == server.PLAYER_A) {
+            for (int i = 0; i < players[server.PLAYER_A].getHand().size() ; i++) {
+                System.out.println((i + 1) + ") " + players[server.PLAYER_A].getHand().get(i).getName());
+            }
+        } else {
+            for (int i = 0; i < players[server.PLAYER_B].getHand().size() ; i++) {
+                System.out.println((i + 1) + ") " + players[server.PLAYER_B].getHand().get(i).getName());
+            }
+        }
         System.out.println("---------- *********** ----------");
         choice = sc.nextInt();
         //TODO Place card in next available spot

@@ -15,8 +15,8 @@ public class Server {
 
     // Fields
     private static Server server = null;
-    private final int PLAYER_A = 0;
-    private final int PLAYER_B = 1;
+    public final int PLAYER_A = 0;
+    public final int PLAYER_B = 1;
     private int round;
     private Player[] players;
     private String command;
