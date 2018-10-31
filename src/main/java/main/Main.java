@@ -93,6 +93,12 @@ public class Main {
 
     private static void printCaseThree() {
         System.out.println("---------- END TURN ----------");
+        System.out.println("TURN " + server.getTurn());
+        System.out.println("ROUND " +server.getRound());
+        server.endTurn();
+        System.out.println("TURN " +server.getTurn());
+        System.out.println("ROUND " +server.getRound());
+
     }
 
     private static void printCaseNine() {

@@ -29,6 +29,7 @@ public class Server {
     //private List<BasicCard>[] playerGraveyards;
     
     private Server() {
+        round = 1;
         players = new Player[2];
         playerAGraveyard = new ArrayList<>();
         playerBGraveyard = new ArrayList<>();
@@ -319,8 +320,13 @@ public class Server {
     }
 
     public void endTurn() {
-        turn = turn == 0 ? 1 : 0;
-        round++;
+        if (turn == 0) {
+            turn = 1;
+        }
+        else {
+            turn = 0;
+            round++;
+        }
     }
 
     public void quitGame() {
