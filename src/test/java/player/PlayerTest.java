@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 
 class PlayerTest {
     List<BasicCard> hand  = new ArrayList<BasicCard>();
-    Player player = new Player(1, "player", 10,hand);
+    Player player = new Player(1, "player", 10);
 
 
     @Test

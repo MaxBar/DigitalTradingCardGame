@@ -1,12 +1,31 @@
 package main;
 
+import Game.Game;
+import player.Player;
+import server.Server;
+
 import java.util.Scanner;
 
 public class Main {
     private static int choice;
     private static Scanner sc = new Scanner(System.in);
-
+    private static Server server = Server.getInstance();
+    private static Game game = Game.getInstance();
     public static void main(String[] args) {
+
+
+
+        //region initialize players and set hand
+        Player[] players = {new Player(1,"Johan",1), new Player(2,"Linn",1)};
+        server.setPlayers(players);
+
+        game.setPlayerA(server.getPlayers()[0]);
+        game.setPlayerB(server.getPlayers()[1]);
+
+        server.getPlayers()[0].receiveStartCards(server.dealCards());
+        server.getPlayers()[1].receiveStartCards(server.dealCards());
+        //endregion
+
         int quitMessage = 9;
         do {
             System.out.println("---------- MENU ----------");
@@ -41,11 +60,7 @@ public class Main {
 
     private static void printCaseOne() {
         System.out.println("---------- PLACE CARD ----------");
-        System.out.println("1) Card1");
-        System.out.println("2) Card2");
-        System.out.println("3) Card3");
-        System.out.println("4) Card4");
-        System.out.println("5) Card5");
+        
         System.out.println("---------- *********** ----------");
         choice = sc.nextInt();
         //TODO Place card in next available spot
