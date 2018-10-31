@@ -18,6 +18,7 @@ public class Server {
     public final int PLAYER_A = 0;
     public final int PLAYER_B = 1;
     private int round;
+    private int maxTableSize;
     private Player[] players;
     private String command;
     private int turn;
@@ -29,6 +30,7 @@ public class Server {
     //private List<BasicCard>[] playerGraveyards;
     
     private Server() {
+        maxTableSize = 5;
         round = 1;
         players = new Player[2];
         playerAGraveyard = new ArrayList<>();
@@ -142,7 +144,10 @@ public class Server {
                 attackEnemyPlayer();
             }
 
-        } else if (input.startsWith("END_TURN")) {
+        } else if (input.startsWith("PLACE_CARD")) {
+            command = placeCard(Integer.parseInt(input.substring(11)));
+        }
+        else if (input.startsWith("END_TURN")) {
             endTurn();
 
         } else if (input.startsWith("QUIT_GAME")) {
@@ -182,16 +187,19 @@ public class Server {
         return "";
     }
     
-    public void placeCard(int index) {
-        if(turn == 0) {
+    public String placeCard(int index) {
+        if (turn == 0 && playerATableCards.size() != maxTableSize) {
             BasicCard card = players[0].getHand().get(index);
             players[0].getHand().remove(index);
             playerATableCards.add(card);
-        } else {
+            return "SUCCESS";
+        } else if (turn == 1 && playerBTableCards.size() != maxTableSize){
             BasicCard card = players[1].getHand().get(index);
             players[1].getHand().remove(index);
             playerBTableCards.add(card);
+            return "SUCCESS";
         }
+        return "FAIL";
     }
 
     public boolean attackEnemyPlayer() {

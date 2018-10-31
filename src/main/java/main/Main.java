@@ -60,22 +60,36 @@ public class Main {
     }
 
     private static void printCaseOne() {
-        System.out.println("---------- PLACE CARD ----------");
 
+        String message;
+        String cardName;
+        System.out.println("---------- PLACE CARD ----------");
         if (server.getTurn() == server.PLAYER_A) {
             for (int i = 0; i < players[server.PLAYER_A].getHand().size() ; i++) {
                 System.out.println((i + 1) + ") " + players[server.PLAYER_A].getHand().get(i).getName());
             }
+            choice = sc.nextInt() - 1;
+            cardName = players[server.PLAYER_A].getHand().get(choice).getName();
+            players[server.PLAYER_A].placeCard(choice);
+            message = server.getCommand();
         } else {
             for (int i = 0; i < players[server.PLAYER_B].getHand().size() ; i++) {
                 System.out.println((i + 1) + ") " + players[server.PLAYER_B].getHand().get(i).getName());
             }
+            choice = sc.nextInt() - 1;
+            cardName = players[server.PLAYER_B].getHand().get(choice).getName();
+            players[server.PLAYER_B].placeCard(choice);
+            message = server.getCommand();
+
         }
         System.out.println("---------- *********** ----------");
-        choice = sc.nextInt();
         //TODO Place card in next available spot
 
-        System.out.println("You placed card: " + choice);
+        if (message == "SUCCESS") {
+            System.out.println("You placed card: " + cardName);
+        } else {
+            System.out.println("There is no more room to place your card");
+        }
     }
 
     private static void printCaseTwo() {

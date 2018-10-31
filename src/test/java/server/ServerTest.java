@@ -27,7 +27,11 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ServerTest {
-    
+
+    private static Server server = Server.getInstance();
+    private static Game game = Game.getInstance();
+    private static Player[] players = {new Player(1,"Johan",1), new Player(2,"Linn",1)};
+
     @BeforeEach
     void setUp() {
         List<BasicCard> playerA = new ArrayList<>(Arrays.asList(
@@ -48,6 +52,11 @@ class ServerTest {
 
             //System.out.println(game.getPlayerATableCards().get(i).getName());
         }
+
+        server.setPlayers(players);
+
+        game.setPlayerA(server.getPlayers()[0]);
+        game.setPlayerB(server.getPlayers()[1]);
     }
 
     @Test
@@ -128,10 +137,11 @@ class ServerTest {
         Server.getInstance().getPlayers()[0].setHand(playerA);
         Server.getInstance().getPlayers()[1].setHand(playerB);
         Server.getInstance().setTurn(0);
-        assertEquals(5, Server.getInstance().getPlayers()[0].getHand().size());
-        assertEquals(0, Server.getInstance().getPlayerATableCards().size());
-        Server.getInstance().placeCard(4);
-        assertEquals(4, Server.getInstance().getPlayers()[0].getHand().size());
+        assertEquals(5, server.getPlayers()[0].getHand().size());
+        assertEquals(4, server.getPlayerATableCards().size());
+        assertEquals("SUCCESS", server.placeCard(4));
+        assertEquals("FAIL", server.placeCard(2));
+        /*assertEquals(4, Server.getInstance().getPlayers()[0].getHand().size());
         assertEquals(1, Server.getInstance().getPlayerATableCards().size());
         
         assertEquals(5, Server.getInstance().getPlayers()[1].getHand().size());
@@ -139,7 +149,7 @@ class ServerTest {
         assertEquals(0, Server.getInstance().getPlayerBTableCards().size());
         Server.getInstance().placeCard(4);
         assertEquals(4, Server.getInstance().getPlayers()[1].getHand().size());
-        assertEquals(1, Server.getInstance().getPlayerBTableCards().size());
+        assertEquals(1, Server.getInstance().getPlayerBTableCards().size());*/
     }
 
     @Test
