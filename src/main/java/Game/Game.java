@@ -22,11 +22,11 @@ public class Game {
     
     private int playerADeck = 8; // Remove A when multiplayer
     private int playerBDeck = 10; // Remove when multiplayer
-    
+
     private Game() {
 
-        playerA = new Player(1, "playerA", 1, null);
-        playerB = new Player(2, "playerB", 1, null);
+        /*playerA = new Player(1, "playerA", 1);
+        playerB = new Player(2, "playerB", 1);*/
     
     }
     
@@ -51,6 +51,14 @@ public class Game {
     
     public Player getPlayerB() {
         return playerB;
+    }
+
+    public void setPlayerA(Player playerA) {
+        this.playerA = playerA;
+    }
+
+    public void setPlayerB(Player playerB) {
+        this.playerB = playerB;
     }
     
     public int getPlayerAGraveyard() {

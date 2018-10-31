@@ -5,6 +5,7 @@ import card.BasicCreatureCard;
 import repository.DummyDB;
 import server.Server;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
@@ -17,12 +18,12 @@ public class Player {
     private List<BasicCard> hand;
     //private Server server = new Server();
 
-    public Player(int id, String name, int mana, List<BasicCard> hand) {
+    public Player(int id, String name, int mana) {
         this.id = id;
         this.name = name;
         this.health = 10;
         this.mana = mana;
-        this.hand = hand;
+        this.hand = new ArrayList<>();
         //this.server = new Server();
     }
   
@@ -85,11 +86,9 @@ public class Player {
     }
 
     public void receiveStartCards(int[] arrayOfId) {
-        for(int i = 0; i < 5; i++){
             for (int j = 0; j < 5; j++){
                 receiveCard(arrayOfId[j]);
             }
-        }
     }
 
     public void drawCard() {
