@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import repository.DummyDB;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import card.BasicCreatureCard;
@@ -253,6 +254,18 @@ class ServerTest {
 
         assertEquals("SUCCESS DEAD", Server.getInstance().attackEnemyCreature(0,0));
 
+    }
+
+    @Test
+    void randomizeCreatureHp() {
+        int min = 1;
+        int max = 10;
+        SecureRandom sRandom = new SecureRandom();
+        int hp = sRandom.nextInt(max - min + 1)+ min;
+        // int hp = 30;
+        assertThat(hp).isLessThan(11);
+        assertThat(hp).isGreaterThan(0);
+        System.out.println(hp);
     }
 
     @Test

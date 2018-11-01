@@ -28,7 +28,8 @@ public class Server {
     private List<BasicCard> playerAGraveyard;
     private List<BasicCard> playerBGraveyard;
     //private List<BasicCard>[] playerGraveyards;
-    
+    private SecureRandom sRandom = new SecureRandom();
+
     private Server() {
         maxTableSize = 5;
         round = 1;
@@ -36,30 +37,31 @@ public class Server {
         playerAGraveyard = new ArrayList<>();
         playerBGraveyard = new ArrayList<>();
         playerADeck = new ArrayList<>(Arrays.asList(
-                new BasicCreatureCard(1, "Marshmallow", "White soft treat", "does not exist yet", 3, 1, 2),
-                new BasicCreatureCard(2, "Plopp","Chocolate with gooey caramel center", "does not excist", 2, 2, 1),
-                new BasicCreatureCard(3, "Smash", "Crispy chocolate treat", "does not exist yet", 1, 5, 1),
-                new BasicCreatureCard(4, "Crazy face", "Sour chewy candy", "does not exist yet", 4, 1, 1),
-                new BasicCreatureCard(5, "Djungelvrål", "Licorice candy that makes you scream", "does not exist yet", 2, 2, 2),
-                new BasicCreatureCard(6, "Nick's", "Sugar-free candy", "does not exist yet", 1, 3, 3),
-                new BasicCreatureCard(7, "Daim", "Chocolate with hard filling", "does not exist yet", 2, 3, 5),
-                new BasicCreatureCard(8, "Bounty", "Chocolate with coconut filling", "does not exist yet", 3, 2, 1),
-                new BasicCreatureCard(9, "Hubba Bubba", "Sweet chewing-gum", "does not exist yet", 1, 3, 3),
-                new BasicCreatureCard(10, "Raisin", "Dried up grapes pretending to be candy", "does not exist yet",1, 1, 1))
+                new BasicCreatureCard(1, "Marshmallow", "White soft treat", "does not exist yet", 0, 1, 2),
+                new BasicCreatureCard(2, "Plopp","Chocolate with gooey caramel center", "does not exist", 0, 2, 1),
+                new BasicCreatureCard(3, "Smash", "Crispy chocolate treat", "does not exist yet", 0, 5, 1),
+                new BasicCreatureCard(4, "Crazy face", "Sour chewy candy", "does not exist yet", 0, 1, 1),
+                new BasicCreatureCard(5, "Djungelvrål", "Licorice candy that makes you scream", "does not exist yet", 0, 2, 2),
+                new BasicCreatureCard(6, "Nick's", "Sugar-free candy", "does not exist yet", 0, 3, 3),
+                new BasicCreatureCard(7, "Daim", "Chocolate with hard filling", "does not exist yet", 0, 3, 5),
+                new BasicCreatureCard(8, "Bounty", "Chocolate with coconut filling", "does not exist yet", 0, 2, 1),
+                new BasicCreatureCard(9, "Hubba Bubba", "Sweet chewing-gum", "does not exist yet", 0, 3, 3),
+                new BasicCreatureCard(10, "Raisin", "Dried up grapes pretending to be candy", "does not exist yet",0, 1, 1))
         );
 
         playerBDeck = new ArrayList<>(Arrays.asList(
-                new BasicCreatureCard(1, "Marshmallow", "White soft treat", "does not exist yet", 3, 1, 2),
-                new BasicCreatureCard(2, "Plopp","Chocolate with gooey caramel center", "does not excist", 2, 2, 1),
-                new BasicCreatureCard(3, "Smash", "Crispy chocolate treat", "does not exist yet", 1, 5, 1),
-                new BasicCreatureCard(4, "Crazy face", "Sour chewy candy", "does not exist yet", 4, 1, 1),
-                new BasicCreatureCard(5, "Djungelvrål", "Licorice candy that makes you scream", "does not exist yet", 2, 2, 2),
-                new BasicCreatureCard(6, "Nick's", "Sugar-free candy", "does not exist yet", 1, 3, 3),
-                new BasicCreatureCard(7, "Daim", "Chocolate with hard filling", "does not exist yet", 2, 3, 5),
-                new BasicCreatureCard(8, "Bounty", "Chocolate with coconut filling", "does not exist yet", 3, 2, 1),
-                new BasicCreatureCard(9, "Hubba Bubba", "Sweet chewing-gum", "does not exist yet", 1, 3, 3),
-                new BasicCreatureCard(10, "Raisin", "Dried up grapes pretending to be candy", "does not exist yet",1, 1, 1))
+                new BasicCreatureCard(1, "Marshmallow", "White soft treat", "does not exist yet", 0, 1, 2),
+                new BasicCreatureCard(2, "Plopp","Chocolate with gooey caramel center", "does not excist", 0, 2, 1),
+                new BasicCreatureCard(3, "Smash", "Crispy chocolate treat", "does not exist yet", 0, 5, 1),
+                new BasicCreatureCard(4, "Crazy face", "Sour chewy candy", "does not exist yet", 0, 1, 1),
+                new BasicCreatureCard(5, "Djungelvrål", "Licorice candy that makes you scream", "does not exist yet", 0, 2, 2),
+                new BasicCreatureCard(6, "Nick's", "Sugar-free candy", "does not exist yet", 0, 3, 3),
+                new BasicCreatureCard(7, "Daim", "Chocolate with hard filling", "does not exist yet", 0, 3, 5),
+                new BasicCreatureCard(8, "Bounty", "Chocolate with coconut filling", "does not exist yet", 0, 2, 1),
+                new BasicCreatureCard(9, "Hubba Bubba", "Sweet chewing-gum", "does not exist yet", 0, 3, 3),
+                new BasicCreatureCard(10, "Raisin", "Dried up grapes pretending to be candy", "does not exist yet",0, 1, 1))
         );
+
     }
     
     public static Server getInstance() {
@@ -157,8 +159,6 @@ public class Server {
         }
     }
 
-    SecureRandom sRandom = new SecureRandom();
-
     public int rollDice(int min, int max) {
         return sRandom.nextInt(max - min + 1)+ min;
     }
@@ -179,10 +179,11 @@ public class Server {
             id = playerADeck.get(playerADeck.size() - 1).id;
             playerADeck.remove(playerADeck.size() - 1);
             return id;
+        } else {
+            id = playerBDeck.get(playerBDeck.size() - 1).id;
+            playerBDeck.remove(playerBDeck.size() - 1);
+            return id;
         }
-        id = playerBDeck.get(playerBDeck.size() - 1).id;
-        playerBDeck.remove(playerBDeck.size() - 1);
-        return id;
     }
 
     public String sendCard(String s) {
@@ -194,12 +195,14 @@ public class Server {
             BasicCard card = players[0].getHand().get(index);
             players[0].getHand().remove(index);
             playerATableCards.add(card);
+            randomizeCreatureHp();
             Game.getInstance().getPlayerATableCards().add(card);
             return "SUCCESS";
         } else if (turn == 1 && playerBTableCards.size() != maxTableSize){
             BasicCard card = players[1].getHand().get(index);
             players[1].getHand().remove(index);
             playerBTableCards.add(card);
+            randomizeCreatureHp();
             Game.getInstance().getPlayerBTableCards().add(card);
             return "SUCCESS";
         }
@@ -274,6 +277,20 @@ public class Server {
             }
         }
     }
+
+    public void randomizeCreatureHp() {
+        if (playerATableCards.size() > 0) {
+            for (int i = 0; i < playerATableCards.size(); i++) {
+                ((BasicCreatureCard)playerATableCards.get(i)).setHealth(rollDice(1,10));
+            }
+        } else if (playerBTableCards.size() > 0) {
+            for (int i = 0; i < playerATableCards.size(); i++) {
+                ((BasicCreatureCard)playerBTableCards.get(i)).setHealth(rollDice(1,10));
+            }
+        }
+
+    }
+
     public String healPlayer(String s) {
         return "";
     }
