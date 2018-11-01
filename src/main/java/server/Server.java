@@ -62,7 +62,6 @@ public class Server {
                 new BasicCreatureCard(10, "Raisin", "Dried up grapes pretending to be candy", "does not exist yet",0, 1, 1))
         );
 
-        randomizeCreatureHp();
     }
     
     public static Server getInstance() {
@@ -196,12 +195,14 @@ public class Server {
             BasicCard card = players[0].getHand().get(index);
             players[0].getHand().remove(index);
             playerATableCards.add(card);
+            randomizeCreatureHp();
             Game.getInstance().getPlayerATableCards().add(card);
             return "SUCCESS";
         } else if (turn == 1 && playerBTableCards.size() != maxTableSize){
             BasicCard card = players[1].getHand().get(index);
             players[1].getHand().remove(index);
             playerBTableCards.add(card);
+            randomizeCreatureHp();
             Game.getInstance().getPlayerBTableCards().add(card);
             return "SUCCESS";
         }
@@ -278,6 +279,15 @@ public class Server {
     }
 
     public void randomizeCreatureHp() {
+        if (playerATableCards.size() > 0) {
+            for (int i = 0; i < playerATableCards.size(); i++) {
+                ((BasicCreatureCard)playerATableCards.get(i)).setHealth(rollDice(1,10));
+            }
+        } else if (playerBTableCards.size() > 0) {
+            for (int i = 0; i < playerATableCards.size(); i++) {
+                ((BasicCreatureCard)playerBTableCards.get(i)).setHealth(rollDice(1,10));
+            }
+        }
 
     }
 
