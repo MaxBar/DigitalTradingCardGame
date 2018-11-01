@@ -84,7 +84,7 @@ public class Main {
         System.out.println("---------- PLACE CARD ----------");
         if (server.getTurn() == server.PLAYER_A) {
             for (int i = 0; i < players[server.PLAYER_A].getHand().size() ; i++) {
-                System.out.println((i + 1) + ") " + players[server.PLAYER_A].getHand().get(i).getName() + " HP: " + ((BasicCreatureCard)players[server.PLAYER_A].getHand().get(i)).getHealth());
+                System.out.println((i + 1) + ") " + players[server.PLAYER_A].getHand().get(i).getName());
 
             }
             choice = sc.nextInt() - 1;

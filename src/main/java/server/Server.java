@@ -29,8 +29,7 @@ public class Server {
     private List<BasicCard> playerBGraveyard;
     //private List<BasicCard>[] playerGraveyards;
     private SecureRandom sRandom = new SecureRandom();
-    private int randomHp;
-    
+
     private Server() {
         maxTableSize = 5;
         round = 1;
@@ -181,10 +180,11 @@ public class Server {
             id = playerADeck.get(playerADeck.size() - 1).id;
             playerADeck.remove(playerADeck.size() - 1);
             return id;
+        } else {
+            id = playerBDeck.get(playerBDeck.size() - 1).id;
+            playerBDeck.remove(playerBDeck.size() - 1);
+            return id;
         }
-        id = playerBDeck.get(playerBDeck.size() - 1).id;
-        playerBDeck.remove(playerBDeck.size() - 1);
-        return id;
     }
 
     public String sendCard(String s) {
@@ -278,17 +278,6 @@ public class Server {
     }
 
     public void randomizeCreatureHp() {
-        int min = 1;
-        int max = 10;
-        
-        for (int i = 0; i < playerADeck.size() ; i++) {
-            ((BasicCreatureCard)playerADeck.get(i)).setHealth(sRandom.nextInt(max - min + 1)+ min);
-            System.out.println(randomHp);
-        }
-
-        for (int i = 0; i < playerBDeck.size() ; i++) {
-            ((BasicCreatureCard)playerBDeck.get(i)).setHealth(sRandom.nextInt(max - min + 1)+ min);
-        }
 
     }
 
