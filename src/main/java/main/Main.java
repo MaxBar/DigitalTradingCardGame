@@ -280,7 +280,7 @@ public class Main {
                 finalString = "EMPTY \t\t\t\t| ";
             }
             if(game.getPlayerBTableCards().size() - 1 >= i) {
-                finalString += String.format("%-12s, HP: %s", game.getPlayerBTableCards().get(i).getName(), ((BasicCreatureCard)game.getPlayerBTableCards().get(i)).getHealth());
+                finalString += String.format("%-12s HP: %s", game.getPlayerBTableCards().get(i).getName(), ((BasicCreatureCard)game.getPlayerBTableCards().get(i)).getHealth());
             } else {
                 finalString += "EMPTY";
             }
@@ -292,10 +292,10 @@ public class Main {
         System.out.println(String.format("Graveyard: %s %s \t| Graveyard: %s %s", game.getPlayerAGraveyard(), playerA, game.getPlayerBGraveyard(), playerB));
         playerA = game.getPlayerADeck() > 1 ? "cards" : "card";
         playerB = game.getPlayerBDeck() > 1 ? "cards" : "card";
-        System.out.println(String.format("Deck: %s %s \t| Deck: %s %s", game.getPlayerADeck(), playerA, game.getPlayerBDeck(), playerB));
+        System.out.println(String.format("Deck: %s %s \t\t| Deck: %s %s", game.getPlayerADeck(), playerA, game.getPlayerBDeck(), playerB));
         playerA = game.getPlayerA().getHand().size() > 1 ? "cards" : "card";
         playerB = game.getPlayerB().getHand().size() > 1 ? "cards" : "card";
-        System.out.println(String.format("Hand: %s %s \t| Hand: %s %s", game.getPlayerA().getHand().size(), playerA, game.getPlayerB().getHand().size(), playerB));
+        System.out.println(String.format("Hand: %s %s \t\t| Hand: %s %s", game.getPlayerA().getHand().size(), playerA, game.getPlayerB().getHand().size(), playerB));
         System.out.println("**************************************");
     }
 }
