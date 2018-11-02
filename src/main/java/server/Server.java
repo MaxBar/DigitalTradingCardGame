@@ -145,7 +145,7 @@ public class Server {
                 String defend = input.substring(27);
                 command = attackEnemyCreature(Integer.parseInt(input.substring(7, 8)), Integer.parseInt(input.substring(27)));
             } else if (input.substring(12).startsWith("ENEMY_PLAYER")) {
-                attackEnemyPlayer();
+                command = attackEnemyPlayer();
             }
 
         } else if (input.startsWith("PLACE_CARD")) {
@@ -220,29 +220,36 @@ public class Server {
         return "FAIL";
     }
 
-    public boolean attackEnemyPlayer() {
+    public String attackEnemyPlayer() {
+        String alive = "ALIVE";
+        String dead = "DEAD";
         if(turn == 0 ){
             if(playerBTableCards.size() == 0){
-                int health = -rollDice(1,6);
-                players[1].changeHealth(health);
-                Game.getInstance().getPlayerB().changeHealth(health);
+                int health = rollDice(1,6);
+                players[1].decrementHealth(health);
 
                 //Should we return a string, example: SUCCESS PLAYER ALIVE/SUCCESS PLAYER DEAD?
-
-                return true;
-
             }
-            return false;
+            
+            if(checkPlayerAlive(players[1])) {
+                return alive;
+            } else {
+                System.out.printf("Player %s died, %s won!\n", players[PLAYER_B].getName(), players[PLAYER_A].getName());
+                return dead;
+            }
         }
         else {
             if(playerATableCards.size() == 0) {
-                int health = -rollDice(1,6);
-                players[0].changeHealth(health);
-                Game.getInstance().getPlayerA().changeHealth(health);
-                return true;
+                int health = rollDice(1,6);
+                players[0].decrementHealth(health);
             }
-
-            return false;
+    
+            if(checkPlayerAlive(players[0])) {
+                return alive;
+            } else {
+                System.out.printf("Player %s died, %s won!\n", players[PLAYER_A].getName(), players[PLAYER_B].getName());
+                return dead;
+            }
         }
     }
 
