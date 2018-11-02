@@ -35,6 +35,7 @@ public class Main {
 
         int quitMessage = 9;
         do {
+            printBoard();
             System.out.println("---------- MENU ----------");
             if(server.getTurn() == server.PLAYER_A && server.getPlayers()[server.PLAYER_A].getHand().size() > 0
                     || server.getTurn() == server.PLAYER_B && server.getPlayers()[server.PLAYER_B].getHand().size() > 0 ) {
@@ -263,5 +264,38 @@ public class Main {
             }
         }
 
+    }
+    
+    private static void printBoard() {
+        System.out.println("**************************************");
+        System.out.println(String.format("%s - HP: %s \t\t| %s - HP: %s",
+                players[0].getName(), players[0].getHealth(),
+                players[1].getName(), players[1].getHealth()));
+        System.out.println("--------------------------------------");
+        for(int i = 0; i < 5; ++i) {
+            String finalString = "";
+            if(game.getPlayerATableCards().size() - 1 >= i) {
+                finalString = String.format("%-12s HP: %s \t| ", game.getPlayerATableCards().get(i).getName(), ((BasicCreatureCard)game.getPlayerATableCards().get(i)).getHealth());
+            } else {
+                finalString = "EMPTY \t\t\t\t| ";
+            }
+            if(game.getPlayerBTableCards().size() - 1 >= i) {
+                finalString += String.format("%-12s, HP: %s", game.getPlayerBTableCards().get(i).getName(), ((BasicCreatureCard)game.getPlayerBTableCards().get(i)).getHealth());
+            } else {
+                finalString += "EMPTY";
+            }
+            System.out.println(finalString);
+        }
+        System.out.println("--------------------------------------");
+        String playerA = game.getPlayerAGraveyard() > 1 ? "cards" : "card";
+        String playerB = game.getPlayerBGraveyard() > 1 ? "cards" : "card";
+        System.out.println(String.format("Graveyard: %s %s \t| Graveyard: %s %s", game.getPlayerAGraveyard(), playerA, game.getPlayerBGraveyard(), playerB));
+        playerA = game.getPlayerADeck() > 1 ? "cards" : "card";
+        playerB = game.getPlayerBDeck() > 1 ? "cards" : "card";
+        System.out.println(String.format("Deck: %s %s \t| Deck: %s %s", game.getPlayerADeck(), playerA, game.getPlayerBDeck(), playerB));
+        playerA = game.getPlayerA().getHand().size() > 1 ? "cards" : "card";
+        playerB = game.getPlayerB().getHand().size() > 1 ? "cards" : "card";
+        System.out.println(String.format("Hand: %s %s \t| Hand: %s %s", game.getPlayerA().getHand().size(), playerA, game.getPlayerB().getHand().size(), playerB));
+        System.out.println("**************************************");
     }
 }
