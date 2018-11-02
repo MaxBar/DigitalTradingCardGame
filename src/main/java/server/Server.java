@@ -278,12 +278,14 @@ public class Server {
         }
     }
 
+
     public void randomizeCreatureHp(int index) {
         if (getTurn() == 0 && playerATableCards.size() > 0) {
                 ((BasicCreatureCard)playerATableCards.get(index)).setHealth(rollDice(1,10));
 
         } else if (getTurn() == 1 && playerBTableCards.size() > 0) {
                 ((BasicCreatureCard)playerBTableCards.get(index)).setHealth(rollDice(1,10));
+
         }
 
     }
