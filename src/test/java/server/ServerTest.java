@@ -297,7 +297,7 @@ class ServerTest {
     @Test
     void moveToGraveyard() {
         //region code
-        List<BasicCard> playerA = new ArrayList<>(Arrays.asList(
+        /*List<BasicCard> playerA = new ArrayList<>(Arrays.asList(
                 new BasicCreatureCard(1, "Marshmallow", "White soft treat", "does not exist yet", 3, 1, 2),
                 new BasicCreatureCard(2, "Plopp","Chocolate with gooey caramel center", "does not excist", 2, 2, 1),
                 new BasicCreatureCard(3, "Smash", "Crispy chocolate treat", "does not exist yet", 1, 5, 1),
@@ -314,7 +314,7 @@ class ServerTest {
             Server.getInstance().getPlayerBTableCards().add(playerB.get(i));
             
             //System.out.println(game.getPlayerATableCards().get(i).getName());
-        }
+        }*/
         assertEquals(0, Server.getInstance().getPlayerAGraveyard().size());
         assertEquals(0, Server.getInstance().getPlayerBGraveyard().size());
         Server.getInstance().moveToGraveyard(2, 1);
