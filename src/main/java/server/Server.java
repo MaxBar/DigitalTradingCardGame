@@ -268,11 +268,11 @@ public class Server {
             // Player B turn
             if (playerARoll > playerBRoll) {
                 dmg = playerARoll - playerBRoll;
-                ((BasicCreatureCard)playerBTableCards.get(attackingCreatureIndex)).setHealth((((BasicCreatureCard)playerATableCards.get(attackingCreatureIndex)).getHealth() - dmg));
+                ((BasicCreatureCard)playerBTableCards.get(attackingCreatureIndex)).setHealth((((BasicCreatureCard)playerBTableCards.get(attackingCreatureIndex)).getHealth() - dmg));
                 return checkCreatureAlive(attackingCreatureIndex, 1) ? attackMsg + fail : successMsg + fail;
             } else {
                 dmg = playerBRoll - playerARoll;
-                ((BasicCreatureCard)playerATableCards.get(defendingCreatureIndex)).setHealth((((BasicCreatureCard)playerBTableCards.get(defendingCreatureIndex)).getHealth() - dmg));
+                ((BasicCreatureCard)playerATableCards.get(defendingCreatureIndex)).setHealth((((BasicCreatureCard)playerATableCards.get(defendingCreatureIndex)).getHealth() - dmg));
                 return checkCreatureAlive(defendingCreatureIndex, 0) ? attackMsg + success : successMsg + success;
             }
         }
