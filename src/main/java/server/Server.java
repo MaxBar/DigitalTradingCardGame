@@ -269,11 +269,11 @@ public class Server {
             if (playerARoll > playerBRoll) {
                 dmg = playerARoll - playerBRoll;
                 ((BasicCreatureCard)playerBTableCards.get(attackingCreatureIndex)).setHealth((((BasicCreatureCard)playerATableCards.get(attackingCreatureIndex)).getHealth() - dmg));
-                return checkCreatureAlive(attackingCreatureIndex, 0) ? attackMsg + fail : successMsg + fail;
+                return checkCreatureAlive(attackingCreatureIndex, 1) ? attackMsg + fail : successMsg + fail;
             } else {
                 dmg = playerBRoll - playerARoll;
                 ((BasicCreatureCard)playerATableCards.get(defendingCreatureIndex)).setHealth((((BasicCreatureCard)playerBTableCards.get(defendingCreatureIndex)).getHealth() - dmg));
-                return checkCreatureAlive(defendingCreatureIndex, 1) ? attackMsg + success : successMsg + success;
+                return checkCreatureAlive(defendingCreatureIndex, 0) ? attackMsg + success : successMsg + success;
             }
         }
     }
