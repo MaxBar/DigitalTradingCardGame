@@ -20,8 +20,8 @@ public class Game {
     private int playerAGraveyard; // Remove A when multiplayer
     private int playerBGraveyard; // Remove when multiplayer
     
-    private int playerADeck = 8; // Remove A when multiplayer
-    private int playerBDeck = 10; // Remove when multiplayer
+    private int playerADeck; // Remove A when multiplayer
+    private int playerBDeck; // Remove when multiplayer
 
     private Game() {
 
@@ -81,8 +81,16 @@ public class Game {
         return playerADeck;
     }
     
+    public void setPlayerADeck(int deck) {
+        playerADeck = deck;
+    }
+    
     public int getPlayerBDeck() {
         return playerBDeck;
+    }
+    
+    public void setPlayerBDeck(int deck) {
+        playerBDeck = deck;
     }
     
     public void decrementPlayerADeck() {

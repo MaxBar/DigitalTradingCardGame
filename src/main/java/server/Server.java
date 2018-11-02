@@ -61,6 +61,8 @@ public class Server {
                 new BasicCreatureCard(9, "Hubba Bubba", "Sweet chewing-gum", "does not exist yet", 0, 3, 3),
                 new BasicCreatureCard(10, "Raisin", "Dried up grapes pretending to be candy", "does not exist yet",0, 1, 1))
         );
+        Game.getInstance().setPlayerADeck(playerADeck.size());
+        Game.getInstance().setPlayerBDeck(playerBDeck.size());
 
     }
     
@@ -189,10 +191,12 @@ public class Server {
         if (playerTurn == PLAYER_A) {
             id = playerADeck.get(playerADeck.size() - 1).id;
             playerADeck.remove(playerADeck.size() - 1);
+            Game.getInstance().setPlayerADeck(playerADeck.size());
             return id;
         } else {
             id = playerBDeck.get(playerBDeck.size() - 1).id;
             playerBDeck.remove(playerBDeck.size() - 1);
+            Game.getInstance().setPlayerBDeck(playerBDeck.size());
             return id;
         }
     }
