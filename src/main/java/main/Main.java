@@ -26,7 +26,7 @@ public class Main {
 
         server.getPlayers()[0].receiveStartCards(server.dealCards(server.PLAYER_A));
         server.getPlayers()[1].receiveStartCards(server.dealCards(server.PLAYER_B));
-
+        players[0].receiveCard(server.dealCard(server.getTurn()));
         //endregion
         printMenu();
     }
@@ -141,6 +141,11 @@ public class Main {
         System.out.println("TURN " + server.getTurn());
         System.out.println("ROUND " +server.getRound());
         server.endTurn();
+        if(server.getTurn() == 0) {
+            players[0].receiveCard(server.dealCard(server.getTurn()));
+        } else {
+            players[1].receiveCard(server.dealCard(server.getTurn()));
+        }
         System.out.println("TURN " +server.getTurn());
         System.out.println("ROUND " +server.getRound());
 
