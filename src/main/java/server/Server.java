@@ -195,14 +195,14 @@ public class Server {
             BasicCard card = players[0].getHand().get(index);
             players[0].getHand().remove(index);
             playerATableCards.add(card);
-            randomizeCreatureHp();
+            randomizeCreatureHp(index);
             Game.getInstance().getPlayerATableCards().add(card);
             return "SUCCESS";
         } else if (turn == 1 && playerBTableCards.size() != maxTableSize){
             BasicCard card = players[1].getHand().get(index);
             players[1].getHand().remove(index);
             playerBTableCards.add(card);
-            randomizeCreatureHp();
+            randomizeCreatureHp(index);
             Game.getInstance().getPlayerBTableCards().add(card);
             return "SUCCESS";
         }
@@ -278,15 +278,12 @@ public class Server {
         }
     }
 
-    public void randomizeCreatureHp() {
-        if (playerATableCards.size() > 0) {
-            for (int i = 0; i < playerATableCards.size(); i++) {
-                ((BasicCreatureCard)playerATableCards.get(i)).setHealth(rollDice(1,10));
-            }
-        } else if (playerBTableCards.size() > 0) {
-            for (int i = 0; i < playerATableCards.size(); i++) {
-                ((BasicCreatureCard)playerBTableCards.get(i)).setHealth(rollDice(1,10));
-            }
+    public void randomizeCreatureHp(int index) {
+        if (getTurn() == 0 && playerATableCards.size() > 0) {
+                ((BasicCreatureCard)playerATableCards.get(index)).setHealth(rollDice(1,10));
+
+        } else if (getTurn() == 1 && playerBTableCards.size() > 0) {
+                ((BasicCreatureCard)playerBTableCards.get(index)).setHealth(rollDice(1,10));
         }
 
     }
