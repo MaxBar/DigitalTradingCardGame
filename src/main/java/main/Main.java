@@ -40,8 +40,8 @@ public class Main {
                     || server.getTurn() == server.PLAYER_B && server.getPlayers()[server.PLAYER_B].getHand().size() > 0 ) {
                 System.out.println("1) Place card");
             }
-            if(server.getTurn() == server.PLAYER_A && server.getPlayerATableCards().size() > 0
-                    || server.getTurn() == server.PLAYER_B && server.getPlayerBTableCards().size() > 0 ) {
+            if(server.getRound() > 1 && server.getTurn() == server.PLAYER_A && server.getPlayerATableCards().size() > 0
+                    || server.getRound() > 1 && server.getTurn() == server.PLAYER_B && server.getPlayerBTableCards().size() > 0) {
                 System.out.println("2) Attack");
             }
             System.out.println("3) End turn");
@@ -105,7 +105,7 @@ public class Main {
         System.out.println("---------- *********** ----------");
         //TODO Place card in next available spot
 
-        if (message == "SUCCESS") {
+        if (message.equals("SUCCESS")) {
             System.out.println("You placed card: " + cardName);
         } else {
             System.out.println("There is no more room to place your card");
@@ -115,25 +115,61 @@ public class Main {
     private static void printCaseTwo() {
         String cardName;
         System.out.println("---------- ATTACK WITH CARD ----------");
-        if (server.getTurn() == server.PLAYER_A) {
+        if (server.getTurn() == server.PLAYER_A && server.getRound() > 1) {
             for (int i = 0; i < server.getPlayerATableCards().size(); i++) {
                 System.out.println((i + 1) + ") " + server.getPlayerATableCards().get(i).getName() + " HP: " + ((BasicCreatureCard)server.getPlayerATableCards().get(i)).getHealth());
             }
             choice = sc.nextInt() - 1;
             cardName = server.getPlayerATableCards().get(choice).getName();
-            printEnemyCards(choice, cardName);
+            printAttackDestination(choice, cardName);
 
-        } else {
+        } else if (server.getTurn() == server.PLAYER_B && server.getRound() > 1) {
             for (int i = 0; i < server.getPlayerBTableCards().size(); i++) {
                 System.out.println((i + 1) + ") " + server.getPlayerBTableCards().get(i).getName() + " HP: " + ((BasicCreatureCard)server.getPlayerBTableCards().get(i)).getHealth());
             }
             choice = sc.nextInt() - 1;
             cardName = server.getPlayerBTableCards().get(choice).getName();
-            printEnemyCards(choice, cardName);
+            printAttackDestination(choice, cardName);
 
         }
         System.out.println("---------- *********** ----------");
 
+    }
+    
+    private static void printAttackDestination(int choice, String cardName) {
+        if(server.getTurn() == server.PLAYER_A) {
+            if(server.getPlayerBTableCards().size() > 0) {
+                printEnemyCards(choice, cardName);
+            } else if(server.getPlayerBTableCards().size() == 0 && server.getRound() > 1) {
+                printAttackPlayer(choice, cardName);
+            }
+        } else {
+            if(server.getPlayerATableCards().size() > 0) {
+                printEnemyCards(choice, cardName);
+            } else if(server.getPlayerATableCards().size() == 0 && server.getRound() > 1) {
+                printAttackPlayer(choice, cardName);
+            }
+        }
+    }
+    
+    private static void printAttackPlayer(int choice, String cardName) {
+        int attackPlayer = 0;
+        System.out.println("------------- ATTACK PLAYER ------------");
+        if(server.getTurn() == server.PLAYER_A) {
+            System.out.printf("1) %s \n", players[server.PLAYER_B].getName());
+            attackPlayer = sc.nextInt();
+            System.out.printf("Player %s attacked with %s on player %s\n", players[server.PLAYER_A].getName(), cardName, players[server.PLAYER_B].getName());
+            players[server.PLAYER_A].attackPlayer(choice);
+        } else {
+            System.out.printf("1) %s \n", players[server.PLAYER_A].getName());
+            attackPlayer = sc.nextInt();
+            System.out.printf("Player %s attacked with %s on player %s\n", players[server.PLAYER_B].getName(), cardName, players[server.PLAYER_A].getName());
+            players[server.PLAYER_B].attackPlayer(choice);
+        }
+        
+        if(server.getCommand().equals("DEAD")) {
+            players[0].quitGame();
+        }
     }
 
     private static void printCaseThree() {
