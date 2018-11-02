@@ -284,7 +284,7 @@ public class Server {
                 ((BasicCreatureCard)playerATableCards.get(i)).setHealth(rollDice(1,10));
             }
         } else if (playerBTableCards.size() > 0) {
-            for (int i = 0; i < playerATableCards.size(); i++) {
+            for (int i = 0; i < playerBTableCards.size(); i++) {
                 ((BasicCreatureCard)playerBTableCards.get(i)).setHealth(rollDice(1,10));
             }
         }
