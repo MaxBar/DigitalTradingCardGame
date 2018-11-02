@@ -140,6 +140,13 @@ public class Main {
         System.out.println("---------- END TURN ----------");
         System.out.println("TURN " + server.getTurn());
         System.out.println("ROUND " +server.getRound());
+        if(server.getTurn() == server.PLAYER_A && server.getPlayerADeck().size() == 0){
+            System.out.println("************GAME OVER***********");
+            server.quitGame();
+        }else if(server.getTurn() == server.PLAYER_B && server.getPlayerBDeck().size() == 0){
+            System.out.println("************GAME OVER***********");
+            server.quitGame();
+        }
         server.endTurn();
         if(server.getTurn() == 0) {
             players[0].receiveCard(server.dealCard(server.getTurn()));
