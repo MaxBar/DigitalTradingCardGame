@@ -24,8 +24,9 @@ public class Main {
         game.setPlayerA(server.getPlayers()[0]);
         game.setPlayerB(server.getPlayers()[1]);
 
-        server.getPlayers()[0].receiveStartCards(server.dealCards());
-        server.getPlayers()[1].receiveStartCards(server.dealCards());
+        server.getPlayers()[0].receiveStartCards(server.dealCards(server.PLAYER_A));
+        server.getPlayers()[1].receiveStartCards(server.dealCards(server.PLAYER_B));
+
         //endregion
         printMenu();
     }

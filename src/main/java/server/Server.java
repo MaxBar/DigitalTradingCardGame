@@ -163,19 +163,30 @@ public class Server {
         return sRandom.nextInt(max - min + 1)+ min;
     }
 
-    public int[] dealCards() {
-
+    public int[] dealCards(int playerTurn) {
         int ids[] = new int[5];
-        for (int i = 0; i < 5; i++) {
-            ids[i] = dealCard();
+
+        if(playerTurn == PLAYER_A){
+
+            for (int i = 0; i < 5; i++) {
+                ids[i] = dealCard(playerTurn);
+            }
+            return ids;
+
+        }else{
+            for (int i = 0; i < 5; i++) {
+                ids[i] = dealCard(playerTurn);
+            }
+            return ids;
         }
-        return ids;
+
+
     }
 
-    public int dealCard() {
+    public int dealCard(int playerTurn) {
 
         int id;
-        if (turn == 0) {
+        if (playerTurn == PLAYER_A) {
             id = playerADeck.get(playerADeck.size() - 1).id;
             playerADeck.remove(playerADeck.size() - 1);
             return id;
