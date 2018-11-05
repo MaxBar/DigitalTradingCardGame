@@ -5,6 +5,7 @@ import card.BasicCreatureCard;
 import player.Player;
 import server.Server;
 
+import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class Main {
@@ -144,20 +145,43 @@ public class Main {
         System.out.println("---------- ATTACK WITH CARD ----------");
         if (server.getTurn() == playerA && server.getRound() > 1) {
             for (int i = 0; i < server.getPlayerATableCards().size(); i++) {
-                System.out.println((i + 1) + ") " + server.getPlayerATableCards().get(i).getName() + " HP: " + ((BasicCreatureCard)server.getPlayerATableCards().get(i)).getHealth());
+                if(server.getPlayerATableCards().get(i).getIsConsumed() == false) {
+                    System.out.println((i + 1) + ") " + server.getPlayerATableCards().get(i).getName() + " HP: " + ((BasicCreatureCard) server.getPlayerATableCards().get(i)).getHealth());
+                }
+
             }
+            System.out.println("9) BACK");
             choice = sc.nextInt() - 1;
-            cardName = server.getPlayerATableCards().get(choice).getName();
-            printAttackDestination(choice, cardName);
+            if(choice !=8) {
+                cardName = server.getPlayerATableCards().get(choice).getName();
+                if (!server.getPlayerATableCards().get(choice).getIsConsumed()) {
+                    server.getPlayerATableCards().get(choice).setIsConsumed(true);
+                    printAttackDestination(choice, cardName);
+                }
+            }
+            if(choice == 8) {
+              printMenu();
+            }
+
 
         } else if (server.getTurn() == playerB && server.getRound() > 1) {
             for (int i = 0; i < server.getPlayerBTableCards().size(); i++) {
-                System.out.println((i + 1) + ") " + server.getPlayerBTableCards().get(i).getName() + " HP: " + ((BasicCreatureCard)server.getPlayerBTableCards().get(i)).getHealth());
+                if(server.getPlayerBTableCards().get(i).getIsConsumed() == false) {
+                    System.out.println((i + 1) + ") " + server.getPlayerBTableCards().get(i).getName() + " HP: " + ((BasicCreatureCard) server.getPlayerBTableCards().get(i)).getHealth());
+                }
             }
+            System.out.println("9) BACK");
             choice = sc.nextInt() - 1;
-            cardName = server.getPlayerBTableCards().get(choice).getName();
-            printAttackDestination(choice, cardName);
-
+            if(choice == 8) {
+                printMenu();
+            }
+            if(choice !=8) {
+                cardName = server.getPlayerBTableCards().get(choice).getName();
+                if (!server.getPlayerBTableCards().get(choice).getIsConsumed()) {
+                    server.getPlayerBTableCards().get(choice).setIsConsumed(true);
+                    printAttackDestination(choice, cardName);
+                }
+            }
         }
         System.out.println("---------- *********** ----------");
 
@@ -234,7 +258,7 @@ public class Main {
                 System.out.println((i + 1) + ") " + server.getPlayerBTableCards().get(i).getName() + " HP: " + ((BasicCreatureCard)server.getPlayerBTableCards().get(i)).getHealth());
             }
             enemyChoice = sc.nextInt() - 1;
-            enemyCardName = server.getPlayerBTableCards().get(choice).getName();
+            enemyCardName = server.getPlayerBTableCards().get(enemyChoice).getName();
             players[playerA].attackCreature(choice, enemyChoice);
             printAttackResults(cardName, enemyCardName);
 
@@ -243,7 +267,7 @@ public class Main {
                 System.out.println((i + 1) + ") " + server.getPlayerATableCards().get(i).getName() + " HP: " + ((BasicCreatureCard)server.getPlayerATableCards().get(i)).getHealth());
             }
             enemyChoice = sc.nextInt() - 1;
-            enemyCardName = server.getPlayerATableCards().get(choice).getName();
+            enemyCardName = server.getPlayerATableCards().get(enemyChoice).getName();
             players[playerB].attackCreature(choice, enemyChoice);
             printAttackResults(cardName, enemyCardName);
 

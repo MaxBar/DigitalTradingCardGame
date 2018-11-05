@@ -5,6 +5,7 @@ public class BasicCard {
     String name;
     String flavourText;
     String image;
+    boolean isConsumed;
 
     public BasicCard(int id, String name, String flavourText, String image) {
         this.id = id;
@@ -29,4 +30,8 @@ public class BasicCard {
     public String getImage() {
         return image;
     }
+
+    public boolean getIsConsumed() { return isConsumed;   }
+
+    public void setIsConsumed(boolean isConsumed) { this.isConsumed = isConsumed; }
 }

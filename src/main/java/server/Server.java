@@ -372,12 +372,21 @@ public class Server {
         //System.out.println(playerBTableCards.get(index));
     }
 
-    public void endTurn() {
+ public void endTurn() {
+
         if (turn == PLAYER_A) {
+            for (int i = 0; i < server.getPlayerATableCards().size() ; i++) {
+                server.getPlayerATableCards().get(i).setIsConsumed(false);
+            }
             turn = PLAYER_B;
+
         }
         else {
+            for (int i = 0; i < server.getPlayerBTableCards().size() ; i++) {
+                server.getPlayerBTableCards().get(i).setIsConsumed(false);
+            }
             turn = PLAYER_A;
+
             round++;
         }
     }
