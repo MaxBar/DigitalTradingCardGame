@@ -29,6 +29,8 @@ public class Server {
     private List<BasicCard> playerBGraveyard;
     //private List<BasicCard>[] playerGraveyards;
     private SecureRandom sRandom = new SecureRandom();
+    
+    private Game game = Game.getInstance();
 
     private Server() {
         maxTableSize = 5;
@@ -61,8 +63,8 @@ public class Server {
                 new BasicCreatureCard(9, "Hubba Bubba", "Sweet chewing-gum", "does not exist yet", 0, 3, 3),
                 new BasicCreatureCard(10, "Raisin", "Dried up grapes pretending to be candy", "does not exist yet",0, 1, 1))
         );
-        Game.getInstance().setPlayerADeck(playerADeck.size());
-        Game.getInstance().setPlayerBDeck(playerBDeck.size());
+        game.setPlayerADeck(playerADeck.size());
+        game.setPlayerBDeck(playerBDeck.size());
 
     }
     
@@ -141,12 +143,14 @@ public class Server {
 
     // server.Server functions
     public void receiveCommand(String input) {
+        int secondaryCheck = 12;
+        int attackStart = 7;
+        int attackEnd = 8;
+        int defendCheck = 27;
         if(input.startsWith("ATTACK")) {
-            if(input.substring(12).startsWith("ENEMY_CREATURE")) {
-                String attack =input.substring(7, 8);
-                String defend = input.substring(27);
-                command = attackEnemyCreature(Integer.parseInt(input.substring(7, 8)), Integer.parseInt(input.substring(27)));
-            } else if (input.substring(12).startsWith("ENEMY_PLAYER")) {
+            if(input.substring(secondaryCheck).startsWith("ENEMY_CREATURE")) {
+                command = attackEnemyCreature(Integer.parseInt(input.substring(attackStart, attackEnd)), Integer.parseInt(input.substring(defendCheck)));
+            } else if (input.substring(secondaryCheck).startsWith("ENEMY_PLAYER")) {
                 command = attackEnemyPlayer();
             }
 
@@ -166,17 +170,18 @@ public class Server {
     }
 
     public int[] dealCards(int playerTurn) {
-        int ids[] = new int[5];
+        int handSize = 5;
+        int ids[] = new int[handSize];
 
         if(playerTurn == PLAYER_A){
 
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < handSize; i++) {
                 ids[i] = dealCard(playerTurn);
             }
             return ids;
 
         }else{
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < handSize; i++) {
                 ids[i] = dealCard(playerTurn);
             }
             return ids;
@@ -191,12 +196,12 @@ public class Server {
         if (playerTurn == PLAYER_A) {
             id = playerADeck.get(playerADeck.size() - 1).id;
             playerADeck.remove(playerADeck.size() - 1);
-            Game.getInstance().setPlayerADeck(playerADeck.size());
+            game.setPlayerADeck(playerADeck.size());
             return id;
         } else {
             id = playerBDeck.get(playerBDeck.size() - 1).id;
             playerBDeck.remove(playerBDeck.size() - 1);
-            Game.getInstance().setPlayerBDeck(playerBDeck.size());
+            game.setPlayerBDeck(playerBDeck.size());
             return id;
         }
     }
@@ -206,19 +211,19 @@ public class Server {
     }
     
     public String placeCard(int index) {
-        if (turn == 0 && playerATableCards.size() != maxTableSize) {
-            BasicCard card = players[0].getHand().get(index);
-            players[0].getHand().remove(index);
+        if (turn == PLAYER_A && playerATableCards.size() != maxTableSize) {
+            BasicCard card = players[PLAYER_A].getHand().get(index);
+            players[PLAYER_A].getHand().remove(index);
             playerATableCards.add(card);
             randomizeCreatureHp(index);
-            Game.getInstance().getPlayerATableCards().add(card);
+            game.getPlayerATableCards().add(card);
             return "SUCCESS";
-        } else if (turn == 1 && playerBTableCards.size() != maxTableSize){
-            BasicCard card = players[1].getHand().get(index);
-            players[1].getHand().remove(index);
+        } else if (turn == PLAYER_B && playerBTableCards.size() != maxTableSize){
+            BasicCard card = players[PLAYER_B].getHand().get(index);
+            players[PLAYER_B].getHand().remove(index);
             playerBTableCards.add(card);
             randomizeCreatureHp(index);
-            Game.getInstance().getPlayerBTableCards().add(card);
+            game.getPlayerBTableCards().add(card);
             return "SUCCESS";
         }
         return "FAIL";
@@ -227,15 +232,15 @@ public class Server {
     public String attackEnemyPlayer() {
         String alive = "ALIVE";
         String dead = "DEAD";
-        if(turn == 0 ){
+        if(turn == PLAYER_A) {
             if(playerBTableCards.size() == 0){
                 int health = rollDice(1,6);
-                players[1].decrementHealth(health);
+                players[PLAYER_B].decrementHealth(health);
 
                 //Should we return a string, example: SUCCESS PLAYER ALIVE/SUCCESS PLAYER DEAD?
             }
             
-            if(checkPlayerAlive(players[1])) {
+            if(checkPlayerAlive(players[PLAYER_B])) {
                 return alive;
             } else {
                 System.out.printf("Player %s died, %s won!\n", players[PLAYER_B].getName(), players[PLAYER_A].getName());
@@ -248,7 +253,7 @@ public class Server {
                 players[0].decrementHealth(health);
             }
     
-            if(checkPlayerAlive(players[0])) {
+            if(checkPlayerAlive(players[PLAYER_A])) {
                 return alive;
             } else {
                 System.out.printf("Player %s died, %s won!\n", players[PLAYER_A].getName(), players[PLAYER_B].getName());
@@ -273,39 +278,39 @@ public class Server {
             playerBRoll = Server.getInstance().rollDice(1, 6);
         } while(playerARoll == playerBRoll);
 
-        if (turn == 0) {
+        if (turn == PLAYER_A) {
             // Player A turn
             if (playerARoll > playerBRoll) {
                 dmg = playerARoll - playerBRoll;
                 System.out.println(dmg);
                 ((BasicCreatureCard)playerBTableCards.get(defendingCreatureIndex)).setHealth((((BasicCreatureCard)playerBTableCards.get(defendingCreatureIndex)).getHealth() - dmg));
-                return checkCreatureAlive(defendingCreatureIndex, 1) ? attackMsg + success : successMsg + success;
+                return checkCreatureAlive(defendingCreatureIndex, PLAYER_B) ? attackMsg + success : successMsg + success;
             } else {
                 dmg = playerBRoll - playerARoll;
                 System.out.println(dmg);
                 ((BasicCreatureCard)playerATableCards.get(attackingCreatureIndex)).setHealth((((BasicCreatureCard)playerATableCards.get(attackingCreatureIndex)).getHealth() - dmg));
-                return checkCreatureAlive(attackingCreatureIndex, 0) ? attackMsg + fail : successMsg + fail;
+                return checkCreatureAlive(attackingCreatureIndex, PLAYER_A) ? attackMsg + fail : successMsg + fail;
             }
         } else {
             // Player B turn
             if (playerARoll > playerBRoll) {
                 dmg = playerARoll - playerBRoll;
                 ((BasicCreatureCard)playerBTableCards.get(attackingCreatureIndex)).setHealth((((BasicCreatureCard)playerBTableCards.get(attackingCreatureIndex)).getHealth() - dmg));
-                return checkCreatureAlive(attackingCreatureIndex, 1) ? attackMsg + fail : successMsg + fail;
+                return checkCreatureAlive(attackingCreatureIndex, PLAYER_B) ? attackMsg + fail : successMsg + fail;
             } else {
                 dmg = playerBRoll - playerARoll;
                 ((BasicCreatureCard)playerATableCards.get(defendingCreatureIndex)).setHealth((((BasicCreatureCard)playerATableCards.get(defendingCreatureIndex)).getHealth() - dmg));
-                return checkCreatureAlive(defendingCreatureIndex, 0) ? attackMsg + success : successMsg + success;
+                return checkCreatureAlive(defendingCreatureIndex, PLAYER_A) ? attackMsg + success : successMsg + success;
             }
         }
     }
 
 
     public void randomizeCreatureHp(int index) {
-        if (getTurn() == 0 && playerATableCards.size() > 0) {
+        if (getTurn() == PLAYER_A && playerATableCards.size() > 0) {
                 ((BasicCreatureCard)playerATableCards.get(playerATableCards.size() - 1)).setHealth(rollDice(1,10));
 
-        } else if (getTurn() == 1 && playerBTableCards.size() > 0) {
+        } else if (getTurn() == PLAYER_B && playerBTableCards.size() > 0) {
                 ((BasicCreatureCard)playerBTableCards.get(playerBTableCards.size() - 1)).setHealth(rollDice(1,10));
 
         }
@@ -327,7 +332,7 @@ public class Server {
     public boolean checkCreatureAlive(int index, int player) {
         // Player A turn
         // WRITE TEST FOR THIS FIRST
-        if (player == 0) {
+        if (player == PLAYER_A) {
             if (((BasicCreatureCard) playerATableCards.get(index)).getHealth() > 0) {
                 return true;
             } else {
@@ -346,40 +351,42 @@ public class Server {
     }
     
     public void moveToGraveyard(int index, int player) {
-        if (player == 0) {
+        if (player == PLAYER_A) {
             BasicCard card = playerATableCards.get(index);
 
             playerAGraveyard.add(card);
             playerATableCards.remove(index);
-
-            Game.getInstance().getPlayerATableCards().remove(index);
-            Game.getInstance().incrementPlayerAGraveyard();
+    
+            game.getPlayerATableCards().remove(index);
+            game.incrementPlayerAGraveyard();
 
         } else {
             BasicCard card = playerBTableCards.get(index);
             playerBGraveyard.add(card);
             playerBTableCards.remove(index);
-            Game.getInstance().getPlayerBTableCards().remove(index);
-            Game.getInstance().incrementPlayerBGraveyard();
+            game.getPlayerBTableCards().remove(index);
+            game.incrementPlayerBGraveyard();
 
 
         }
         //System.out.println(playerBTableCards.get(index));
     }
 
-    public void endTurn() {
-        if (turn == 0) {
+ public void endTurn() {
+
+        if (turn == PLAYER_A) {
             for (int i = 0; i < server.getPlayerATableCards().size() ; i++) {
                 server.getPlayerATableCards().get(i).setIsConsumed(false);
             }
-            turn = 1;
+            turn = PLAYER_B;
 
         }
         else {
             for (int i = 0; i < server.getPlayerBTableCards().size() ; i++) {
                 server.getPlayerBTableCards().get(i).setIsConsumed(false);
             }
-            turn = 0;
+            turn = PLAYER_A;
+
             round++;
         }
     }

@@ -14,6 +14,10 @@ public class Main {
     private static Server server = Server.getInstance();
     private static Game game = Game.getInstance();
     private static Player[] players = {new Player(1,"Johan",1), new Player(2,"Linn",1)};
+    
+    private static int playerA = server.PLAYER_A;
+    private static int playerB = server.PLAYER_B;
+    
     public static void main(String[] args) {
 
 
@@ -22,12 +26,12 @@ public class Main {
 
         server.setPlayers(players);
 
-        game.setPlayerA(server.getPlayers()[0]);
-        game.setPlayerB(server.getPlayers()[1]);
+        game.setPlayerA(server.getPlayers()[playerA]);
+        game.setPlayerB(server.getPlayers()[playerB]);
 
-        server.getPlayers()[0].receiveStartCards(server.dealCards(server.PLAYER_A));
-        server.getPlayers()[1].receiveStartCards(server.dealCards(server.PLAYER_B));
-        players[0].receiveCard(server.dealCard(server.getTurn()));
+        server.getPlayers()[playerA].receiveStartCards(server.dealCards(server.PLAYER_A));
+        server.getPlayers()[playerB].receiveStartCards(server.dealCards(server.PLAYER_B));
+        players[playerA].receiveCard(server.dealCard(server.getTurn()));
         //endregion
         printMenu();
     }
@@ -38,12 +42,12 @@ public class Main {
         do {
             printBoard();
             System.out.println("---------- MENU ----------");
-            if(server.getTurn() == server.PLAYER_A && server.getPlayers()[server.PLAYER_A].getHand().size() > 0
-                    || server.getTurn() == server.PLAYER_B && server.getPlayers()[server.PLAYER_B].getHand().size() > 0 ) {
+            if(server.getTurn() == playerA && server.getPlayers()[playerA].getHand().size() > 0
+                    || server.getTurn() == playerB && server.getPlayers()[playerB].getHand().size() > 0 ) {
                 System.out.println("1) Place card");
             }
-            if(server.getRound() > 1 && server.getTurn() == server.PLAYER_A && server.getPlayerATableCards().size() > 0
-                    || server.getRound() > 1 && server.getTurn() == server.PLAYER_B && server.getPlayerBTableCards().size() > 0) {
+            if(server.getRound() > 1 && server.getTurn() == playerA && server.getPlayerATableCards().size() > 0
+                    || server.getRound() > 1 && server.getTurn() == playerB && server.getPlayerBTableCards().size() > 0) {
                 System.out.println("2) Attack");
             }
             System.out.println("3) End turn");
@@ -58,14 +62,14 @@ public class Main {
     public static void checkChoice(int choice) {
         switch (choice) {
             case 1:
-                if(server.getTurn() == server.PLAYER_A && server.getPlayers()[server.PLAYER_A].getHand().size() > 0
-                        || server.getTurn() == server.PLAYER_B && server.getPlayers()[server.PLAYER_B].getHand().size() > 0 ) {
+                if(server.getTurn() == playerA && server.getPlayers()[playerA].getHand().size() > 0
+                        || server.getTurn() == playerB && server.getPlayers()[playerB].getHand().size() > 0 ) {
                     printCaseOne();
                 }
                 break;
             case 2:
-                if(server.getTurn() == server.PLAYER_A && server.getPlayerATableCards().size() > 0
-                        || server.getTurn() == server.PLAYER_B && server.getPlayerBTableCards().size() > 0 ) {
+                if(server.getTurn() == playerA && server.getPlayerATableCards().size() > 0
+                        || server.getTurn() == playerB && server.getPlayerBTableCards().size() > 0 ) {
                     printCaseTwo();
                 }
                 break;
@@ -82,31 +86,53 @@ public class Main {
 
     private static void printCaseOne() {
 
-        String message;
-        String cardName;
+//        String message;
+//        String cardName;
         System.out.println("---------- PLACE CARD ----------");
-        if (server.getTurn() == server.PLAYER_A) {
-            for (int i = 0; i < players[server.PLAYER_A].getHand().size() ; i++) {
-                System.out.println((i + 1) + ") " + players[server.PLAYER_A].getHand().get(i).getName());
-
-            }
-            choice = sc.nextInt() - 1;
-            cardName = players[server.PLAYER_A].getHand().get(choice).getName();
-            players[server.PLAYER_A].placeCard(choice);
-            message = server.getCommand();
+        if (server.getTurn() == playerA) {
+            placeCard(playerA);
+//            for (int i = 0; i < players[playerA].getHand().size() ; i++) {
+//                System.out.println((i + 1) + ") " + players[playerA].getHand().get(i).getName());
+//
+//            }
+//            choice = sc.nextInt() - 1;
+//            cardName = players[playerA].getHand().get(choice).getName();
+//            players[playerA].placeCard(choice);
+//            message = server.getCommand();
         } else {
-            for (int i = 0; i < players[server.PLAYER_B].getHand().size() ; i++) {
-                System.out.println((i + 1) + ") " + players[server.PLAYER_B].getHand().get(i).getName());
-            }
-            choice = sc.nextInt() - 1;
-            cardName = players[server.PLAYER_B].getHand().get(choice).getName();
-            players[server.PLAYER_B].placeCard(choice);
-            message = server.getCommand();
+            placeCard(playerB);
+//            for (int i = 0; i < players[playerB].getHand().size() ; i++) {
+//                System.out.println((i + 1) + ") " + players[playerB].getHand().get(i).getName());
+//            }
+//            choice = sc.nextInt() - 1;
+//            cardName = players[playerB].getHand().get(choice).getName();
+//            players[playerB].placeCard(choice);
+//            message = server.getCommand();
 
         }
+//        System.out.println("---------- *********** ----------");
+//        //TODO Place card in next available spot
+//
+//        if (message.equals("SUCCESS")) {
+//            System.out.println("You placed card: " + cardName);
+//        } else {
+//            System.out.println("There is no more room to place your card");
+//        }
+    }
+    
+    private static void placeCard(int player) {
+        String cardName;
+        String message;
+        for(int i = 0; i < players[player].getHand().size(); ++i) {
+            System.out.println((i + 1) + ") " + players[player].getHand().get(i).getName());
+        }
+        choice = sc.nextInt() - 1;
+        cardName = players[player].getHand().get(choice).getName();
+        players[player].placeCard(choice);
+        message = server.getCommand();
+    
         System.out.println("---------- *********** ----------");
-        //TODO Place card in next available spot
-
+    
         if (message.equals("SUCCESS")) {
             System.out.println("You placed card: " + cardName);
         } else {
@@ -117,7 +143,7 @@ public class Main {
     private static void printCaseTwo() {
         String cardName;
         System.out.println("---------- ATTACK WITH CARD ----------");
-        if (server.getTurn() == server.PLAYER_A && server.getRound() > 1) {
+        if (server.getTurn() == playerA && server.getRound() > 1) {
             for (int i = 0; i < server.getPlayerATableCards().size(); i++) {
                 if(server.getPlayerATableCards().get(i).getIsConsumed() == false) {
                     System.out.println((i + 1) + ") " + server.getPlayerATableCards().get(i).getName() + " HP: " + ((BasicCreatureCard) server.getPlayerATableCards().get(i)).getHealth());
@@ -138,7 +164,7 @@ public class Main {
             }
 
 
-        } else if (server.getTurn() == server.PLAYER_B && server.getRound() > 1) {
+        } else if (server.getTurn() == playerB && server.getRound() > 1) {
             for (int i = 0; i < server.getPlayerBTableCards().size(); i++) {
                 if(server.getPlayerBTableCards().get(i).getIsConsumed() == false) {
                     System.out.println((i + 1) + ") " + server.getPlayerBTableCards().get(i).getName() + " HP: " + ((BasicCreatureCard) server.getPlayerBTableCards().get(i)).getHealth());
@@ -162,7 +188,7 @@ public class Main {
     }
     
     private static void printAttackDestination(int choice, String cardName) {
-        if(server.getTurn() == server.PLAYER_A) {
+        if(server.getTurn() == playerA) {
             if(server.getPlayerBTableCards().size() > 0) {
                 printEnemyCards(choice, cardName);
             } else if(server.getPlayerBTableCards().size() == 0 && server.getRound() > 1) {
@@ -180,20 +206,20 @@ public class Main {
     private static void printAttackPlayer(int choice, String cardName) {
         int attackPlayer = 0;
         System.out.println("------------- ATTACK PLAYER ------------");
-        if(server.getTurn() == server.PLAYER_A) {
-            System.out.printf("1) %s \n", players[server.PLAYER_B].getName());
+        if(server.getTurn() == playerA) {
+            System.out.printf("1) %s \n", players[playerB].getName());
             attackPlayer = sc.nextInt();
-            System.out.printf("Player %s attacked with %s on player %s\n", players[server.PLAYER_A].getName(), cardName, players[server.PLAYER_B].getName());
-            players[server.PLAYER_A].attackPlayer(choice);
+            System.out.printf("Player %s attacked with %s on player %s\n", players[playerA].getName(), cardName, players[playerB].getName());
+            players[playerA].attackPlayer(choice);
         } else {
-            System.out.printf("1) %s \n", players[server.PLAYER_A].getName());
+            System.out.printf("1) %s \n", players[playerA].getName());
             attackPlayer = sc.nextInt();
-            System.out.printf("Player %s attacked with %s on player %s\n", players[server.PLAYER_B].getName(), cardName, players[server.PLAYER_A].getName());
-            players[server.PLAYER_B].attackPlayer(choice);
+            System.out.printf("Player %s attacked with %s on player %s\n", players[playerB].getName(), cardName, players[playerA].getName());
+            players[playerB].attackPlayer(choice);
         }
         
         if(server.getCommand().equals("DEAD")) {
-            players[0].quitGame();
+            players[playerA].quitGame();
         }
     }
 
@@ -201,18 +227,18 @@ public class Main {
         System.out.println("---------- END TURN ----------");
         System.out.println("TURN " + server.getTurn());
         System.out.println("ROUND " +server.getRound());
-        if(server.getTurn() == server.PLAYER_A && server.getPlayerADeck().size() == 0){
+        if(server.getTurn() == playerA && server.getPlayerADeck().size() == 0){
             System.out.println("************GAME OVER***********");
             server.quitGame();
-        }else if(server.getTurn() == server.PLAYER_B && server.getPlayerBDeck().size() == 0){
+        }else if(server.getTurn() == playerB && server.getPlayerBDeck().size() == 0){
             System.out.println("************GAME OVER***********");
             server.quitGame();
         }
         server.endTurn();
         if(server.getTurn() == 0) {
-            players[0].receiveCard(server.dealCard(server.getTurn()));
+            players[playerA].receiveCard(server.dealCard(server.getTurn()));
         } else {
-            players[1].receiveCard(server.dealCard(server.getTurn()));
+            players[playerB].receiveCard(server.dealCard(server.getTurn()));
         }
         System.out.println("TURN " +server.getTurn());
         System.out.println("ROUND " +server.getRound());
@@ -227,13 +253,13 @@ public class Main {
         String enemyCardName;
         int enemyChoice;
         System.out.println("---------- ATTACK ENEMY CARD ----------");
-        if (server.getTurn() == server.PLAYER_A) {
+        if (server.getTurn() == playerA) {
             for (int i = 0; i < server.getPlayerBTableCards().size(); i++) {
                 System.out.println((i + 1) + ") " + server.getPlayerBTableCards().get(i).getName() + " HP: " + ((BasicCreatureCard)server.getPlayerBTableCards().get(i)).getHealth());
             }
             enemyChoice = sc.nextInt() - 1;
             enemyCardName = server.getPlayerBTableCards().get(choice).getName();
-            players[server.PLAYER_A].attackCreature(choice, enemyChoice);
+            players[playerA].attackCreature(choice, enemyChoice);
             printAttackResults(cardName, enemyCardName);
 
         } else {
@@ -242,7 +268,7 @@ public class Main {
             }
             enemyChoice = sc.nextInt() - 1;
             enemyCardName = server.getPlayerATableCards().get(choice).getName();
-            players[server.PLAYER_B].attackCreature(choice, enemyChoice);
+            players[playerB].attackCreature(choice, enemyChoice);
             printAttackResults(cardName, enemyCardName);
 
         }
@@ -251,36 +277,39 @@ public class Main {
     }
 
     public static void printAttackResults(String attackingCardName, String defendingCardName) {
-        if(server.getTurn() == server.PLAYER_A){
-            if (server.getCommand().substring(8, 9).startsWith("A")) {
-                if(server.getCommand().substring(10).startsWith("SUCCESS")){
+        int aliveStart = 8;
+        int aliveEnd = 9;
+        int successOrFail = 10;
+        if(server.getTurn() == playerA){
+            if (server.getCommand().substring(aliveStart, aliveEnd).startsWith("A")) {
+                if(server.getCommand().substring(successOrFail).startsWith("SUCCESS")){
                     System.out.println("Player A successfully attacked Enemy card " + defendingCardName + " with card " + attackingCardName + ", but " + defendingCardName + " is still alive");
-                } else if (server.getCommand().substring(10).startsWith("FAIL")){
+                } else if (server.getCommand().substring(successOrFail).startsWith("FAIL")){
                     System.out.println("Player A lost against Enemy card " + defendingCardName + " with card " + attackingCardName + ", but " + attackingCardName + " is still alive");
                 }
 
-            } else if (server.getCommand().substring(8, 9).startsWith("D")) {
-                if(server.getCommand().substring(10).startsWith("SUCCESS")){
+            } else if (server.getCommand().substring(aliveStart, aliveEnd).startsWith("D")) {
+                if(server.getCommand().substring(successOrFail).startsWith("SUCCESS")){
                     System.out.println("Player A successfully attacked Enemy card " + defendingCardName + " with card " + attackingCardName + " and " + defendingCardName + " died");
-                } else if (server.getCommand().substring(10).startsWith("FAIL")){
+                } else if (server.getCommand().substring(successOrFail).startsWith("FAIL")){
                     System.out.println("Player A lost against Enemy card " + defendingCardName + " with card " + attackingCardName + " and " + attackingCardName + " died");
 
                 }
 
             }
         } else {
-            if (server.getCommand().substring(8, 9).startsWith("A")) {
-                if(server.getCommand().substring(10).startsWith("SUCCESS")){
+            if (server.getCommand().substring(aliveStart, aliveEnd).startsWith("A")) {
+                if(server.getCommand().substring(successOrFail).startsWith("SUCCESS")){
                     System.out.println("Player B successfully attacked Enemy card " + defendingCardName + " with card " + attackingCardName + ", but " + defendingCardName + " is still alive");
-                } else if (server.getCommand().substring(10).startsWith("FAIL")){
+                } else if (server.getCommand().substring(successOrFail).startsWith("FAIL")){
                     System.out.println("Player B lost against Enemy card " + defendingCardName + " with card " + attackingCardName + ", but " + attackingCardName + " is still alive");
                 }
 
-            } else if (server.getCommand().substring(8, 9).startsWith("D")) {
-                if(server.getCommand().substring(10).startsWith("SUCCESS")){
+            } else if (server.getCommand().substring(aliveStart, aliveEnd).startsWith("D")) {
+                if(server.getCommand().substring(successOrFail).startsWith("SUCCESS")){
                     System.out.println("Player B successfully attacked Enemy card " + defendingCardName + " with card " + attackingCardName + " and " + defendingCardName + " died");
 
-                } else if (server.getCommand().substring(10).startsWith("FAIL")){
+                } else if (server.getCommand().substring(successOrFail).startsWith("FAIL")){
                     System.out.println("Player B lost against Enemy card " + defendingCardName + " with card " + attackingCardName + " and " + attackingCardName + " died");
 
                 }
@@ -292,11 +321,11 @@ public class Main {
     
     private static void printBoard() {
         System.out.println("**************************************");
-        System.out.println(String.format("%s - HP: %s \t\t| %s - HP: %s",
-                players[0].getName(), players[0].getHealth(),
-                players[1].getName(), players[1].getHealth()));
+        System.out.printf("%s - HP: %s \t\t| %s - HP: %s\n",
+                players[playerA].getName(), players[playerA].getHealth(),
+                players[playerB].getName(), players[playerB].getHealth());
         System.out.println("--------------------------------------");
-        for(int i = 0; i < 5; ++i) {
+        for(int i = 0; i < game.getPlayerATableCards().size(); ++i) {
             String finalString = "";
             if(game.getPlayerATableCards().size() - 1 >= i) {
                 finalString = String.format("%-12s HP: %s \t| ", game.getPlayerATableCards().get(i).getName(), ((BasicCreatureCard)game.getPlayerATableCards().get(i)).getHealth());
