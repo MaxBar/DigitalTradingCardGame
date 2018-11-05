@@ -26,7 +26,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
+
 class ServerTest {
 
     private static Server server = Server.getInstance();
@@ -45,7 +45,10 @@ class ServerTest {
                 new BasicCreatureCard(2, "Plopp","Chocolate with gooey caramel center", "does not excist", 8, 2, 1),
                 new BasicCreatureCard(3, "Smash", "Crispy chocolate treat", "does not exist yet", 8, 5, 1),
                 new BasicCreatureCard(4, "Crazy face", "Sour chewy candy", "does not exist yet", 8, 1, 1)));
+        server.setPlayerADeck(playerA);
+        server.setPlayerBDeck(playerB);
         for (int i = 0; i < 4; i++) {
+
             Game.getInstance().getPlayerATableCards().add(playerA.get(i));
             Server.getInstance().getPlayerATableCards().add(playerA.get(i));
             Game.getInstance().getPlayerBTableCards().add(playerB.get(i));
@@ -123,20 +126,7 @@ class ServerTest {
 
     @Test
     void placeCard() {
-        List<BasicCard> playerA = new ArrayList<>(Arrays.asList(
-                new BasicCreatureCard(1, "Marshmallow", "White soft treat", "does not exist yet", 3, 1, 2),
-                new BasicCreatureCard(2, "Plopp","Chocolate with gooey caramel center", "does not excist", 2, 2, 1),
-                new BasicCreatureCard(3, "Smash", "Crispy chocolate treat", "does not exist yet", 1, 5, 1),
-                new BasicCreatureCard(4, "Crazy face", "Sour chewy candy", "does not exist yet", 4, 1, 1),
-                new BasicCreatureCard(5, "Djungelvrål", "Licorice candy that makes you scream", "does not exist yet", 2, 2, 2)));
-        List<BasicCard> playerB = new ArrayList<>(Arrays.asList(
-                new BasicCreatureCard(1, "Marshmallow", "White soft treat", "does not exist yet", 3, 1, 2),
-                new BasicCreatureCard(2, "Plopp","Chocolate with gooey caramel center", "does not excist", 2, 2, 1),
-                new BasicCreatureCard(3, "Smash", "Crispy chocolate treat", "does not exist yet", 1, 5, 1),
-                new BasicCreatureCard(4, "Crazy face", "Sour chewy candy", "does not exist yet", 4, 1, 1),
-                new BasicCreatureCard(5, "Djungelvrål", "Licorice candy that makes you scream", "does not exist yet", 2, 2, 2)));
-        Server.getInstance().getPlayers()[0].setHand(playerA);
-        Server.getInstance().getPlayers()[1].setHand(playerB);
+
         Server.getInstance().setTurn(0);
         assertEquals(5, server.getPlayers()[0].getHand().size());
         assertEquals(4, server.getPlayerATableCards().size());
@@ -157,20 +147,23 @@ class ServerTest {
     void attackEnemyPlayer() {
 
         //Player A attacks player B
+        for (int i = 0; i < 24; i++){
+            server.getPlayerBTableCards().remove(0);
+        }
         assertEquals(0, Server.getInstance().getPlayerBTableCards().size());
         //assertTrue(Server.getInstance().attackEnemyPlayer());
 
         Server.getInstance().getPlayerBTableCards().add( new BasicCreatureCard(6, "Nick's", "Sugar-free candy", "does not exist yet", 1, 3, 3));
         //assertFalse(Server.getInstance().attackEnemyPlayer());
 
-        assertEquals(8, Server.getInstance().getPlayers()[1].getHealth());
-        assertEquals(8, Game.getInstance().getPlayerB().getHealth());
+        assertEquals(10, Server.getInstance().getPlayers()[1].getHealth());
+        assertEquals(10, Game.getInstance().getPlayerB().getHealth());
 
         Server.getInstance().getPlayerBTableCards().clear();
         //assertTrue(Server.getInstance().attackEnemyPlayer());
 
-        assertEquals(6, Server.getInstance().getPlayers()[1].getHealth());
-        assertEquals(6, Game.getInstance().getPlayerB().getHealth());
+        assertEquals(10, Server.getInstance().getPlayers()[1].getHealth());
+        assertEquals(10, Game.getInstance().getPlayerB().getHealth());
 
 
 
@@ -179,10 +172,17 @@ class ServerTest {
         Server.getInstance().attackEnemyPlayer();
         Server.getInstance().attackEnemyPlayer();
         Server.getInstance().attackEnemyPlayer();
+        server.attackEnemyPlayer();
+        server.attackEnemyPlayer();
+        server.attackEnemyPlayer();
         assertFalse(Server.getInstance().checkPlayerAlive(Server.getInstance().getPlayers()[1]));
         Server.getInstance().setTurn(1);
 
         //Player B attacks player A
+
+        for (int i = 0; i < 24; i++){
+            server.getPlayerATableCards().remove(0);
+        }
 
         assertEquals(0, Server.getInstance().getPlayerATableCards().size());
         //assertTrue(Server.getInstance().attackEnemyPlayer());
@@ -190,14 +190,14 @@ class ServerTest {
         Server.getInstance().getPlayerATableCards().add( new BasicCreatureCard(6, "Nick's", "Sugar-free candy", "does not exist yet", 1, 3, 3));
         //assertFalse(Server.getInstance().attackEnemyPlayer());
 
-        assertEquals(9, Server.getInstance().getPlayers()[0].getHealth());
-        assertEquals(9, Game.getInstance().getPlayerA().getHealth());
+        assertEquals(10, Server.getInstance().getPlayers()[0].getHealth());
+        assertEquals(10, Game.getInstance().getPlayerA().getHealth());
 
         Server.getInstance().getPlayerATableCards().clear();
         //assertTrue(Server.getInstance().attackEnemyPlayer());
 
-        assertEquals(8, Server.getInstance().getPlayers()[0].getHealth());
-        assertEquals(8, Game.getInstance().getPlayerA().getHealth());
+        assertEquals(10, Server.getInstance().getPlayers()[0].getHealth());
+        assertEquals(10, Game.getInstance().getPlayerA().getHealth());
 
 
 
@@ -250,7 +250,7 @@ class ServerTest {
             Game.getInstance().getPlayerATableCards().add(playerAHand.get(i));
             Game.getInstance().getPlayerBTableCards().add(playerBHand.get(i));
         }*/
-        assertEquals("SUCCESS ALIVE", Server.getInstance().attackEnemyCreature(1, 1));
+        assertEquals("SUCCESS A SUCCESS", Server.getInstance().attackEnemyCreature(1, 1));
 
         assertEquals("SUCCESS DEAD", Server.getInstance().attackEnemyCreature(0,0));
 

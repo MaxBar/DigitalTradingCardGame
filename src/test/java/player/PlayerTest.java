@@ -25,14 +25,10 @@ class PlayerTest {
     @Test
     void receiveCardTest() {
         DummyDB db = new DummyDB();
-
-
-        int id = 1;
-        for (BasicCard card: db.database) {
-            if(id == card.getId()){
-                hand.add(card);
-            }
+        for (int i = 0; i < 1; i++){
+            hand.add(db.database.get(0));
         }
+
 
         assertEquals(1, hand.size());
 
@@ -40,5 +36,10 @@ class PlayerTest {
 
     @Test
     void receiveStartCardsTest() {
+        for( int i = 0; i <= 5; i++){
+            player.receiveCard(i);
+        }
+
+        assertEquals(5, player.getHand().size());
     }
 }
