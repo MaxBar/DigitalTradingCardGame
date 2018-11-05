@@ -5,6 +5,7 @@ import card.BasicCreatureCard;
 import player.Player;
 import server.Server;
 
+import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class Main {
@@ -118,20 +119,43 @@ public class Main {
         System.out.println("---------- ATTACK WITH CARD ----------");
         if (server.getTurn() == server.PLAYER_A && server.getRound() > 1) {
             for (int i = 0; i < server.getPlayerATableCards().size(); i++) {
-                System.out.println((i + 1) + ") " + server.getPlayerATableCards().get(i).getName() + " HP: " + ((BasicCreatureCard)server.getPlayerATableCards().get(i)).getHealth());
+                if(server.getPlayerATableCards().get(i).getIsConsumed() == false) {
+                    System.out.println((i + 1) + ") " + server.getPlayerATableCards().get(i).getName() + " HP: " + ((BasicCreatureCard) server.getPlayerATableCards().get(i)).getHealth());
+                }
+
             }
+            System.out.println("9) BACK");
             choice = sc.nextInt() - 1;
-            cardName = server.getPlayerATableCards().get(choice).getName();
-            printAttackDestination(choice, cardName);
+            if(choice !=8) {
+                cardName = server.getPlayerATableCards().get(choice).getName();
+                if (!server.getPlayerATableCards().get(choice).getIsConsumed()) {
+                    printAttackDestination(choice, cardName);
+                    server.getPlayerATableCards().get(choice).setIsConsumed(true);
+                }
+            }
+            if(choice == 8) {
+              printMenu();
+            }
+
 
         } else if (server.getTurn() == server.PLAYER_B && server.getRound() > 1) {
             for (int i = 0; i < server.getPlayerBTableCards().size(); i++) {
-                System.out.println((i + 1) + ") " + server.getPlayerBTableCards().get(i).getName() + " HP: " + ((BasicCreatureCard)server.getPlayerBTableCards().get(i)).getHealth());
+                if(server.getPlayerBTableCards().get(i).getIsConsumed() == false) {
+                    System.out.println((i + 1) + ") " + server.getPlayerBTableCards().get(i).getName() + " HP: " + ((BasicCreatureCard) server.getPlayerBTableCards().get(i)).getHealth());
+                }
             }
+            System.out.println("9) BACK");
             choice = sc.nextInt() - 1;
-            cardName = server.getPlayerBTableCards().get(choice).getName();
-            printAttackDestination(choice, cardName);
-
+            if(choice == 8) {
+                printMenu();
+            }
+            if(choice !=8) {
+                cardName = server.getPlayerBTableCards().get(choice).getName();
+                if (!server.getPlayerBTableCards().get(choice).getIsConsumed()) {
+                    printAttackDestination(choice, cardName);
+                    server.getPlayerBTableCards().get(choice).setIsConsumed(true);
+                }
+            }
         }
         System.out.println("---------- *********** ----------");
 

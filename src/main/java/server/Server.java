@@ -369,9 +369,16 @@ public class Server {
 
     public void endTurn() {
         if (turn == 0) {
+            for (int i = 0; i < server.getPlayerATableCards().size() ; i++) {
+                server.getPlayerATableCards().get(i).setIsConsumed(false);
+            }
             turn = 1;
+
         }
         else {
+            for (int i = 0; i < server.getPlayerBTableCards().size() ; i++) {
+                server.getPlayerBTableCards().get(i).setIsConsumed(false);
+            }
             turn = 0;
             round++;
         }
