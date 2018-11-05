@@ -1,6 +1,25 @@
 # Compiled class file
 *.class
 
+#ios support#
+.DS_Store
+.AppleDoubble
+.LSOverride
+.AppleDB
+.AppleDesktop
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Mac
+.DS_Store
+
+# Maven
+log/
+target/
+
 # Log file
 *.log
 
