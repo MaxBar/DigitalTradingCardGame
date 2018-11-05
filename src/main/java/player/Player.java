@@ -16,6 +16,7 @@ public class Player {
     private int health;
     private int mana = 2;
     private List<BasicCard> hand;
+    private Server server = Server.getInstance();
     //private Server server = new Server();
 
     public Player(int id, String name, int mana) {
@@ -102,15 +103,15 @@ public class Player {
     }
 
     public void placeCard(int handIndex){
-        Server.getInstance().receiveCommand("PLACE_CARD " + handIndex);
+        server.receiveCommand("PLACE_CARD " + handIndex);
     }
 
     public void attackCreature(int friendlyBoardIndex, int enemyBoardIndex){
-        Server.getInstance().receiveCommand("ATTACK " + friendlyBoardIndex + " ON ENEMY_CREATURE " + enemyBoardIndex);
+        server.receiveCommand("ATTACK " + friendlyBoardIndex + " ON ENEMY_CREATURE " + enemyBoardIndex);
     }
 
     public void attackPlayer(int friendlyBoardIndex) {
-        Server.getInstance().receiveCommand("ATTACK " + friendlyBoardIndex + " ON ENEMY_PLAYER");
+        server.receiveCommand("ATTACK " + friendlyBoardIndex + " ON ENEMY_PLAYER");
     }
 
     public int randomizeCreatureHp() {
@@ -118,10 +119,10 @@ public class Player {
     }
 
     public void finishTurn() {
-        Server.getInstance().receiveCommand("END_TURN");
+        server.receiveCommand("END_TURN");
     }
 
     public void quitGame() {
-        Server.getInstance().receiveCommand("QUIT_GAME");
+        server.receiveCommand("QUIT_GAME");
     }
 }
