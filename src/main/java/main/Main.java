@@ -155,8 +155,8 @@ public class Main {
             if(choice !=8) {
                 cardName = server.getPlayerATableCards().get(choice).getName();
                 if (!server.getPlayerATableCards().get(choice).getIsConsumed()) {
-                    printAttackDestination(choice, cardName);
                     server.getPlayerATableCards().get(choice).setIsConsumed(true);
+                    printAttackDestination(choice, cardName);
                 }
             }
             if(choice == 8) {
@@ -178,8 +178,8 @@ public class Main {
             if(choice !=8) {
                 cardName = server.getPlayerBTableCards().get(choice).getName();
                 if (!server.getPlayerBTableCards().get(choice).getIsConsumed()) {
-                    printAttackDestination(choice, cardName);
                     server.getPlayerBTableCards().get(choice).setIsConsumed(true);
+                    printAttackDestination(choice, cardName);
                 }
             }
         }
@@ -258,7 +258,7 @@ public class Main {
                 System.out.println((i + 1) + ") " + server.getPlayerBTableCards().get(i).getName() + " HP: " + ((BasicCreatureCard)server.getPlayerBTableCards().get(i)).getHealth());
             }
             enemyChoice = sc.nextInt() - 1;
-            enemyCardName = server.getPlayerBTableCards().get(choice).getName();
+            enemyCardName = server.getPlayerBTableCards().get(enemyChoice).getName();
             players[playerA].attackCreature(choice, enemyChoice);
             printAttackResults(cardName, enemyCardName);
 
@@ -267,7 +267,7 @@ public class Main {
                 System.out.println((i + 1) + ") " + server.getPlayerATableCards().get(i).getName() + " HP: " + ((BasicCreatureCard)server.getPlayerATableCards().get(i)).getHealth());
             }
             enemyChoice = sc.nextInt() - 1;
-            enemyCardName = server.getPlayerATableCards().get(choice).getName();
+            enemyCardName = server.getPlayerATableCards().get(enemyChoice).getName();
             players[playerB].attackCreature(choice, enemyChoice);
             printAttackResults(cardName, enemyCardName);
 
