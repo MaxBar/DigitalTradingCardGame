@@ -9,6 +9,7 @@ import java.lang.reflect.Array;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Server {
@@ -65,6 +66,8 @@ public class Server {
         );
         game.setPlayerADeck(playerADeck.size());
         game.setPlayerBDeck(playerBDeck.size());
+        shuffleDeck(playerADeck);
+        shuffleDeck(playerBDeck);
 
     }
     
@@ -389,6 +392,10 @@ public class Server {
 
             round++;
         }
+    }
+
+    public void shuffleDeck(List<BasicCard> deck) {
+        Collections.shuffle(deck);
     }
 
     public void quitGame() {

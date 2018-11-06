@@ -320,12 +320,13 @@ public class Main {
     }
     
     private static void printBoard() {
+        int tableSize = 5;
         System.out.println("**************************************");
         System.out.printf("%s - HP: %s \t\t| %s - HP: %s\n",
                 players[playerA].getName(), players[playerA].getHealth(),
                 players[playerB].getName(), players[playerB].getHealth());
         System.out.println("--------------------------------------");
-        for(int i = 0; i < game.getPlayerATableCards().size(); ++i) {
+        for(int i = 0; i < tableSize; ++i) {
             String finalString = "";
             if(game.getPlayerATableCards().size() - 1 >= i) {
                 finalString = String.format("%-12s HP: %s \t| ", game.getPlayerATableCards().get(i).getName(), ((BasicCreatureCard)game.getPlayerATableCards().get(i)).getHealth());
