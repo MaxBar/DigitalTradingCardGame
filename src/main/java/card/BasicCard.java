@@ -36,4 +36,12 @@ public class BasicCard {
     public boolean getIsConsumed() { return isConsumed;   }
 
     public void setIsConsumed(boolean isConsumed) { this.isConsumed = isConsumed; }
+
+    public int getManaCost() {
+        return manaCost;
+    }
+
+    public void setManaCost(int manaCost) {
+        this.manaCost = manaCost;
+    }
 }
