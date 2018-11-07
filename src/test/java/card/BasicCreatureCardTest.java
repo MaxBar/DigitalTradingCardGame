@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BasicCreatureCardTest {
-    BasicCreatureCard card = new BasicCreatureCard(10,"Plopp","Chocolate with gooey caramel center", "does not excist", 2, 4,1);
+    BasicCreatureCard card = new BasicCreatureCard(10,"Plopp","Chocolate with gooey caramel center", "does not excist", 2, 4,1,1,2);
 
     @Test
     void getHealth() {

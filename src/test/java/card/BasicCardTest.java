@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BasicCardTest {
-    BasicCard card = new BasicCard(12, "Marshmallow", "White soft treat", "does not exist yet");
+    BasicCard card = new BasicCard(12, "Marshmallow", "White soft treat", "does not exist yet",1);
 
     @Test
     void getId() {
