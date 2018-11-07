@@ -403,6 +403,7 @@ public class Server {
 
     public void shuffleDeck(List<BasicCard> deck) {
         Collections.shuffle(deck);
+
     }
 
     public void quitGame() {
