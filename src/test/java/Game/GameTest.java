@@ -21,8 +21,8 @@ class GameTest {
     
     @BeforeEach
     void setUp() {
-        BasicCreatureCard card1 = new BasicCreatureCard(1, "Hallon", "hej", "qwerty", 5, 5, 5);
-        BasicCreatureCard card2 = new BasicCreatureCard(2, "Saft", "då", "asdf", 1, 1, 1);
+        BasicCreatureCard card1 = new BasicCreatureCard(1, "Hallon", "hej", "qwerty", 5, 5, 5,1,2);
+        BasicCreatureCard card2 = new BasicCreatureCard(2, "Saft", "då", "asdf", 1, 1, 1,1,2);
         playerTableCards.add(card1);
         playerTableCards.add(card2);
     }
