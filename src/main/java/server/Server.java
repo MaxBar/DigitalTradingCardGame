@@ -219,6 +219,7 @@ public class Server {
            if(players[PLAYER_A].getMana() > card.getManaCost()) {
                 players[PLAYER_A].setMana(players[PLAYER_A].getMana());
 
+
                 players[PLAYER_A].getHand().remove(index);
                 playerATableCards.add(card);
                 randomizeCreatureHp(index);
