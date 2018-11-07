@@ -219,7 +219,6 @@ public class Server {
            if(players[PLAYER_A].getMana() > card.getManaCost()) {
                 players[PLAYER_A].setMana(players[PLAYER_A].getMana());
 
-
                 players[PLAYER_A].getHand().remove(index);
                 playerATableCards.add(card);
                 randomizeCreatureHp(index);
@@ -231,11 +230,18 @@ public class Server {
             }
         } else if (turn == PLAYER_B && playerBTableCards.size() != maxTableSize){
             BasicCard card = players[PLAYER_B].getHand().get(index);
-            players[PLAYER_B].getHand().remove(index);
-            playerBTableCards.add(card);
-            randomizeCreatureHp(index);
-            game.getPlayerBTableCards().add(card);
-            return "SUCCESS";
+            if(players[PLAYER_B].getMana() > card.getManaCost()) {
+                players[PLAYER_B].setMana(players[PLAYER_B].getMana());
+
+                players[PLAYER_B].getHand().remove(index);
+                playerBTableCards.add(card);
+                randomizeCreatureHp(index);
+                game.getPlayerBTableCards().add(card);
+                return "SUCCESS";
+            }
+            else {
+                return "";
+            }
         }
         return "FAIL";
     }
