@@ -22,7 +22,7 @@ public class Player {
     public Player(int id, String name, int mana) {
         this.id = id;
         this.name = name;
-        this.health = 10;
+        this.health = 20;
         this.mana = mana;
         this.hand = new ArrayList<>();
         //this.server = new Server();
