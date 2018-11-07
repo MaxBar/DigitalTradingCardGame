@@ -35,6 +35,11 @@ class ServerTest {
 
     @BeforeEach
     void setUp() {
+        List<BasicCard> playerADeck = new ArrayList<>(Arrays.asList(
+                new BasicCreatureCard(1, "Marshmallow", "White soft treat", "does not exist yet", 1, 1, 2),
+                new BasicCreatureCard(2, "Plopp","Chocolate with gooey caramel center", "does not excist", 8, 2, 1),
+                new BasicCreatureCard(3, "Smash", "Crispy chocolate treat", "does not exist yet", 1, 5, 1),
+                new BasicCreatureCard(4, "Crazy face", "Sour chewy candy", "does not exist yet", 1, 1, 1)));
         List<BasicCard> playerA = new ArrayList<>(Arrays.asList(
                 new BasicCreatureCard(1, "Marshmallow", "White soft treat", "does not exist yet", 1, 1, 2),
                 new BasicCreatureCard(2, "Plopp","Chocolate with gooey caramel center", "does not excist", 8, 2, 1),
@@ -48,7 +53,7 @@ class ServerTest {
         server.setPlayerADeck(playerA);
         server.setPlayerBDeck(playerB);
         for (int i = 0; i < 4; i++) {
-
+            Server.getInstance().getPlayerADeck().add(playerADeck.get(i));
             Game.getInstance().getPlayerATableCards().add(playerA.get(i));
             Server.getInstance().getPlayerATableCards().add(playerA.get(i));
             Game.getInstance().getPlayerBTableCards().add(playerB.get(i));
@@ -347,5 +352,21 @@ class ServerTest {
 
     @Test
     void quitGame() {
+    }
+
+    @Test
+    void shuffleDeck() {
+        // Create more cards for further testing
+        int testPassed = 0;
+        for (int i = 0; i < 100000; i++) {
+            String A = Server.getInstance().getPlayerADeck().toString();
+            Server.getInstance().shuffleDeck(Server.getInstance().getPlayerADeck());
+            String B = Server.getInstance().getPlayerADeck().toString();
+            testPassed += !A.equals(B) ? 1 : 0;
+
+        }
+        // Increase number passed when you got more cards
+        assertTrue(testPassed > 99995,testPassed + "");
+
     }
 }
