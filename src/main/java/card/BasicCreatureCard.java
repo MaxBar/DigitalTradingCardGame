@@ -4,14 +4,16 @@ public class BasicCreatureCard extends BasicCard {
     private int health;
     private int attack;
     private int defense;
+    private int creatureClass;
 
 
 
-    public BasicCreatureCard(int id, String name, String flavourText, String image, int health, int attack, int defense) {
-        super(id, name, flavourText, image);
+    public BasicCreatureCard(int id, String name, String flavourText, String image, int manaCost, int health, int attack, int defense, int creatureClass) {
+        super(id, name, flavourText, image, manaCost);
         this.health = health;
         this.attack = attack;
         this.defense = defense;
+        this.creatureClass = creatureClass;
     }
 
     public int getHealth() {
@@ -38,6 +40,21 @@ public class BasicCreatureCard extends BasicCard {
         this.defense = defense;
     }
 
+    public EClass getCreatureClass() {
+
+        if(creatureClass == 0){
+            return EClass.MELEE ;
+        }else if(creatureClass == 1){
+            return EClass.RANGE;
+        }else{
+            return EClass.SUPPORT;
+        }
+
+    }
+
+    public void setCreatureClass(int creatureClass) {
+        this.creatureClass = creatureClass;
+    }
 
 
 }
