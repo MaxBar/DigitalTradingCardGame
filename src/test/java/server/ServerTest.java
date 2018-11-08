@@ -31,7 +31,7 @@ class ServerTest {
 
     private static Server server = Server.getInstance();
     private static Game game = Game.getInstance();
-    private static Player[] players = {new Player(1,"Johan",1), new Player(2,"Linn",1)};
+    private static Player[] players = {new Player(1,"Johan",2), new Player(2,"Linn",1)};
 
     @BeforeEach
     void setUp() {
@@ -132,12 +132,17 @@ class ServerTest {
     @Test
     void placeCard() {
 
-        Server.getInstance().setTurn(0);
+        //Server.getInstance().setTurn(0);
         /*assertEquals(0, server.getPlayers()[0].getHand().size());
         assertEquals(4, server.getPlayerATableCards().size());
         assertEquals("SUCCESS", server.placeCard(4));
         assertEquals("FAIL", server.placeCard(2));*/
+        players[0].setHand(server.getPlayerADeck());
+        System.out.println(players[0].getHand().size());
         assertTrue(players[0].getHand().get(0).getManaCost() < players[0].getMana());
+        System.out.println(players[0].getMana());
+        players[0].setMana(players[0].getMana() - players[0].getHand().get(0).getManaCost());
+        assertEquals(1,players[0].getMana());
         /*assertEquals(4, Server.getInstance().getPlayers()[0].getHand().size());
         assertEquals(1, Server.getInstance().getPlayerATableCards().size());
         
