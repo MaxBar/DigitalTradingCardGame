@@ -115,8 +115,8 @@ public class Player {
     }
     public void decreaseMana(int manaCost){
 
-        setMana(getMana() - manaCost);
-
+        mana =- manaCost;
+        
     }
 
     public int randomizeCreatureHp() {
