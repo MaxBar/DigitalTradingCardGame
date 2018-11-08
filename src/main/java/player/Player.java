@@ -113,6 +113,11 @@ public class Player {
     public void attackPlayer(int friendlyBoardIndex) {
         server.receiveCommand("ATTACK " + friendlyBoardIndex + " ON ENEMY_PLAYER");
     }
+    public void decreaseMana(int manaCost){
+
+        setMana(getMana() - manaCost);
+
+    }
 
     public int randomizeCreatureHp() {
         return 0;

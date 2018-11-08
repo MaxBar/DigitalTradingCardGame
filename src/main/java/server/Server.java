@@ -241,13 +241,14 @@ public class Server {
         if (turn == PLAYER_A && playerATableCards.size() != maxTableSize) {
             BasicCard card = players[PLAYER_A].getHand().get(index);
 
-            if (players[PLAYER_A].getMana() > card.getManaCost()) {
+            if (players[PLAYER_A].getMana() >= card.getManaCost()) {
 
-                decreaseMana(PLAYER_A, card);
+                players[PLAYER_A].decreaseMana(card.getManaCost());
                 players[PLAYER_A].getHand().remove(index);
                 playerATableCards.add(card);
                 randomizeCreatureHp(index);
                 game.getPlayerATableCards().add(card);
+
                 return "SUCCESS";
             } else {
                 return "";
@@ -256,13 +257,14 @@ public class Server {
 
             BasicCard card = players[PLAYER_B].getHand().get(index);
 
-            if (players[PLAYER_B].getMana() > card.getManaCost()) {
-                decreaseMana(PLAYER_B, card);
+            if (players[PLAYER_B].getMana() >= card.getManaCost()) {
 
+                players[PLAYER_B].decreaseMana(card.getManaCost());
                 players[PLAYER_B].getHand().remove(index);
                 playerBTableCards.add(card);
                 randomizeCreatureHp(index);
                 game.getPlayerBTableCards().add(card);
+
                 return "SUCCESS";
             } else {
                 return "";
@@ -271,11 +273,7 @@ public class Server {
         return "FAIL";
     }
 
-    public void decreaseMana(int player, BasicCard card){
 
-        players[player].setMana(players[player].getMana() - card.getManaCost());
-
-    }
 
     public String attackEnemyPlayer() {
         String alive = "ALIVE";
