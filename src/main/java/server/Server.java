@@ -4,6 +4,7 @@ import card.BasicCard;
 import card.BasicCreatureCard;
 import player.Player;
 import Game.Game;
+import repository.QueryHandler;
 
 import java.lang.reflect.Array;
 import java.security.SecureRandom;
@@ -30,7 +31,7 @@ public class Server {
     private List<BasicCard> playerBGraveyard;
     //private List<BasicCard>[] playerGraveyards;
     private SecureRandom sRandom = new SecureRandom();
-
+    private QueryHandler queryHandler = new QueryHandler();
     private Game game = Game.getInstance();
 
     private Server() {
@@ -189,7 +190,15 @@ public class Server {
 
         } else if (input.startsWith("QUIT_GAME")) {
             quitGame();
+        } else if (input.startsWith("LOGIN")) {
+            String email = input.substring(6);
+            command = retrievePlayerId(email);
+            System.out.println(command);
         }
+    }
+
+    private String retrievePlayerId(String email) {
+        return queryHandler.fetchPlayer(email);
     }
 
     public int rollDice(int min, int max) {

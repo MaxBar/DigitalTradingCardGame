@@ -4,6 +4,7 @@ import Game.Game;
 import card.BasicCreatureCard;
 import player.Player;
 import repository.Database;
+import repository.QueryHandler;
 import server.NetworkServer;
 import server.Server;
 
@@ -24,12 +25,13 @@ public class Main {
     private static void launch(String[] args) {
 
         Database db = new Database();
+        QueryHandler q = new QueryHandler();
         try {
             db.connect();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        db.close();
 
         //region initialize players and set hand
     

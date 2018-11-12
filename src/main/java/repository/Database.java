@@ -9,7 +9,7 @@ import java.util.Properties;
 
 public class Database {
 
-    private Connection con;
+    public static Connection con;
 
     private static void doSshTunnel(String strSshUser, String strSshPassword, String strSshHost, int nSshPort,
                                     String strRemoteHost, int nLocalPort, int nRemotePort) throws JSchException {
@@ -25,8 +25,8 @@ public class Database {
         session.setPortForwardingL(nLocalPort, strRemoteHost, nRemotePort);
     }
 
-    private void getAllCreatureCards() throws Exception {
-        String query = "SELECT * FROM CreatureCard";
+    /*private void getAllCreatureCards() throws Exception {
+        String query = "SELECT * FROM Player";
         Statement st = con.createStatement();
         ResultSet rs = st.executeQuery(query);
 
@@ -34,10 +34,11 @@ public class Database {
         {
             int id = rs.getInt("id");
             String name = rs.getString("name");
-            System.out.format("%s, %s\n", id, name);
+            String email = rs.getString("email");
+            System.out.format("%s, %s ,%s\n", id, name, email);
         }
         st.close();
-    }
+    }*/
 
     public void connect() throws Exception{
         if(con != null) return;
@@ -61,7 +62,7 @@ public class Database {
             Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/236605-candy?user=236605_dj83154&password=password");
             System.out.println("Connected");
-            getAllCreatureCards();
+            //getAllCreatureCards();
         } catch (ClassNotFoundException e) {
             throw new Exception("No database");
         }
