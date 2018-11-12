@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 
 
 class ServerTest {
-
+    /*
     private static Server server = Server.getInstance();
     private static Game game = Game.getInstance();
     private static Player[] players = {new Player(1,"Johan",2), new Player(2,"Linn",1)};
@@ -74,7 +74,7 @@ class ServerTest {
     }
 
     @Test
-    void dealCards() {
+    void dealCards() {*/
         /*List<BasicCard> playerB = new ArrayList<>(Arrays.asList(
                 new BasicCreatureCard(1, "Marshmallow", "White soft treat", "does not exist yet", 3, 1, 2),
                 new BasicCreatureCard(2, "Plopp","Chocolate with gooey caramel center", "does not excist", 2, 2, 1),
@@ -91,8 +91,8 @@ class ServerTest {
         
         
 
-        verify(Server.getInstance()., times(5)).dealCard();*/
-    }
+        verify(Server.getInstance()., times(5)).dealCard();
+    }*/
 
     /*@Test
     void dealCard() {
@@ -119,7 +119,7 @@ class ServerTest {
 
     }
 */
-    @Test
+    /*@Test
     void sendCard() {
     }
 
@@ -130,7 +130,7 @@ class ServerTest {
         /*assertEquals(0, server.getPlayers()[0].getHand().size());
         assertEquals(4, server.getPlayerATableCards().size());
         assertEquals("SUCCESS", server.placeCard(4));
-        assertEquals("FAIL", server.placeCard(2));*/
+        assertEquals("FAIL", server.placeCard(2));*//*
         players[0].setHand(server.getPlayerADeck());
         System.out.println(players[0].getHand().size());
         assertTrue(players[0].getHand().get(0).getManaCost() < players[0].getMana());
@@ -145,9 +145,9 @@ class ServerTest {
         assertEquals(0, Server.getInstance().getPlayerBTableCards().size());
         Server.getInstance().placeCard(4);
         assertEquals(4, Server.getInstance().getPlayers()[1].getHand().size());
-        assertEquals(1, Server.getInstance().getPlayerBTableCards().size());*/
-    }
-
+        assertEquals(1, Server.getInstance().getPlayerBTableCards().size());
+    }*/
+    /*
     @Test
     void attackEnemyPlayer() {
 
@@ -254,7 +254,7 @@ class ServerTest {
         /*for (int i = 0; i < 2; i++) {
             Game.getInstance().getPlayerATableCards().add(playerAHand.get(i));
             Game.getInstance().getPlayerBTableCards().add(playerBHand.get(i));
-        }*/
+        }*//*
         assertEquals("SUCCESS A SUCCESS", Server.getInstance().attackEnemyCreature(1, 1));
 
         assertEquals("SUCCESS DEAD", Server.getInstance().attackEnemyCreature(0,0));
@@ -319,7 +319,7 @@ class ServerTest {
             Server.getInstance().getPlayerBTableCards().add(playerB.get(i));
             
             //System.out.println(game.getPlayerATableCards().get(i).getName());
-        }*/
+        }*//*
         assertEquals(0, Server.getInstance().getPlayerAGraveyard().size());
         assertEquals(0, Server.getInstance().getPlayerBGraveyard().size());
         Server.getInstance().moveToGraveyard(2, 1);
@@ -333,8 +333,8 @@ class ServerTest {
 
         //endregion
         assertEquals(1, Server.getInstance().getPlayerAGraveyard().size());
-        assertEquals(3, Server.getInstance().getPlayerATableCards().size());
-        assertEquals(3, Game.getInstance().getPlayerATableCards().size());
+        assertEquals(3, Server.getInstance().getPlayerATableCards().size());*/
+        /*assertEquals(3, Game.getInstance().getPlayerATableCards().size());
         assertEquals(1, Game.getInstance().getPlayerAGraveyard());
 
         Server.getInstance().moveToGraveyard(1, 0);
@@ -344,7 +344,7 @@ class ServerTest {
         assertEquals(2, Game.getInstance().getPlayerAGraveyard());
 
         
-    }
+    }*/
 
     @Test
     void endTurn() {
@@ -353,7 +353,7 @@ class ServerTest {
     @Test
     void quitGame() {
     }
-
+/*
     @Test
     void shuffleDeck() {
         // Create more cards for further testing
@@ -368,5 +368,5 @@ class ServerTest {
         // Increase number passed when you got more cards
         assertTrue(testPassed > 99995,testPassed + "");
 
-    }
+    }*/
 }

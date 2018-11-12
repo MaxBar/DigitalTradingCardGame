@@ -1,6 +1,7 @@
 package main;
 
 import Game.Game;
+import board.Board;
 import card.BasicCreatureCard;
 import player.Player;
 import server.NetworkServer;
@@ -14,23 +15,24 @@ public class Main {
     private static Scanner sc = new Scanner(System.in);
     private static Server server = Server.getInstance();
     private static Game game = Game.getInstance();
+
     private static Player[] players = {new Player(1,"Johan",1), new Player(2,"Linn",1)};
     
-    private static int playerA = server.PLAYER_A;
-    private static int playerB = server.PLAYER_B;
+    private static int playerA = server.board.PLAYER_A;
+    private static int playerB = server.board.PLAYER_B;
     private static NetworkServer networkServer;
     
     private static void launch(String[] args) {
         //region initialize players and set hand
     
-        server.setPlayers(players);
+        server.board.setPlayers(players);
     
-        game.setPlayerA(server.getPlayers()[playerA]);
-        game.setPlayerB(server.getPlayers()[playerB]);
+        game.setPlayerA(server.board.getPlayers()[playerA]);
+        game.setPlayerB(server.board.getPlayers()[playerB]);
     
-        server.getPlayers()[playerA].receiveStartCards(server.dealCards(server.PLAYER_A));
-        server.getPlayers()[playerB].receiveStartCards(server.dealCards(server.PLAYER_B));
-        players[playerA].receiveCard(server.dealCard(server.getTurn()));
+        server.board.getPlayers()[playerA].receiveStartCards(server.dealCards(server.board.PLAYER_A));
+        server.board.getPlayers()[playerB].receiveStartCards(server.dealCards(server.board.PLAYER_B));
+        players[playerA].receiveCard(server.dealCard(server.board.getTurn()));
         //endregion
         try {
             networkServer = new NetworkServer(150);

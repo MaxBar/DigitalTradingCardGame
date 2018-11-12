@@ -25,7 +25,7 @@ public class Board {
 
     Game game = Game.getInstance();
 
-    private Board(){
+    public Board(){
         round = 1;
         players = new Player[2];
         playerADeck = new ArrayList<>(Arrays.asList(
@@ -71,8 +71,8 @@ public class Board {
         return round;
     }
     
-    public void setRound(int round) {
-        this.round = round;
+    public void setRound() {
+        this.round += 1;
     }
     
     public Player[] getPlayers() {
