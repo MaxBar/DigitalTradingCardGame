@@ -12,9 +12,9 @@ public class Board {
 
     public final int PLAYER_A = 0;
     public final int PLAYER_B = 1;
+    public final int maxTableSize = 5;
     private int turn;
     private int round;
-    private int maxTableSize;
     private Player[] players;
     private List<BasicCard> playerADeck;
     private List<BasicCard> playerBDeck;
@@ -26,11 +26,8 @@ public class Board {
     Game game = Game.getInstance();
 
     private Board(){
-        maxTableSize = 5;
         round = 1;
         players = new Player[2];
-        playerAGraveyard = new ArrayList<>();
-        playerBGraveyard = new ArrayList<>();
         playerADeck = new ArrayList<>(Arrays.asList(
                 new BasicCreatureCard(1, "Marshmallow", "White soft treat", "does not exist yet", 0, 1, 2, 1, 2),
                 new BasicCreatureCard(2, "Plopp", "Chocolate with gooey caramel center", "does not exist", 0, 2, 1, 1, 2),
@@ -56,7 +53,81 @@ public class Board {
                 new BasicCreatureCard(9, "Hubba Bubba", "Sweet chewing-gum", "does not exist yet", 0, 3, 3, 1, 2),
                 new BasicCreatureCard(10, "Raisin", "Dried up grapes pretending to be candy", "does not exist yet", 0, 1, 1, 1, 2))
         );
+        playerAGraveyard = new ArrayList<>();
+        playerBGraveyard = new ArrayList<>();
         playerATableCards = new ArrayList<>();
         playerBTableCards = new ArrayList<>();
+    }
+    
+    public int getTurn() {
+        return turn;
+    }
+    
+    public void setTurn(int turn) {
+        this.turn = turn;
+    }
+    
+    public int getRound() {
+        return round;
+    }
+    
+    public void setRound(int round) {
+        this.round = round;
+    }
+    
+    public Player[] getPlayers() {
+        return players;
+    }
+    
+    public void setPlayers(Player[] players) {
+        this.players = players;
+    }
+    
+    public List<BasicCard> getPlayerADeck() {
+        return playerADeck;
+    }
+    
+    public void setPlayerADeck(List<BasicCard> playerADeck) {
+        this.playerADeck = playerADeck;
+    }
+    
+    public List<BasicCard> getPlayerBDeck() {
+        return playerBDeck;
+    }
+    
+    public void setPlayerBDeck(List<BasicCard> playerBDeck) {
+        this.playerBDeck = playerBDeck;
+    }
+    
+    public List<BasicCard> getPlayerAGraveyard() {
+        return playerAGraveyard;
+    }
+    
+    public void setPlayerAGraveyard(List<BasicCard> playerAGraveyard) {
+        this.playerAGraveyard = playerAGraveyard;
+    }
+    
+    public List<BasicCard> getPlayerBGraveyard() {
+        return playerBGraveyard;
+    }
+    
+    public void setPlayerBGraveyard(List<BasicCard> playerBGraveyard) {
+        this.playerBGraveyard = playerBGraveyard;
+    }
+    
+    public List<BasicCard> getPlayerATableCards() {
+        return playerATableCards;
+    }
+    
+    public void setPlayerATableCards(List<BasicCard> playerATableCards) {
+        this.playerATableCards = playerATableCards;
+    }
+    
+    public List<BasicCard> getPlayerBTableCards() {
+        return playerBTableCards;
+    }
+    
+    public void setPlayerBTableCards(List<BasicCard> playerBTableCards) {
+        this.playerBTableCards = playerBTableCards;
     }
 }
