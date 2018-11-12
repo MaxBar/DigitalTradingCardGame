@@ -3,12 +3,53 @@ package main;
 import Game.Game;
 import card.BasicCreatureCard;
 import player.Player;
+import server.NetworkServer;
 import server.Server;
 
 import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class Main {
+    private static int choice;
+    private static Scanner sc = new Scanner(System.in);
+    private static Server server = Server.getInstance();
+    private static Game game = Game.getInstance();
+    private static Player[] players = {new Player(1,"Johan",1), new Player(2,"Linn",1)};
+    
+    private static int playerA = server.PLAYER_A;
+    private static int playerB = server.PLAYER_B;
+    private static NetworkServer networkServer;
+    
+    private static void launch(String[] args) {
+        //region initialize players and set hand
+    
+        server.setPlayers(players);
+    
+        game.setPlayerA(server.getPlayers()[playerA]);
+        game.setPlayerB(server.getPlayers()[playerB]);
+    
+        server.getPlayers()[playerA].receiveStartCards(server.dealCards(server.PLAYER_A));
+        server.getPlayers()[playerB].receiveStartCards(server.dealCards(server.PLAYER_B));
+        players[playerA].receiveCard(server.dealCard(server.getTurn()));
+        //endregion
+        try {
+            networkServer = new NetworkServer(150);
+        } catch(Exception e){
+            System.out.println(e.getMessage());
+            networkServer.stop();
+        }
+    }
+    
+    public void stop(){
+        networkServer.stop();
+    }
+    
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
+
+/*public class Main {
     private static int choice;
     private static Scanner sc = new Scanner(System.in);
     private static Server server = Server.getInstance();
@@ -353,3 +394,4 @@ public class Main {
         System.out.println("**************************************");
     }
 }
+*/

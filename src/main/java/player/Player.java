@@ -23,7 +23,7 @@ public class Player {
         this.id = id;
         this.name = name;
         this.health = 20;
-        this.mana = mana;
+        this.mana = 1;
         this.hand = new ArrayList<>();
         //this.server = new Server();
     }
