@@ -3,6 +3,7 @@ package main;
 import Game.Game;
 import card.BasicCreatureCard;
 import player.Player;
+import repository.Database;
 import server.NetworkServer;
 import server.Server;
 
@@ -21,6 +22,15 @@ public class Main {
     private static NetworkServer networkServer;
     
     private static void launch(String[] args) {
+
+        Database db = new Database();
+        try {
+            db.connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        db.close();
+
         //region initialize players and set hand
     
         server.setPlayers(players);
