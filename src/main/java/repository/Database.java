@@ -24,21 +24,7 @@ public class Database {
         session.connect();
         session.setPortForwardingL(nLocalPort, strRemoteHost, nRemotePort);
     }
-
-    /*private void getAllCreatureCards() throws Exception {
-        String query = "SELECT * FROM Player";
-        Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery(query);
-
-        while (rs.next())
-        {
-            int id = rs.getInt("id");
-            String name = rs.getString("name");
-            String email = rs.getString("email");
-            System.out.format("%s, %s ,%s\n", id, name, email);
-        }
-        st.close();
-    }*/
+    
 
     public void connect() throws Exception{
         if(con != null) return;
