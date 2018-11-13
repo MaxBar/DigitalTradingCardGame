@@ -1,3 +1,4 @@
+/*
 package Game;
 
 import card.BasicCard;
@@ -25,8 +26,10 @@ public class Game {
 
     private Game() {
 
-        /*playerA = new Player(1, "playerA", 1);
-        playerB = new Player(2, "playerB", 1);*/
+        */
+/*playerA = new Player(1, "playerA", 1);
+        playerB = new Player(2, "playerB", 1);*//*
+
     
     }
     
@@ -101,13 +104,16 @@ public class Game {
         --playerBDeck;
     }
     //TODO add when changing to multiplayer
-    /*
+    */
+/*
     private List<BasicCard> EnemyTableCards;
     private int enemyGraveyard;
     private int enemyHand;
     privaet int enemyDeck
     private int enemyHealth;
     private int enemyMana;
-    */
+    *//*
+
     
 }
+*/

@@ -1,6 +1,5 @@
 package server;
 
-import Game.Game;
 import card.BasicCard;
 import card.BasicCreatureCard;
 import org.junit.jupiter.api.BeforeEach;

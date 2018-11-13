@@ -1,5 +1,7 @@
 package server;
 
+import player.Player;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -13,6 +15,7 @@ public class NetworkServer {
     private final int MSG_SIZE = 512;
     private final int SLEEP_MS = 1;
     private LinkedBlockingDeque<String> msgQueue = new LinkedBlockingDeque<>();
+    private ArrayList<Player> players = new ArrayList<>();
     
     private ArrayList<DatagramPacket> clientIP = new ArrayList<>();
     
@@ -103,7 +106,12 @@ public class NetworkServer {
         }*/
         
         Server.getInstance().receiveCommand(msgQueue.takeFirst());
-        sendMsgToClient(Server.getInstance().getCommand(), clientIP.get(0));
+        if(clientIP.size() == 1) {
+            sendMsgToClient(Server.getInstance().getCommand(), clientIP.get(0));
+        } else {
+            sendMsgToClient(Server.getInstance().getCommand(), clientIP.get(0));
+            sendMsgToClient(Server.getInstance().getCommand(), clientIP.get(1));
+        }
         
         
         /*if(clientIP.size() >= 2) {

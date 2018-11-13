@@ -1,6 +1,5 @@
 package board;
 
-import Game.Game;
 import card.BasicCard;
 import card.BasicCreatureCard;
 import player.Player;
@@ -15,20 +14,21 @@ public class Board {
     public final int maxTableSize = 5;
     private int turn;
     private int round;
-    private Player[] players;
+    private Player[] players;/*
     private List<BasicCard> playerADeck;
     private List<BasicCard> playerBDeck;
     private List<BasicCard> playerAGraveyard;
     private List<BasicCard> playerBGraveyard;
     private List<BasicCard> playerATableCards = new ArrayList<>();
-    private List<BasicCard> playerBTableCards = new ArrayList<>();
+    private List<BasicCard> playerBTableCards = new ArrayList<>();*/
 
-    Game game = Game.getInstance();
+    //Game game = Game.getInstance();
 
     public Board(){
-        round = 1;
+        round = 0;
+        turn = 0;
         players = new Player[2];
-        playerADeck = new ArrayList<>(Arrays.asList(
+        /*playerADeck = new ArrayList<>(Arrays.asList(
                 new BasicCreatureCard(1, "Marshmallow", "White soft treat", "does not exist yet", 0, 1, 2, 1, 2),
                 new BasicCreatureCard(2, "Plopp", "Chocolate with gooey caramel center", "does not exist", 0, 2, 1, 1, 2),
                 new BasicCreatureCard(3, "Smash", "Crispy chocolate treat", "does not exist yet", 0, 5, 1, 1, 2),
@@ -52,11 +52,11 @@ public class Board {
                 new BasicCreatureCard(8, "Bounty", "Chocolate with coconut filling", "does not exist yet", 0, 2, 1, 1, 2),
                 new BasicCreatureCard(9, "Hubba Bubba", "Sweet chewing-gum", "does not exist yet", 0, 3, 3, 1, 2),
                 new BasicCreatureCard(10, "Raisin", "Dried up grapes pretending to be candy", "does not exist yet", 0, 1, 1, 1, 2))
-        );
-        playerAGraveyard = new ArrayList<>();
+        );*/
+        /*playerAGraveyard = new ArrayList<>();
         playerBGraveyard = new ArrayList<>();
         playerATableCards = new ArrayList<>();
-        playerBTableCards = new ArrayList<>();
+        playerBTableCards = new ArrayList<>();*/
     }
     
     public int getTurn() {
@@ -64,15 +64,33 @@ public class Board {
     }
     
     public void setTurn(int turn) {
-        this.turn = turn;
+        if(this.turn == 0) {
+            this.turn = turn;
+        } else {
+            this.turn = turn;
+            ++round;
+        }
+    }
+    
+    public void increaseTurn(int increase) {
+        if(turn == 0) {
+            turn += increase;
+        } else {
+            turn = 0;
+            ++round;
+        }
     }
     
     public int getRound() {
         return round;
     }
     
-    public void setRound() {
-        this.round += 1;
+    public void setRound(int round) {
+        this.round = round;
+    }
+    
+    public void increaseRound() {
+        round += 1;
     }
     
     public Player[] getPlayers() {
@@ -83,7 +101,11 @@ public class Board {
         this.players = players;
     }
     
-    public List<BasicCard> getPlayerADeck() {
+    public void addPlayer(Player player, int pos) {
+        players[pos] = player;
+    }
+    
+    /*public List<BasicCard> getPlayerADeck() {
         return playerADeck;
     }
     
@@ -129,5 +151,5 @@ public class Board {
     
     public void setPlayerBTableCards(List<BasicCard> playerBTableCards) {
         this.playerBTableCards = playerBTableCards;
-    }
+    }*/
 }

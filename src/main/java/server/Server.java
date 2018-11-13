@@ -4,7 +4,6 @@ import board.Board;
 import card.BasicCard;
 import card.BasicCreatureCard;
 import player.Player;
-import Game.Game;
 import repository.QueryHandler;
 
 import java.lang.reflect.Array;
@@ -18,20 +17,21 @@ public class Server {
 
     // Fields
     private static Server server = null;
-
-
-
+    
     private String command;
     private SecureRandom sRandom = new SecureRandom();
     private QueryHandler queryHandler = new QueryHandler();
-    private Game game = Game.getInstance();
+    private boolean started = false;
+    private int playersCon;
+    //private Game game = Game.getInstance();
     public Board board = new Board();
 
     private Server() {
-        game.setPlayerADeck(board.getPlayerADeck().size());
-        game.setPlayerBDeck(board.getPlayerBDeck().size());
-        shuffleDeck(board.getPlayerADeck());
-        shuffleDeck(board.getPlayerBDeck());
+        playersCon = 0;
+        //game.setPlayerADeck(board.getPlayerADeck().size());
+        //game.setPlayerBDeck(board.getPlayerBDeck().size());
+        //shuffleDeck(board.getPlayerADeck());
+        //shuffleDeck(board.getPlayerBDeck());
         this.board = board;
     }
 
@@ -52,12 +52,13 @@ public class Server {
     public void setCommand(String command) {
         this.command = command;
     }
+    
     public void receiveCommand(String input) {
         int secondaryCheck = 12;
         int attackStart = 7;
         int attackEnd = 8;
         int defendCheck = 27;
-        if (input.startsWith("ATTACK")) {
+        /*if (input.startsWith("ATTACK")) {
             if (input.substring(secondaryCheck).startsWith("ENEMY_CREATURE")) {
                 command = attackEnemyCreature(Integer.parseInt(input.substring(attackStart, attackEnd)), Integer.parseInt(input.substring(defendCheck)));
             } else if (input.substring(secondaryCheck).startsWith("ENEMY_PLAYER")) {
@@ -69,39 +70,71 @@ public class Server {
         } else if (input.startsWith("END_TURN")) {
             endTurn();
 
-        } else if (input.startsWith("QUIT_GAME")) {
+        } else */if (input.startsWith("QUIT_GAME")) {
             quitGame();
         } else if (input.startsWith("LOGIN")) {
             String email = input.substring(6);
-            command = retrievePlayerId(email);
-            System.out.println(command);
+            String name = retrievePlayerName(email);
+            int id = retrievePlayerId(email);
+            if(board.getPlayers()[0] == null) {
+                int pos = 0;
+                board.addPlayer(new Player(id, name), pos);
+                command = String.valueOf("LOGIN " + id + " " + name + " " + pos);
+            } else {
+                int pos = 1;
+                board.addPlayer(new Player(id, name), pos);
+                command = String.valueOf("LOGIN " + id + " " + name + " " + pos);
+                
+                if(!started) {
+                    command += " START";
+                    started = true;
+                }
+            }
+        } else if(input.startsWith("STARTED")) {
+            ++playersCon;
+        } else if(input.startsWith("START_CARDS") && playersCon == 2) {
+            command = dealCards(board.getTurn());
+            board.increaseTurn(1);
         }
     }
 
-    private String retrievePlayerId(String email) {
-        return queryHandler.fetchPlayer(email);
+    private int retrievePlayerId(String email) {
+        return queryHandler.fetchPlayerId(email);
+    }
+    
+    private String retrievePlayerName(String email) {
+        return queryHandler.fetchPlayerName(email);
     }
 
     public int rollDice(int min, int max) {
         return sRandom.nextInt(max - min + 1) + min;
     }
 
-    public int[] dealCards(int playerTurn) {
+    public String dealCards(int playerTurn) {
         int handSize = 5;
         int ids[] = new int[handSize];
 
-        if (playerTurn == board.PLAYER_A) {
+        if (playerTurn == board.getTurn()) {
 
             for (int i = 0; i < handSize; i++) {
                 ids[i] = dealCard(playerTurn);
             }
-            return ids;
+            StringBuilder id = new StringBuilder();
+            System.out.println(String.valueOf(ids));
+            //String[] temp = Arrays.toString(ids).split("[\\[\\]]")[1].split(", ");
+            for (int id1 : ids) {
+                id.append(id1).append(", ");
+            }
+            id.setLength(id.length() - 2);
+            return "DEALT P" + playerTurn + " " + id.toString();
 
         } else {
             for (int i = 0; i < handSize; i++) {
                 ids[i] = dealCard(playerTurn);
             }
-            return ids;
+            return "";
+            //System.out.println(Arrays.toString(ids).split("[\\[\\]]")[1].split(", "));
+            //return Arrays.toString(ids).split("[\\[\\]]")[1].split(", ");
         }
 
 
@@ -110,20 +143,22 @@ public class Server {
     public int dealCard(int playerTurn) {
 
         int id;
-        if (playerTurn == board.PLAYER_A) {
-            id = board.getPlayerADeck().get(board.getPlayerADeck().size() - 1).id;
-            board.getPlayerADeck().remove(board.getPlayerADeck().size() - 1);
-            game.setPlayerADeck(board.getPlayerADeck().size());
+        if (board.getTurn() == playerTurn) {
+            var deck = board.getPlayers()[board.getTurn()].getDeck();
+            id = deck.get(deck.size() - 1).id; //.get(board.getPlayerADeck().size() - 1).id;
+            board.getPlayers()[board.getTurn()].getHand().add(deck.get(deck.size() - 1));
+            deck.remove(deck.size() - 1);
             return id;
-        } else {
+        } /*else {
             id = board.getPlayerBDeck().get(board.getPlayerBDeck().size() - 1).id;
             board.getPlayerBDeck().remove(board.getPlayerBDeck().size() - 1);
             game.setPlayerBDeck(board.getPlayerBDeck().size());
             return id;
-        }
+        }*/
+        return 0;
     }
 
-    public String sendCard(String s) {
+    /*public String sendCard(String s) {
         return "";
     }
 
@@ -323,7 +358,7 @@ public class Server {
 
             board.setRound();
         }
-    }
+    }*/
 
 
     public void shuffleDeck(List<BasicCard> deck) {
