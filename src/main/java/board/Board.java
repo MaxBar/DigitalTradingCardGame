@@ -71,6 +71,11 @@ public class Board {
             ++round;
         }
     }
+
+    public int checkTurnCombat() {
+        int combat = turn;
+        return combat == 1 ? 0 : 1;
+    }
     
     public void increaseTurn(int increase) {
         if(turn == 0) {
