@@ -58,14 +58,15 @@ public class Server {
         int attackStart = 7;
         int attackEnd = 8;
         int defendCheck = 27;
-        /*if (input.startsWith("ATTACK")) {
+        int cardIndex = 23;
+        if (input.startsWith("ATTACK")) {
             if (input.substring(secondaryCheck).startsWith("ENEMY_CREATURE")) {
-                command = attackEnemyCreature(Integer.parseInt(input.substring(attackStart, attackEnd)), Integer.parseInt(input.substring(defendCheck)));
-            } else if (input.substring(secondaryCheck).startsWith("ENEMY_PLAYER")) {
-                command = attackEnemyPlayer();
+                //command = attackEnemyCreature(Integer.parseInt(input.substring(attackStart, attackEnd)), Integer.parseInt(input.substring(defendCheck)));
+            } else if (input.substring(attackStart).startsWith("P" + board.getTurn() + " ENEMY_PLAYER")) {
+                command = attackEnemyPlayer(cardIndex);
             }
 
-        } else */if (input.startsWith("PLACE P" + board.getTurn())) {
+        } else if (input.startsWith("PLACE P" + board.getTurn())) {
             command = placeCard(Integer.parseInt(input.substring(18)));
         } /*else if (input.startsWith("END_TURN")) {
             endTurn();
@@ -188,25 +189,25 @@ public class Server {
     }
 
 
-/*
-    public String attackEnemyPlayer() {
-        String alive = "ALIVE";
-        String dead = "DEAD";
-        if (board.getTurn() == board.PLAYER_A) {
-            if (board.getPlayerBTableCards().size() == 0) {
-                int health = rollDice(1, 6);
-                board.getPlayers()[board.PLAYER_B].decrementHealth(health);
 
+    private String attackEnemyPlayer(int index) {
+        var player = board.getPlayers()[board.getTurn()];
+        var enemyPlayer = board.getPlayers()[board.checkTurnCombat()];
+        //if (board.getTurn() == board.PLAYER_A) {
+            if (enemyPlayer.getTable().size() == 0) {
+                enemyPlayer.decrementHealth(((BasicCreatureCard)player.getTable().get(index)).getAttack());
                 //Should we return a string, example: SUCCESS PLAYER ALIVE/SUCCESS PLAYER DEAD?
+                if (checkPlayerAlive(enemyPlayer)) {
+                    return "P" + board.checkTurnCombat() + "_PLAYER " + enemyPlayer.getHealth();
+                } else {
+                    System.out.printf("Player %s died, %s won!\n", enemyPlayer.getName(), player.getName());
+                    return "P" + board.checkTurnCombat() + "_PLAYER DEAD";
+                }
             }
 
-            if (checkPlayerAlive(board.getPlayers()[board.PLAYER_B])) {
-                return alive;
-            } else {
-                System.out.printf("Player %s died, %s won!\n", board.getPlayers()[board.PLAYER_B].getName(), board.getPlayers()[board.PLAYER_A].getName());
-                return dead;
-            }
-        } else {
+            return "P" + board.checkTurnCombat() + "_PLAYER FAIL CARDS_ON_TABLE";
+
+        /*}*/ /*else {
             if (board.getPlayerATableCards().size() == 0) {
                 int health = rollDice(1, 6);
                 board.getPlayers()[board.PLAYER_A].decrementHealth(health);
@@ -218,9 +219,11 @@ public class Server {
                 System.out.printf("Player %s died, %s won!\n", board.getPlayers()[board.PLAYER_A].getName(), board.getPlayers()[board.PLAYER_B].getName());
                 return dead;
             }
-        }
-    }
+        }*/
 
+
+    }
+/*
     public String attackEnemyCreature(int attackingCreatureIndex, int defendingCreatureIndex) {
         int playerARoll;
         int playerBRoll;
@@ -283,11 +286,11 @@ public class Server {
     public String healCreature(String s) {
         return "";
     }
-
+*/
     public boolean checkPlayerAlive(Player p) {
         return p.getHealth() > 0;
     }
-
+/*
     public boolean checkCreatureAlive(int index, int player) {
         // Player A turn
         // WRITE TEST FOR THIS FIRST
