@@ -24,6 +24,10 @@ public class BasicCreatureCard extends BasicCard {
         this.health = health;
     }
 
+    public void decrementHealth(int change) {
+        health -= change;
+    }
+
     public int getAttack() {
         return attack;
     }
