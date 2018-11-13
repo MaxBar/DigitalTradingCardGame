@@ -95,6 +95,8 @@ public class Server {
         } else if(input.startsWith("START_CARDS") && playersCon == 2) {
             command = dealCards(board.getTurn());
             board.increaseTurn(1);
+        } else if (input.startsWith("P" + board.getTurn() + "_DRAW")) {
+            command = "DEALT CARD P" + board.getTurn() + " " + Integer.toString(dealCard(board.getTurn()));
         }
     }
 
@@ -126,7 +128,7 @@ public class Server {
                 id.append(id1).append(", ");
             }
             id.setLength(id.length() - 2);
-            return "DEALT P" + playerTurn + " " + id.toString();
+            return "DEALT CARDS P" + playerTurn + " " + id.toString();
 
         } else {
             for (int i = 0; i < handSize; i++) {
@@ -141,21 +143,12 @@ public class Server {
     }
 
     public int dealCard(int playerTurn) {
-
         int id;
-        if (board.getTurn() == playerTurn) {
-            var deck = board.getPlayers()[board.getTurn()].getDeck();
-            id = deck.get(deck.size() - 1).id; //.get(board.getPlayerADeck().size() - 1).id;
-            board.getPlayers()[board.getTurn()].getHand().add(deck.get(deck.size() - 1));
-            deck.remove(deck.size() - 1);
-            return id;
-        } /*else {
-            id = board.getPlayerBDeck().get(board.getPlayerBDeck().size() - 1).id;
-            board.getPlayerBDeck().remove(board.getPlayerBDeck().size() - 1);
-            game.setPlayerBDeck(board.getPlayerBDeck().size());
-            return id;
-        }*/
-        return 0;
+        var deck = board.getPlayers()[board.getTurn()].getDeck();
+        id = deck.get(deck.size() - 1).id;
+        board.getPlayers()[board.getTurn()].getHand().add(deck.get(deck.size() - 1));
+        deck.remove(deck.size() - 1);
+        return id;
     }
 
     /*public String sendCard(String s) {
