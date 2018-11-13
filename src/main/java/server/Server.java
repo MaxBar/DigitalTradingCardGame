@@ -65,12 +65,12 @@ public class Server {
                 command = attackEnemyPlayer();
             }
 
-        } else if (input.startsWith("PLACE_CARD")) {
-            command = placeCard(Integer.parseInt(input.substring(11)));
-        } else if (input.startsWith("END_TURN")) {
+        } else */if (input.startsWith("PLACE P" + board.getTurn())) {
+            command = placeCard(Integer.parseInt(input.substring(18)));
+        } /*else if (input.startsWith("END_TURN")) {
             endTurn();
 
-        } else */if (input.startsWith("QUIT_GAME")) {
+        } */ else if (input.startsWith("QUIT_GAME")) {
             quitGame();
         } else if (input.startsWith("LOGIN")) {
             String email = input.substring(6);
@@ -151,27 +151,23 @@ public class Server {
         return id;
     }
 
-    /*public String sendCard(String s) {
-        return "";
-    }
 
     public String placeCard(int index) {
-        if (board.getTurn() == board.PLAYER_A && board.getPlayerATableCards().size() != board.maxTableSize) {
-            BasicCard card = board.getPlayers()[board.PLAYER_A].getHand().get(index);
+        var player = board.getPlayers()[board.getTurn()];
+        if (player.getTable().size() != board.maxTableSize) {
+            BasicCard card = player.getHand().get(index);
 
-            if (board.getPlayers()[board.PLAYER_A].getMana() >= card.getManaCost()) {
+            if (player.getMana() >= card.getManaCost()) {
 
-                board.getPlayers()[board.PLAYER_A].decreaseMana(card.getManaCost());
-                board.getPlayers()[board.PLAYER_A].getHand().remove(index);
-                board.getPlayerATableCards().add(card);
-                randomizeCreatureHp(index);
-                game.getPlayerATableCards().add(card);
+                player.decreaseMana(card.getManaCost());
+                player.getHand().remove(index);
+                player.getTable().add(card);
 
-                return "SUCCESS";
+                return "PLACE P" + board.getTurn() + "_CREATURE " + index;
             } else {
-                return "";
+                return "PLACE P" + board.getTurn() + "_FAILED NOMANA";
             }
-        } else if (board.getTurn() == board.PLAYER_B && board.getPlayerBTableCards().size() != board.maxTableSize) {
+        } /*else if (board.getTurn() == board.PLAYER_B && board.getPlayerBTableCards().size() != board.maxTableSize) {
 
             BasicCard card = board.getPlayers()[board.PLAYER_B].getHand().get(index);
 
@@ -187,12 +183,12 @@ public class Server {
             } else {
                 return "";
             }
-        }
-        return "FAIL";
+        }*/
+        return "PLACE P" + board.getTurn() + "_FAILED NOROOM";
     }
 
 
-
+/*
     public String attackEnemyPlayer() {
         String alive = "ALIVE";
         String dead = "DEAD";
