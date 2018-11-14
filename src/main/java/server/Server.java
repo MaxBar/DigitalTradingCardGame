@@ -67,35 +67,18 @@ public class Server {
             } else if (input.substring(attackStart).startsWith("P" + board.getTurn() + " ENEMY_PLAYER")) {
                 command = attackEnemyPlayer(cardIndex);
             }
-
         } else if (input.startsWith("PLACE P" + board.getTurn())) {
             command = placeCard(Integer.parseInt(input.substring(18)));
         } else if (input.startsWith("END_TURN")) {
             command = endTurn();
-
         } else if (input.startsWith("QUIT_GAME")) {
             command = quitGame();
         } else if (input.startsWith("LOGIN")) {
-            String email = input.substring(6);
-            String name = retrievePlayerName(email);
-            int id = retrievePlayerId(email);
-            if(board.getPlayers()[0] == null) {
-                int pos = 0;
-                board.addPlayer(new Player(id, name), pos);
-                command = String.valueOf("LOGIN " + id + " " + name + " " + pos);
-            } else {
-                int pos = 1;
-                board.addPlayer(new Player(id, name), pos);
-                command = String.valueOf("LOGIN " + id + " " + name + " " + pos);
-                
-                if(!started) {
-                    command += " START";
-                    started = true;
-                }
-            }
+            command = login(input);
         } else if(input.startsWith("STARTED")) {
             ++playersCon;
         } else if(input.startsWith("START_CARDS") && playersCon == 2) {
+
             command = dealCards(board.getTurn());
             board.increaseTurn(1);
         } else if (input.startsWith("P" + board.getTurn() + "_DRAW")) {
@@ -114,6 +97,53 @@ public class Server {
     public int rollDice(int min, int max) {
         return sRandom.nextInt(max - min + 1) + min;
     }
+
+    public String login(String input) {
+        String email = input.substring(6);
+        String name = retrievePlayerName(email);
+        int id = retrievePlayerId(email);
+        if(board.getPlayers()[0] == null) {
+            int pos = 0;
+            board.addPlayer(new Player(id, name), pos);
+            return String.valueOf("LOGIN " + id + " " + name + " " + pos);
+        } else {
+            int pos = 1;
+            board.addPlayer(new Player(id, name), pos);
+            String command = String.valueOf("LOGIN " + id + " " + name + " " + pos);
+
+            if(!started) {
+                command += " START";
+                started = true;
+            }
+            return command;
+        }
+    }
+
+    public void populateDecks() {
+        int deckId;
+        if (board.getPlayers()[0].getId() == 8) {
+            deckId = 1;
+        } else {
+            deckId = 2;
+        }
+        List<Integer> player0 = queryHandler.fetchDeckCreatureCardId(board.getPlayers()[0].getId(), deckId);
+
+        if (board.getPlayers()[1].getId() == 9) {
+            deckId = 2;
+        } else {
+            deckId = 1;
+        }
+        List<Integer> player1 = queryHandler.fetchDeckCreatureCardId(board.getPlayers()[1].getId(), deckId);
+
+        for (int id : player0) {
+            board.getPlayers()[0].getDeck().add(queryHandler.fetchCreatureCardId(id));
+        }
+
+        for (int id : player1) {
+            board.getPlayers()[1].getDeck().add(queryHandler.fetchCreatureCardId(id));
+        }
+    }
+
 
     public String dealCards(int playerTurn) {
         int handSize = 5;
