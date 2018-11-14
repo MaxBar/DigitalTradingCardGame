@@ -158,7 +158,6 @@ public class Server {
         int ids[] = new int[handSize];
 
         if (playerTurn == board.getTurn()) {
-
             for (int i = 0; i < handSize; i++) {
                 ids[i] = dealCard(playerTurn);
             }
@@ -170,7 +169,6 @@ public class Server {
             }
             id.setLength(id.length() - 2);
             return "DEALT CARDS P" + playerTurn + " " + id.toString();
-
         } else {
             for (int i = 0; i < handSize; i++) {
                 ids[i] = dealCard(playerTurn);
@@ -377,7 +375,7 @@ public class Server {
         }*/
     }
 
-    private void moveToGraveyard(int index, int player) {
+    public void moveToGraveyard(int index, int player) {
         //if (player == board.PLAYER_A) {
             BasicCard card = board.getPlayers()[player].getTable().get(index);
 
