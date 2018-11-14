@@ -1,30 +1,12 @@
 package server;
 
-import card.BasicCard;
 import card.BasicCreatureCard;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import repository.Database;
-import repository.DummyDB;
-
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
-import card.BasicCreatureCard;
-import player.Player;
 import repository.QueryHandler;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 
 class ServerTest {
@@ -82,7 +64,6 @@ class ServerTest {
 //        server.receiveCommand("START_CARDS");
             assertEquals(5, server.board.getPlayers()[0].getHand().size());
             assertEquals(5, server.board.getPlayers()[1].getHand().size());
-        
             server.receiveCommand("P0_DRAW");
             assertEquals(6, server.board.getPlayers()[0].getHand().size());
             server.receiveCommand("END_TURN");
@@ -94,7 +75,6 @@ class ServerTest {
     
     @Nested
     class Place {
-    
         @Test
         void placeCard() {
             assertEquals(5, server.board.getPlayers()[0].getHand().size());
@@ -112,11 +92,10 @@ class ServerTest {
     }
     
     @Nested
-    class attackEnemyPlayerWithCreaturesOnEnemyTable {
+    class AttackEnemyPlayerWithCreaturesOnEnemyTable {
     
         @Test
         void aEPWCOET() {
-            
             server.receiveCommand("P0_DRAW");
             server.receiveCommand("END_TURN");
             server.receiveCommand("P1_DRAW");
@@ -139,10 +118,9 @@ class ServerTest {
     }
     
     @Nested
-    class attackEnemyPlayerWithConsumedCard {
+    class AttackEnemyPlayerWithConsumedCard {
         @Test
         void aEPWCC() {
-            
             server.receiveCommand("P0_DRAW");
             server.receiveCommand("END_TURN");
             server.receiveCommand("P1_DRAW");
@@ -156,8 +134,7 @@ class ServerTest {
     }
     
     @Nested
-    class attackEnemyPlayerWithoutCreaturesOnEnemyTable {
-    
+    class AttackEnemyPlayerWithoutCreaturesOnEnemyTable {
         @Test
         void aEPWCOET() {
             
@@ -177,8 +154,7 @@ class ServerTest {
     }
     
     @Nested
-    class attackEnemyPlayerThatDies {
-    
+    class AttackEnemyPlayerThatDies {
         @Test
         void aEPLTD() {
             
@@ -197,7 +173,7 @@ class ServerTest {
     }
     
     @Nested
-    class attackEnemyCreature {
+    class AttackEnemyCreature {
         @Test
         void aEC() {
             server.receiveCommand("P0_DRAW");
@@ -219,7 +195,7 @@ class ServerTest {
     }
     
     @Nested
-    class attackEnemyCreatureWithWrongCreature {
+    class AttackEnemyCreatureWithWrongCreature {
         @Test
         void aECWWC() {
             server.receiveCommand("P0_DRAW");
@@ -240,7 +216,7 @@ class ServerTest {
     }
     
     @Nested
-    class attackEnemyCreatureThatHasNone {
+    class AttackEnemyCreatureThatHasNone {
         @Test
         void aECTHN() {
             server.receiveCommand("P0_DRAW");
@@ -259,7 +235,7 @@ class ServerTest {
     }
     
     @Nested
-    class attackEnemyCreatureWithConsumed {
+    class AttackEnemyCreatureWithConsumed {
         @Test
         void aECWC() {
             server.receiveCommand("P0_DRAW");
@@ -275,52 +251,66 @@ class ServerTest {
             assertEquals("ATTACK_RESULT FAILED 0 IS_CONSUMED", server.getCommand());
         }
     }
-
-    @Test
-    void checkPlayerAlive() {
-        assertTrue(server.checkPlayerAlive(server.board.getPlayers()[0]));
-        server.board.getPlayers()[1].setHealth(0);
-        assertFalse(server.checkPlayerAlive(server.board.getPlayers()[1]));
+    
+    @Nested
+    class CheckPlayerAlive {
+        @Test
+        void cPA() {
+            assertTrue(server.checkPlayerAlive(server.board.getPlayers()[0]));
+            server.board.getPlayers()[1].setHealth(0);
+            assertFalse(server.checkPlayerAlive(server.board.getPlayers()[1]));
+        }
     }
 
-    @Test
-    void checkCreatureAlive() {
-        server.receiveCommand("P0_DRAW");
-        server.receiveCommand("END_TURN");
-        server.receiveCommand("P1_DRAW");
-        server.receiveCommand("END_TURN");
-        server.board.getPlayers()[0].setMana(10);
-        server.receiveCommand("PLACE P0_CREATURE 0");
-        assertTrue(server.checkCreatureAlive(0, 0));
-        ((BasicCreatureCard)server.board.getPlayers()[0].getTable().get(0)).setHealth(-1);
-        assertFalse(server.checkCreatureAlive(0,0));
+    @Nested
+    class CheckCreatureAlive {
+        @Test
+        void cCA() {
+            server.receiveCommand("P0_DRAW");
+            server.receiveCommand("END_TURN");
+            server.receiveCommand("P1_DRAW");
+            server.receiveCommand("END_TURN");
+            server.board.getPlayers()[0].setMana(10);
+            server.receiveCommand("PLACE P0_CREATURE 0");
+            assertTrue(server.checkCreatureAlive(0, 0));
+            ((BasicCreatureCard) server.board.getPlayers()[0].getTable().get(0)).setHealth(-1);
+            assertFalse(server.checkCreatureAlive(0, 0));
+        }
     }
     
-    @Test
-    void moveToGraveyard() {
-        server.receiveCommand("P0_DRAW");
-        server.receiveCommand("END_TURN");
-        server.receiveCommand("P1_DRAW");
-        server.receiveCommand("END_TURN");
-        server.board.getPlayers()[0].setMana(10);
-        server.receiveCommand("PLACE P0_CREATURE 0");
-        assertEquals(0, server.board.getPlayers()[0].getGraveyard().size());
-        server.moveToGraveyard(0, 0);
-        assertEquals(1, server.board.getPlayers()[0].getGraveyard().size());
+    @Nested
+    class MoveToGraveyard {
+        @Test
+        void mTG() {
+            server.receiveCommand("P0_DRAW");
+            server.receiveCommand("END_TURN");
+            server.receiveCommand("P1_DRAW");
+            server.receiveCommand("END_TURN");
+            server.board.getPlayers()[0].setMana(10);
+            server.receiveCommand("PLACE P0_CREATURE 0");
+            assertEquals(0, server.board.getPlayers()[0].getGraveyard().size());
+            server.moveToGraveyard(0, 0);
+            assertEquals(1, server.board.getPlayers()[0].getGraveyard().size());
+        }
     }
     
-    
-    @Test
-    void endTurn() {
-        server.receiveCommand("END_TURN");
-        assertEquals("ROUND 1 TURN 1", server.getCommand());
-        server.receiveCommand("END_TURN");
-        assertEquals("ROUND 2 TURN 0", server.getCommand());
+    @Nested
+    class EndTurn {
+        @Test
+        void eT() {
+            server.receiveCommand("END_TURN");
+            assertEquals("ROUND 1 TURN 1", server.getCommand());
+            server.receiveCommand("END_TURN");
+            assertEquals("ROUND 2 TURN 0", server.getCommand());
+        }
     }
     
-    @Test
-    void quitGame() {
-        server.receiveCommand("QUIT_GAME");
-        assertEquals("QUIT_GAME P0", server.getCommand());
+    @Nested
+    class QuitGame {
+        @Test
+        void qG() {
+            server.receiveCommand("QUIT_GAME");
+            assertEquals("QUIT_GAME P0", server.getCommand());
+        }
     }
 }
