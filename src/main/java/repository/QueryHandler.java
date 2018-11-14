@@ -55,7 +55,7 @@ public class QueryHandler {
     }
 
     public List<Integer> fetchDeckCreatureCardId(int playerId, int deckId) {
-        String query = "SELECT id FROM CreatureCard card JOIN Deck deck ON deck.creatureCardId = card.id " +
+        String query = "SELECT card.id FROM CreatureCard card JOIN Deck deck ON deck.creatureCardId = card.id " +
                 "WHERE deck.deckId = " + deckId + " AND deck.playerId = " + playerId + " AND deck.creatureCardId IS NOT NULL";
         List<Integer> ids = new ArrayList<>();
         Statement st;
@@ -69,7 +69,7 @@ public class QueryHandler {
 
         try {
             while (rs.next()) {
-                ids.add(rs.getInt("creatureCardId"));
+                ids.add(rs.getInt("id"));
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -22,6 +22,7 @@ public class Server {
     private SecureRandom sRandom = new SecureRandom();
     private QueryHandler queryHandler = new QueryHandler();
     private boolean started = false;
+    private boolean isDeckPopulated = false;
     private int playersCon;
     //private Game game = Game.getInstance();
     public Board board = new Board();
@@ -54,18 +55,18 @@ public class Server {
     }
     
     public void receiveCommand(String input) {
-        int secondaryCheck = 12;
-        int attackStart = 6;
-        int attackEnd = 8;
-        int defendCheck = 26;
-        int cardIndex = 22;
-        int attackCreature = 24;
-        int attackCreatureEnd = 25;
+        //int secondaryCheck = 12;
+        int attackStart = 7;
+        //int attackEnd = 8;
+        int defendCheck = 27;
+        int cardIndex = 23;
+        int attackCreature = 25;
+        int attackCreatureEnd = 26;
         if (input.startsWith("ATTACK")) {
             if (input.substring(attackStart).startsWith("P" + board.getTurn() + " ENEMY_CREATURE")) {
                 command = attackEnemyCreature(Integer.parseInt(input.substring(attackCreature, attackCreatureEnd)), Integer.parseInt(input.substring(defendCheck)));
             } else if (input.substring(attackStart).startsWith("P" + board.getTurn() + " ENEMY_PLAYER")) {
-                command = attackEnemyPlayer(cardIndex);
+                command = attackEnemyPlayer(Integer.parseInt(input.substring(cardIndex)));
             }
         } else if (input.startsWith("PLACE P" + board.getTurn())) {
             command = placeCard(Integer.parseInt(input.substring(18)));
@@ -76,9 +77,13 @@ public class Server {
         } else if (input.startsWith("LOGIN")) {
             command = login(input);
         } else if(input.startsWith("STARTED")) {
+            command = "";
             ++playersCon;
         } else if(input.startsWith("START_CARDS") && playersCon == 2) {
-
+            if(!isDeckPopulated) {
+                populateDecks();
+                isDeckPopulated = true;
+            }
             command = dealCards(board.getTurn());
             board.increaseTurn(1);
         } else if (input.startsWith("P" + board.getTurn() + "_DRAW")) {
@@ -142,6 +147,9 @@ public class Server {
         for (int id : player1) {
             board.getPlayers()[1].getDeck().add(queryHandler.fetchCreatureCardId(id));
         }
+        
+        shuffleDeck(board.getPlayers()[0].getDeck());
+        shuffleDeck(board.getPlayers()[1].getDeck());
     }
 
 
@@ -195,6 +203,7 @@ public class Server {
                 player.decreaseMana(card.getManaCost());
                 player.getHand().remove(index);
                 player.getTable().add(card);
+                player.getTable().get(player.getTable().size() - 1).setIsConsumed(true);
 
                 return "PLACE P" + board.getTurn() + "_CREATURE " + index;
             } else {
@@ -221,20 +230,24 @@ public class Server {
     }
 
 
-
+    //TODO Check if the attacking creature exists with same as enemy craeture method
     private String attackEnemyPlayer(int index) {
         var player = board.getPlayers()[board.getTurn()];
         var enemyPlayer = board.getPlayers()[board.checkTurnCombat()];
         //if (board.getTurn() == board.PLAYER_A) {
             if (enemyPlayer.getTable().size() == 0) {
-                player.getTable().get(index).setIsConsumed(true);
-                enemyPlayer.decrementHealth(((BasicCreatureCard)player.getTable().get(index)).getAttack());
-                //Should we return a string, example: SUCCESS PLAYER ALIVE/SUCCESS PLAYER DEAD?
-                if (checkPlayerAlive(enemyPlayer)) {
-                    return "P" + board.checkTurnCombat() + "_PLAYER " + enemyPlayer.getHealth();
+                if (!player.getTable().get(index).getIsConsumed()) {
+                    player.getTable().get(index).setIsConsumed(true);
+                    enemyPlayer.decrementHealth(((BasicCreatureCard) player.getTable().get(index)).getAttack());
+                    //Should we return a string, example: SUCCESS PLAYER ALIVE/SUCCESS PLAYER DEAD?
+                    if (checkPlayerAlive(enemyPlayer)) {
+                        return "P" + board.checkTurnCombat() + "_PLAYER " + enemyPlayer.getHealth();
+                    } else {
+                        System.out.printf("Player %s died, %s won!\n", enemyPlayer.getName(), player.getName());
+                        return "P" + board.checkTurnCombat() + "_PLAYER DEAD";
+                    }
                 } else {
-                    System.out.printf("Player %s died, %s won!\n", enemyPlayer.getName(), player.getName());
-                    return "P" + board.checkTurnCombat() + "_PLAYER DEAD";
+                    return "P" + board.getTurn() + " CREATURE " + index + " IS_CONSUMED";
                 }
             }
 
@@ -259,21 +272,36 @@ public class Server {
 
     public String attackEnemyCreature(int attackingCreatureIndex, int defendingCreatureIndex) {
         String returnString = "ATTACK_RESULT";
-        var player = ((BasicCreatureCard)board.getPlayers()[board.getTurn()].getTable().get(attackingCreatureIndex));
-        var enemyPlayer = ((BasicCreatureCard)board.getPlayers()[board.checkTurnCombat()].getTable().get(defendingCreatureIndex));
-
-        player.decrementHealth(enemyPlayer.getDefense());
-        enemyPlayer.decrementHealth(player.getAttack());
-
-        player.setIsConsumed(true);
-
-        boolean attackingCreature = checkCreatureAlive(attackingCreatureIndex, board.getTurn());
-        boolean defendingCreature = checkCreatureAlive(defendingCreatureIndex, board.checkTurnCombat());
-
-        returnString += " P" + board.getTurn() + "_TABLE " + attackingCreatureIndex + "HP " + player.getHealth();
-        returnString += " | P" + board.checkTurnCombat() + "_TABLE " + defendingCreatureIndex + "HP " + enemyPlayer.getHealth();
-
-        return returnString;
+        BasicCreatureCard player = null;
+        if(board.getPlayers()[board.getTurn()].getTable().size() == attackingCreatureIndex + 1) {
+            player = ((BasicCreatureCard) board.getPlayers()[board.getTurn()].getTable().get(attackingCreatureIndex));
+        } else {
+            return returnString + " WRONG_CREATURE";
+        }
+    
+        if (board.getPlayers()[board.checkTurnCombat()].getTable().size() != 0) {
+            var enemyPlayer = ((BasicCreatureCard) board.getPlayers()[board.checkTurnCombat()].getTable().get(defendingCreatureIndex));
+            if (!player.getIsConsumed()) {
+    
+                player.decrementHealth(enemyPlayer.getDefense());
+                enemyPlayer.decrementHealth(player.getAttack());
+    
+                player.setIsConsumed(true);
+    
+                boolean attackingCreature = checkCreatureAlive(attackingCreatureIndex, board.getTurn());
+                boolean defendingCreature = checkCreatureAlive(defendingCreatureIndex, board.checkTurnCombat());
+    
+                returnString += " P" + board.getTurn() + "_TABLE " + attackingCreatureIndex + " HP " + player.getHealth();
+                returnString += " | P" + board.checkTurnCombat() + "_TABLE " + defendingCreatureIndex + " HP " + enemyPlayer.getHealth();
+    
+                return returnString;
+            } else {
+                return returnString + " FAILED " + attackingCreatureIndex + " IS_CONSUMED";
+            }
+        } else {
+            return returnString + " FAILED NO_ENEMY_CREATURES";
+        }
+    
 
 
         /*if (board.getTurn() == board.PLAYER_A) {
@@ -379,6 +407,7 @@ public class Server {
                 board.getPlayers()[board.getTurn()].getTable().get(i).setIsConsumed(false);
             }
             board.increaseTurn(1);
+            board.getPlayers()[board.getTurn()].setMana(board.getRound());
 
             return "ROUND " + board.getRound() + " TURN " + board.getTurn();
 

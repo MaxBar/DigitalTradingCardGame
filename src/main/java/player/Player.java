@@ -29,7 +29,9 @@ public class Player {
         this.health = 20;
         this.mana = 1;
         this.hand = new ArrayList<>();
-        deck = new ArrayList<>(Arrays.asList(
+        this.table = new ArrayList<>();
+        this.graveyard = new ArrayList<>();
+        deck = new ArrayList<>();/*(Arrays.asList(
                 new BasicCreatureCard(1, "Marshmallow", "White soft treat", "does not exist yet", 0, 1, 2, 1, 2),
                 new BasicCreatureCard(2, "Plopp", "Chocolate with gooey caramel center", "does not exist", 0, 2, 1, 1, 2),
                 new BasicCreatureCard(3, "Smash", "Crispy chocolate treat", "does not exist yet", 0, 5, 1, 1, 2),
@@ -40,7 +42,7 @@ public class Player {
                 new BasicCreatureCard(8, "Bounty", "Chocolate with coconut filling", "does not exist yet", 0, 2, 1, 1, 2),
                 new BasicCreatureCard(9, "Hubba Bubba", "Sweet chewing-gum", "does not exist yet", 0, 3, 3, 1, 2),
                 new BasicCreatureCard(10, "Raisin", "Dried up grapes pretending to be candy", "does not exist yet", 0, 1, 1, 1, 2))
-        );
+        );*/
         Collections.shuffle(deck);
     }
     

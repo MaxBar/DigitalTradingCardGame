@@ -59,6 +59,7 @@ public class NetworkServer {
         t.start();
     }
     
+    //TODO make public so that server can send to client without client sending first
     private void sendMsgToClient(String msg, DatagramPacket clientRequest) throws IOException {
         
         byte[] buffer = msg.getBytes();
