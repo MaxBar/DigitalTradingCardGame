@@ -3,6 +3,7 @@ package Game;
 import NetworkClient.NetworkClient;
 import card.BasicCard;
 import player.Player;
+import repository.QueryHandler;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,6 +11,8 @@ import java.util.List;
 
 public class Game {
     private static Game game;
+    
+    QueryHandler queryHandler;
     // Player
     private Player player;
     private List<BasicCard> playerTableCards = new ArrayList<>();
@@ -19,7 +22,7 @@ public class Game {
     private int round;
     
     // Enemy player
-    private List<BasicCard> EnemyTableCards;
+    private List<BasicCard> enemyTableCards;
     private int enemyGraveyard;
     private int enemyHand;
     private int enemyDeck;
@@ -27,6 +30,9 @@ public class Game {
     private int enemyMana;
     
     private Game() {
+        queryHandler = new QueryHandler();
+        playerTableCards = new ArrayList<>();
+        enemyTableCards = new ArrayList<>();
         turn = 0;
         round = 0;
     }
@@ -77,6 +83,17 @@ public class Game {
     public void receiveCommand(String serverOutput) {
         if(serverOutput.startsWith("LOGIN")) {
             login(serverOutput);
+        } else if(serverOutput.substring(3).startsWith("DEALT_CARDS") && (Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn())) {
+            String cards = serverOutput.substring(15);
+            String[] chunks = cards.split(", ");
+            int[] cardIndices = new int[5];
+            for(int i = 0; i < chunks.length; ++i) {
+                cardIndices[i] = Integer.parseInt(chunks[i]);
+                player.getHand().add(queryHandler.fetchCreatureCardId(cardIndices[i]));
+            }
+            for(int i = 0; i < player.getHand().size(); ++i) {
+                System.out.println(player.getHand().get(i));
+            }
         }
     }
     
@@ -102,6 +119,8 @@ public class Game {
     private void startGame() {
         try {
             NetworkClient.getInstance().sendMessageToServer("STARTED");
+            NetworkClient.getInstance().sendMessageToServer("START_CARDS");
+            NetworkClient.getInstance().sendMessageToServer("END_TURN");
         } catch (IOException e) {
             e.printStackTrace();
         }
