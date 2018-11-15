@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
-    private static Game game;
+    private static Game game = null;
     
     QueryHandler queryHandler;
     private int started;
@@ -157,7 +157,7 @@ public class Game {
     
     private void endTurn(String serverOutput) {
         String[] chunks = serverOutput.split(" ");
-        turn = Integer.parseInt(chunks[1]);
-        round = Integer.parseInt(chunks[3]);
+        turn = Integer.parseInt(chunks[3]);
+        round = Integer.parseInt(chunks[1]);
     }
 }
