@@ -1,7 +1,9 @@
 package menu;
 
 import Game.Game;
+import NetworkClient.NetworkClient;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class GameMenu {
@@ -24,11 +26,15 @@ public class GameMenu {
             System.out.println("9) Quit game");
             System.out.println("---------- **** ----------");
             choice = sc.nextInt();
-            checkChoice(choice);
+            try {
+                checkChoice(choice);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } while(choice != quitMessage);
     }
     
-    private void checkChoice(int choice) {
+    private void checkChoice(int choice) throws IOException {
         Game game = Game.getInstance();
         if(game.getTurn() == game.getPlayer().getPlayerTurn()) {
             switch (choice) {
@@ -39,7 +45,8 @@ public class GameMenu {
                     System.out.println("attack");
                     break;
                 case 3:
-                    System.out.println("end");
+                    NetworkClient.getInstance().sendMessageToServer("END_TURN");
+                    //System.out.println("end");
                     break;
                 case 9:
                     break;

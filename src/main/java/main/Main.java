@@ -60,12 +60,14 @@ public class Main {
                 Scanner scanner = new Scanner(System.in);
                 
                 while(true) {
-                    String msg = scanner.nextLine();
-                    
-                    try {
-                        client.sendMessageToServer(msg);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    if(Game.getInstance().getStarted() < 1) {
+                        String msg = scanner.nextLine();
+    
+                        try {
+                            client.sendMessageToServer(msg);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }

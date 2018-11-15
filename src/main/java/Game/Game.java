@@ -88,6 +88,11 @@ public class Game {
         return turn;
     }
     
+    public int getStarted() {
+        return started;
+    }
+    
+    
     
     public void receiveCommand(String serverOutput) {
         if(serverOutput.startsWith("LOGIN")) {
