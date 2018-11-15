@@ -13,6 +13,7 @@ public class Game {
     private static Game game;
     
     QueryHandler queryHandler;
+    private int started;
     // Player
     private Player player;
     private List<BasicCard> playerTableCards = new ArrayList<>();
@@ -94,6 +95,11 @@ public class Game {
             for(int i = 0; i < player.getHand().size(); ++i) {
                 System.out.println(player.getHand().get(i));
             }
+        } else if(serverOutput.equals("STARTED")) {
+            ++started;
+            if(started >= 2) {
+                startGame();
+            }
         }
     }
     
@@ -107,18 +113,25 @@ public class Game {
             player = new Player(playerId, playerName, playerTurn);
             System.out.printf("%s %s %s", player.getId(), player.getName(), player.getPlayerTurn());
             if(chunks.length > 5) {
-                startGame();
+                sendStart();
             }
         } else {
             if(chunks.length > 5) {
-                startGame();
+                sendStart();
             }
+        }
+    }
+    
+    private void sendStart() {
+        try {
+            NetworkClient.getInstance().sendMessageToServer("STARTED");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
     
     private void startGame() {
         try {
-            NetworkClient.getInstance().sendMessageToServer("STARTED");
             NetworkClient.getInstance().sendMessageToServer("START_CARDS");
             NetworkClient.getInstance().sendMessageToServer("END_TURN");
         } catch (IOException e) {
