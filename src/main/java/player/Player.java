@@ -1,9 +1,6 @@
 package player;
 
 import card.BasicCard;
-import card.BasicCreatureCard;
-import repository.DummyDB;
-import server.Server;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,19 +8,21 @@ import java.util.List;
 public class Player {
 
     // Fields
-    private int id = 1;
+    private int id;
+    private int playerTurn;
     private String name = "player";
     private int health;
     private int mana = 2;
     private List<BasicCard> hand;
-    private Server server = Server.getInstance();
+    //private Server server = Server.getInstance();
     //private Server server = new Server();
 
-    public Player(int id, String name, int mana) {
+    public Player(int id, String name, int playerTurn) {
         this.id = id;
+        this.playerTurn = playerTurn;
         this.name = name;
         this.health = 20;
-        this.mana = mana;
+        this.mana = 1;
         this.hand = new ArrayList<>();
         //this.server = new Server();
     }
@@ -32,7 +31,11 @@ public class Player {
     public int getId() {
         return id;
     }
-
+    
+    public int getPlayerTurn() {
+        return playerTurn;
+    }
+    
     public void setId(int id) {
         this.id = id;
     }
@@ -76,9 +79,15 @@ public class Player {
     public void setHand(List<BasicCard> hand) {
         this.hand = hand;
     }
+    
+    public void receiveCommand(String serverOutput) {
+        if(serverOutput.startsWith("LOGIN")) {
+        
+        }
+    }
 
     // Player Functions
-    public void receiveCard(int id) {
+    /*public void receiveCard(int id) {
         DummyDB db = new DummyDB();
 
         for (BasicCard card: db.database) {
@@ -129,5 +138,5 @@ public class Player {
 
     public void quitGame() {
         server.receiveCommand("QUIT_GAME");
-    }
+    }*/
 }

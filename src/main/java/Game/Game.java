@@ -2,32 +2,31 @@ package Game;
 
 import card.BasicCard;
 import player.Player;
-import repository.DummyDB;
-import server.Server;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
     private static Game game;
-    DummyDB dummy = new DummyDB();
-    private List<BasicCard> playerATableCards = new ArrayList<>(); // Remove A when multiplayer
-    private List<BasicCard> playerBTableCards = new ArrayList<>(); // Remove when multiplayer
+    // Player
+    private Player player;
+    private List<BasicCard> playerTableCards = new ArrayList<>();
+    private int playerGraveyard;
+    private int playerDeck;
+    private int turn;
+    private int round;
     
-    private Player playerA; // Remove A when multiplayer
-    private Player playerB; // Remove when multiplayer
-    
-    private int playerAGraveyard; // Remove A when multiplayer
-    private int playerBGraveyard; // Remove when multiplayer
-    
-    private int playerADeck; // Remove A when multiplayer
-    private int playerBDeck; // Remove when multiplayer
+    // Enemy player
+    private List<BasicCard> EnemyTableCards;
+    private int enemyGraveyard;
+    private int enemyHand;
+    private int enemyDeck;
+    private int enemyHealth;
+    private int enemyMana;
 
     private Game() {
-
-        /*playerA = new Player(1, "playerA", 1);
-        playerB = new Player(2, "playerB", 1);*/
-    
+        turn = 0;
+        round = 0;
     }
     
     public static Game getInstance() {
@@ -37,77 +36,49 @@ public class Game {
         return game;
     }
     
-    public List<BasicCard> getPlayerATableCards() {
-        return playerATableCards;
+    public List<BasicCard> getPlayerTableCards() {
+        return playerTableCards;
+    }
+    
+    public Player getPlayer() {
+        return player;
     }
 
-    public List<BasicCard> getPlayerBTableCards() {
-        return playerBTableCards;
+    /*public void setPlayer(Player player) {
+        this.player = player;
+    }*/
+    
+    public int getPlayerGraveyard() {
+        return playerGraveyard;
     }
     
-    public Player getPlayerA() {
-        return playerA;
+    public void incrementPlayerGraveyard() {
+        ++playerGraveyard;
     }
     
-    public Player getPlayerB() {
-        return playerB;
-    }
-
-    public void setPlayerA(Player playerA) {
-        this.playerA = playerA;
-    }
-
-    public void setPlayerB(Player playerB) {
-        this.playerB = playerB;
+    public int getPlayerDeck() {
+        return playerDeck;
     }
     
-    public int getPlayerAGraveyard() {
-        return playerAGraveyard;
+    public void incrementPlayerDeck() {
+        ++playerDeck;
     }
     
-    public int getPlayerBGraveyard() {
-        return playerBGraveyard;
+    public void decrementPlayerDeck() {
+        --playerDeck;
     }
     
-    public void incrementPlayerAGraveyard() {
-        ++playerAGraveyard;
+    public void setPlayerDeck(int deck) {
+        playerDeck = deck;
     }
     
-    public void incrementPlayerBGraveyard() {
-        ++playerBGraveyard;
+    public void receiveCommand(String serverOutput) {
+        if(serverOutput.startsWith("LOGIN")) {
+            int playerId = Integer.parseInt(serverOutput.substring(9, serverOutput.indexOf(" ", 9)));
+            int playerTurn = Integer.parseInt(serverOutput.substring(18, serverOutput.indexOf(" ", 18)));
+            String playerName = serverOutput.substring(25);//, serverOutput.indexOf(" ", 25));
+            player = new Player(playerId, playerName, playerTurn);
+            System.out.printf("%s %s %s", player.getId(), player.getName(), player.getPlayerTurn());
+        }
     }
-    
-    public int getPlayerADeck() {
-        return playerADeck;
-    }
-    
-    public void setPlayerADeck(int deck) {
-        playerADeck = deck;
-    }
-    
-    public int getPlayerBDeck() {
-        return playerBDeck;
-    }
-    
-    public void setPlayerBDeck(int deck) {
-        playerBDeck = deck;
-    }
-    
-    public void decrementPlayerADeck() {
-        --playerADeck;
-    }
-    
-    public void decrementPlayerBDeck() {
-        --playerBDeck;
-    }
-    //TODO add when changing to multiplayer
-    /*
-    private List<BasicCard> EnemyTableCards;
-    private int enemyGraveyard;
-    private int enemyHand;
-    privaet int enemyDeck
-    private int enemyHealth;
-    private int enemyMana;
-    */
-    
 }

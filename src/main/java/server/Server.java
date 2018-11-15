@@ -1,3 +1,4 @@
+/*
 package server;
 
 import card.BasicCard;
@@ -446,3 +447,4 @@ public class Server {
     }
 
 }
+*/

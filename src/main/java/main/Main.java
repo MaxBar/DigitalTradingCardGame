@@ -1,14 +1,82 @@
 package main;
-
-import Game.Game;
-import card.BasicCreatureCard;
-import player.Player;
-import server.Server;
-
-import java.sql.SQLOutput;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Scanner;
 
+import Game.Game;
+import NetworkClient.NetworkClient;
+import repository.Database;
+import repository.QueryHandler;
+
 public class Main {
+        
+        private static NetworkClient client;
+        
+        
+        public static void launch(String[] args) throws IOException, InterruptedException {
+            //...
+            try {
+                client = new NetworkClient("10.155.88.80", 150);
+            } catch(Exception e){
+                System.out.println(e.getMessage());
+                client.stop();
+            }
+    
+            Database db = new Database();
+            QueryHandler q = new QueryHandler();
+            try {
+                db.connect();
+        
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
+            inputThread.start();
+            
+            while(true){
+                Thread.sleep(500);
+                while(true){
+                    String text = client.pollMessage();
+                    if(text != null){
+                        Game.getInstance().receiveCommand(text);
+                        //System.out.println(text);
+                        
+                    }else{
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // On program exit
+        
+        public void stop(){
+            client.stop();
+        }
+        
+        private static Thread inputThread = new Thread() {
+            public void run() {
+                Scanner scanner = new Scanner(System.in);
+                
+                while(true) {
+                    String msg = scanner.nextLine();
+                    
+                    try {
+                        client.sendMessageToServer(msg);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        
+        public static void main(String[] args) throws IOException, InterruptedException {
+            launch(args);
+        }
+    }
+    
+    
+    /*
     private static int choice;
     private static Scanner sc = new Scanner(System.in);
     private static Server server = Server.getInstance();
@@ -353,3 +421,4 @@ public class Main {
         System.out.println("**************************************");
     }
 }
+*/
