@@ -104,7 +104,8 @@ public class Game {
             for(int i = 0; i < player.getHand().size(); ++i) {
                 System.out.println(player.getHand().get(i));
             }
-            gameMenu.rootMenu();
+            
+            gameMenu.rootMenu.start();
         } else if(serverOutput.equals("STARTED")) {
             ++started;
             if(started == 2) {
@@ -118,7 +119,7 @@ public class Game {
     private void login(String serverOutput) {
         String [] chunks = serverOutput.split (" ");
         String start = "";
-        if(chunks[1].equals("john@hotmail.se")) {
+        if(chunks[1].equals("linn@hotmail.se")) {
             int playerId = Integer.parseInt(chunks[2].substring(3));
             int playerTurn = Integer.parseInt(chunks[3].substring(7));
             String playerName = chunks[4].substring(5);
