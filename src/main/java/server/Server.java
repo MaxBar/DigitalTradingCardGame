@@ -436,8 +436,13 @@ public class Server {
             }
             board.increaseTurn(1);
             board.getPlayers()[board.getTurn()].setMana(board.getRound());
-
-            return "ROUND " + board.getRound() + " TURN " + board.getTurn();
+        try {
+            NetworkServer.getInstance().sendMsgToClient(String.format("ROUND %s TURN %s", board.getRound(), board.getTurn()), NetworkServer.getInstance().getClientIP().get(0));
+            NetworkServer.getInstance().sendMsgToClient(String.format("ROUND %s TURN %s", board.getRound(), board.getTurn()), NetworkServer.getInstance().getClientIP().get(1));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+            return "";
 
         /*} else {
             for (int i = 0; i < board.getPlayerBTableCards().size(); i++) {
