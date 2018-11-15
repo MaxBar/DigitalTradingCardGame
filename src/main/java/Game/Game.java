@@ -2,6 +2,7 @@ package Game;
 
 import NetworkClient.NetworkClient;
 import card.BasicCard;
+import menu.GameMenu;
 import player.Player;
 import repository.QueryHandler;
 
@@ -14,6 +15,7 @@ public class Game {
     
     QueryHandler queryHandler;
     private int started;
+    private GameMenu gameMenu;
     // Player
     private Player player;
     private List<BasicCard> playerTableCards = new ArrayList<>();
@@ -31,6 +33,7 @@ public class Game {
     private int enemyMana;
     
     private Game() {
+        gameMenu = new GameMenu();
         queryHandler = new QueryHandler();
         playerTableCards = new ArrayList<>();
         enemyTableCards = new ArrayList<>();
@@ -81,6 +84,11 @@ public class Game {
         playerDeck = deck;
     }
     
+    public int getTurn() {
+        return turn;
+    }
+    
+    
     public void receiveCommand(String serverOutput) {
         if(serverOutput.startsWith("LOGIN")) {
             login(serverOutput);
@@ -97,7 +105,7 @@ public class Game {
             }
         } else if(serverOutput.equals("STARTED")) {
             ++started;
-            if(started >= 2) {
+            if(started == 2) {
                 startGame();
             }
         }
@@ -134,6 +142,7 @@ public class Game {
         try {
             NetworkClient.getInstance().sendMessageToServer("START_CARDS");
             NetworkClient.getInstance().sendMessageToServer("END_TURN");
+            gameMenu.rootMenu();
         } catch (IOException e) {
             e.printStackTrace();
         }
