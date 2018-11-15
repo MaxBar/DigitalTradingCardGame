@@ -110,10 +110,10 @@ class ServerTest {
             assertEquals(1, server.board.getPlayers()[0].getTable().size());
             assertEquals(1, server.board.getPlayers()[1].getTable().size());
             server.receiveCommand("ATTACK P0 ENEMY_PLAYER 0");
-            assertEquals("P1_PLAYER FAIL CARDS_ON_TABLE", server.getCommand());
+            assertEquals("P" + server.board.checkTurnCombat() + " ATTACK_RESULT_FAILURE CARDS_ON_TABLE", server.getCommand());
             server.receiveCommand("END_TURN");
             server.receiveCommand("ATTACK P1 ENEMY_PLAYER 0");
-            assertEquals("P0_PLAYER FAIL CARDS_ON_TABLE", server.getCommand());
+            assertEquals("P" + server.board.checkTurnCombat() + " ATTACK_RESULT_FAILURE CARDS_ON_TABLE", server.getCommand());
         }
     }
     
@@ -129,7 +129,7 @@ class ServerTest {
             server.receiveCommand("PLACE P0_CREATURE 0");
             assertEquals(1, server.board.getPlayers()[0].getTable().size());
             server.receiveCommand("ATTACK P0 ENEMY_PLAYER 0");
-            assertEquals("P0 CREATURE " + 0 + " IS_CONSUMED", server.getCommand());
+            assertEquals("P" + server.board.getTurn() + " ATTACK_RESULT_FAILURE CREATURE_0_IS_CONSUMED", server.getCommand());
         }
     }
     
@@ -149,7 +149,7 @@ class ServerTest {
         
             assertEquals(1, server.board.getPlayers()[0].getTable().size());
             server.receiveCommand("ATTACK P0 ENEMY_PLAYER 0");
-            assertEquals("P1_PLAYER " + (server.board.getPlayers()[1].getHealth() - ((BasicCreatureCard) server.board.getPlayers()[0].getTable().get(0)).getAttack()), server.getCommand());
+            assertEquals("P" + server.board.getTurn() + " ATTACK_RESULT_SUCCESS P" + server.board.checkTurnCombat() + " HP " + server.board.getPlayers()[server.board.checkTurnCombat()].getHealth(), server.getCommand());
         }
     }
     
@@ -168,7 +168,7 @@ class ServerTest {
             server.receiveCommand("END_TURN");
             server.board.getPlayers()[1].setHealth(1);
             server.receiveCommand("ATTACK P0 ENEMY_PLAYER 0");
-            assertEquals("P1_PLAYER DEAD", server.getCommand());
+            assertEquals("P" + server.board.getTurn() + " ATTACK_RESULT_SUCCESS P" + server.board.checkTurnCombat() + "_DEAD", server.getCommand());
         }
     }
     
@@ -189,8 +189,9 @@ class ServerTest {
             ((BasicCreatureCard)server.board.getPlayers()[0].getTable().get(0)).setHealth(10);
             ((BasicCreatureCard)server.board.getPlayers()[1].getTable().get(0)).setHealth(10);
             server.receiveCommand("ATTACK P0 ENEMY_CREATURE 0 0");
-            assertEquals("ATTACK_RESULT P0_TABLE 0 HP " + ((BasicCreatureCard)server.board.getPlayers()[0].getTable().get(0)).getHealth() +
-                    " | P1_TABLE 0 HP " + ((BasicCreatureCard)server.board.getPlayers()[1].getTable().get(0)).getHealth(), server.getCommand());
+            assertEquals("P" + server.board.getTurn() + "_ATTACK_RESULT_SUCCESS CARD_0 HP " +
+                    ((BasicCreatureCard) server.board.getPlayers()[0].getTable().get(0)).getHealth() + " | P" +
+                    server.board.checkTurnCombat() + "_CARD_0 hp " + ((BasicCreatureCard) server.board.getPlayers()[1].getTable().get(0)).getHealth(), server.getCommand());
         }
     }
     
@@ -204,14 +205,16 @@ class ServerTest {
             server.receiveCommand("END_TURN");
             server.board.getPlayers()[0].setMana(10);
             server.receiveCommand("PLACE P0_CREATURE 0");
+            server.receiveCommand("PLACE P0_CREATURE 0");
             server.receiveCommand("END_TURN");
             server.board.getPlayers()[1].setMana(10);
             server.receiveCommand("PLACE P1_CREATURE 0");
             server.receiveCommand("END_TURN");
             ((BasicCreatureCard)server.board.getPlayers()[0].getTable().get(0)).setHealth(10);
             ((BasicCreatureCard)server.board.getPlayers()[1].getTable().get(0)).setHealth(10);
-            server.receiveCommand("ATTACK P0 ENEMY_CREATURE 1 0");
-            assertEquals("ATTACK_RESULT WRONG_CREATURE", server.getCommand());
+            server.receiveCommand("ATTACK P0 ENEMY_CREATURE 8 0");
+            assertEquals("P" +
+                    server.board.getTurn() + " ATTACK_RESULT_FAILURE CREATURE_OUT_OF_BOUNDS", server.getCommand());
         }
     }
     
@@ -230,7 +233,8 @@ class ServerTest {
             server.receiveCommand("END_TURN");
             ((BasicCreatureCard)server.board.getPlayers()[0].getTable().get(0)).setHealth(10);
             server.receiveCommand("ATTACK P0 ENEMY_CREATURE 0 0");
-            assertEquals("ATTACK_RESULT FAILED NO_ENEMY_CREATURES", server.getCommand());
+            assertEquals("P" +
+                    server.board.getTurn() + " ATTACK_RESULT_FAILURE NO_ENEMY_CARDS_ON_TABLE", server.getCommand());
         }
     }
     
@@ -248,7 +252,8 @@ class ServerTest {
             server.board.getPlayers()[1].setMana(10);
             server.receiveCommand("PLACE P1_CREATURE 0");
             server.receiveCommand("ATTACK P1 ENEMY_CREATURE 0 0");
-            assertEquals("ATTACK_RESULT FAILED 0 IS_CONSUMED", server.getCommand());
+            assertEquals("P" +
+                    server.board.getTurn() + " ATTACK_RESULT_FAILURE CREATURE_0_IS_CONSUMED", server.getCommand());
         }
     }
     
@@ -310,7 +315,7 @@ class ServerTest {
         @Test
         void qG() {
             server.receiveCommand("QUIT_GAME");
-            assertEquals("QUIT_GAME P0", server.getCommand());
+            assertEquals("P" + server.board.getTurn() + " QUIT_GAME", server.getCommand());
         }
     }
 }

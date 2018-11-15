@@ -171,7 +171,7 @@ public class Player {
 
     public void decreaseMana(int manaCost){
 
-        mana =- manaCost;
+        mana -= manaCost;
 
     }
 }
