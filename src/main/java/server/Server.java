@@ -6,6 +6,7 @@ import card.BasicCreatureCard;
 import player.Player;
 import repository.QueryHandler;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -169,6 +170,11 @@ public class Server {
                 id.append(id1).append(", ");
             }
             id.setLength(id.length() - 2);
+            try {
+                NetworkServer.getInstance().sendMsgToClient(String.format("P%s DEALT_CARDS %s", playerTurn, id.toString()), NetworkServer.getInstance().getClientIP().get(playerTurn));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return String.format("P%s DEALT_CARDS %s", playerTurn, id.toString());
             //return "DEALT_CARDS P" + playerTurn + " " + id.toString();
         } else {

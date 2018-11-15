@@ -47,7 +47,7 @@ public class Main {
         //players[playerA].receiveCard(server.dealCard(server.board.getTurn()));
         //endregion
         try {
-            networkServer = new NetworkServer(150);
+            networkServer = NetworkServer.getInstance();
         } catch(Exception e){
             System.out.println(e.getMessage());
             networkServer.stop();
