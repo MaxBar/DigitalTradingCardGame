@@ -113,6 +113,8 @@ public class Game {
             if(started == 2) {
                 startGame();
             }
+        } else if(serverOutput.equals("END_TURN")) {
+            endTurn(serverOutput);
         }
     }
     
@@ -151,5 +153,11 @@ public class Game {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    private void endTurn(String serverOutput) {
+        String[] chunks = serverOutput.split(" ");
+        turn = Integer.parseInt(chunks[1]);
+        round = Integer.parseInt(chunks[3]);
     }
 }
