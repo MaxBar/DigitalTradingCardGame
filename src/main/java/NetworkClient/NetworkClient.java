@@ -6,6 +6,8 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 
 public class NetworkClient {
+    private static NetworkClient instance = null;
+    
     private DatagramSocket socket;
     private Thread t;
     private int serverPort;
@@ -14,18 +16,33 @@ public class NetworkClient {
     private InetAddress serverAddress;
     private LinkedBlockingDeque<String> msgQueue = new LinkedBlockingDeque<>();
     
-    public NetworkClient(String hostname, int serverPort) throws SocketException, UnknownHostException {
-        
+    private NetworkClient() throws SocketException, UnknownHostException {
+        String hostname = "10.155.88.80";
+        int serverPort = 150;
         serverAddress = InetAddress.getByName(hostname);
         this.serverPort = serverPort;
         
         
-        final int clientPort = serverPort+1;
+        final int clientPort = 150+1;
         System.out.println(InetAddress.getByName(hostname));
         socket = new DatagramSocket(clientPort);
         socket.setSoTimeout(500);
         
         startThread();
+    }
+    
+    public static NetworkClient getInstance() {
+        if(instance == null) {
+            try {
+                instance = new NetworkClient();
+            } catch (SocketException e) {
+                e.printStackTrace();
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+            return instance;
+        }
+        return instance;
     }
     
     public void stop(){

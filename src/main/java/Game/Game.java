@@ -1,8 +1,10 @@
 package Game;
 
+import NetworkClient.NetworkClient;
 import card.BasicCard;
 import player.Player;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +25,7 @@ public class Game {
     private int enemyDeck;
     private int enemyHealth;
     private int enemyMana;
-
+    
     private Game() {
         turn = 0;
         round = 0;
@@ -74,11 +76,34 @@ public class Game {
     
     public void receiveCommand(String serverOutput) {
         if(serverOutput.startsWith("LOGIN")) {
-            int playerId = Integer.parseInt(serverOutput.substring(9, serverOutput.indexOf(" ", 9)));
-            int playerTurn = Integer.parseInt(serverOutput.substring(18, serverOutput.indexOf(" ", 18)));
-            String playerName = serverOutput.substring(25);//, serverOutput.indexOf(" ", 25));
+            login(serverOutput);
+        }
+    }
+    
+    private void login(String serverOutput) {
+        String [] chunks = serverOutput.split (" ");
+        String start = "";
+        if(chunks[1].equals("john@hotmail.se")) {
+            int playerId = Integer.parseInt(chunks[2].substring(3));
+            int playerTurn = Integer.parseInt(chunks[3].substring(7));
+            String playerName = chunks[4].substring(5);
             player = new Player(playerId, playerName, playerTurn);
             System.out.printf("%s %s %s", player.getId(), player.getName(), player.getPlayerTurn());
+            if(chunks.length > 5) {
+                startGame();
+            }
+        } else {
+            if(chunks.length > 5) {
+                startGame();
+            }
+        }
+    }
+    
+    private void startGame() {
+        try {
+            NetworkClient.getInstance().sendMessageToServer("STARTED");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

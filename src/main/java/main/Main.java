@@ -16,7 +16,8 @@ public class Main {
         public static void launch(String[] args) throws IOException, InterruptedException {
             //...
             try {
-                client = new NetworkClient("10.155.88.80", 150);
+                client = NetworkClient.getInstance();
+                //client = new NetworkClient("10.155.88.80", 150);
             } catch(Exception e){
                 System.out.println(e.getMessage());
                 client.stop();
