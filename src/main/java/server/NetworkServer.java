@@ -9,6 +9,8 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 
 public class NetworkServer {
+    private static NetworkServer instance = null;
+    
     private DatagramSocket socket;
     private List<String> listQuotes = new ArrayList<String>();
     private Thread t;
@@ -19,11 +21,23 @@ public class NetworkServer {
     
     private ArrayList<DatagramPacket> clientIP = new ArrayList<>();
     
-    public NetworkServer(int port) throws SocketException{
+    private NetworkServer() throws SocketException{
+        int port = 150;
         socket = new DatagramSocket(port);
         socket.setSoTimeout(500);
         
         startThread();
+    }
+    
+    public static NetworkServer getInstance() {
+        if(instance == null) {
+            try {
+                instance = new NetworkServer();
+            } catch (SocketException e) {
+                e.printStackTrace();
+            }
+        }
+        return instance;
     }
     
     public void stop(){
@@ -60,7 +74,7 @@ public class NetworkServer {
     }
     
     //TODO make public so that server can send to client without client sending first
-    private void sendMsgToClient(String msg, DatagramPacket clientRequest) throws IOException {
+    public void sendMsgToClient(String msg, DatagramPacket clientRequest) throws IOException {
         
         byte[] buffer = msg.getBytes();
         
@@ -123,5 +137,9 @@ public class NetworkServer {
         }*/
         
         System.out.println(clientMsg);
+    }
+    
+    public ArrayList<DatagramPacket> getClientIP() {
+        return clientIP;
     }
 }
