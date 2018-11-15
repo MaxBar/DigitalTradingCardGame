@@ -9,9 +9,10 @@ import repository.QueryHandler;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Game {
-    private static Game game = null;
+    private static final Game GAME = new Game();
     
     QueryHandler queryHandler;
     private int started;
@@ -37,15 +38,10 @@ public class Game {
         queryHandler = new QueryHandler();
         playerTableCards = new ArrayList<>();
         enemyTableCards = new ArrayList<>();
-        turn = 0;
-        round = 0;
     }
     
     public static Game getInstance() {
-        if (game == null) {
-            game = new Game();
-        }
-        return game;
+        return GAME;
     }
     
     public List<BasicCard> getPlayerTableCards() {
@@ -108,12 +104,13 @@ public class Game {
             for(int i = 0; i < player.getHand().size(); ++i) {
                 System.out.println(player.getHand().get(i));
             }
+            gameMenu.rootMenu();
         } else if(serverOutput.equals("STARTED")) {
             ++started;
             if(started == 2) {
                 startGame();
             }
-        } else if(serverOutput.equals("END_TURN")) {
+        } else if(serverOutput.startsWith("ROUND")) {
             endTurn(serverOutput);
         }
     }
@@ -149,7 +146,7 @@ public class Game {
         try {
             NetworkClient.getInstance().sendMessageToServer("START_CARDS");
             NetworkClient.getInstance().sendMessageToServer("END_TURN");
-            gameMenu.rootMenu();
+            //gameMenu.rootMenu();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -159,5 +156,8 @@ public class Game {
         String[] chunks = serverOutput.split(" ");
         turn = Integer.parseInt(chunks[3]);
         round = Integer.parseInt(chunks[1]);
+    
+        System.out.println("Turn: " + turn);
+        System.out.println("Round: " + round);
     }
 }
