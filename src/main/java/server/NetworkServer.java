@@ -119,14 +119,13 @@ public class NetworkServer {
         } else {
             msgQueue.addLast("John: " + clientMsg);
         }*/
-        
         Server.getInstance().receiveCommand(msgQueue.takeFirst());
-        if(clientIP.size() == 1) {
+        /*if(clientIP.size() == 1) {
             sendMsgToClient(Server.getInstance().getCommand(), clientIP.get(0));
         } else {
             sendMsgToClient(Server.getInstance().getCommand(), clientIP.get(0));
             sendMsgToClient(Server.getInstance().getCommand(), clientIP.get(1));
-        }
+        }*/
         
         
         /*if(clientIP.size() >= 2) {

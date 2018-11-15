@@ -78,7 +78,16 @@ public class Server {
         } else if (input.startsWith("LOGIN")) {
             command = login(input);
         } else if(input.startsWith("STARTED")) {
-            command = "";
+            try {
+                NetworkServer.getInstance().sendMsgToClient("STARTED",NetworkServer.getInstance().getClientIP().get(0));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                NetworkServer.getInstance().sendMsgToClient("STARTED",NetworkServer.getInstance().getClientIP().get(1));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             ++playersCon;
         } else if(input.startsWith("START_CARDS") && playersCon == 2) {
             if(!isDeckPopulated) {
@@ -90,6 +99,8 @@ public class Server {
         } else if (input.startsWith("P" + board.getTurn() + "_DRAW")) {
             command = String.format("P%s DEALT_CARD %s", board.getTurn(), Integer.toString(dealCard(board.getTurn())));
             //+ board.getTurn() + " " + Integer.toString(dealCard(board.getTurn()));
+        } else {
+
         }
     }
 
@@ -112,7 +123,13 @@ public class Server {
         if(board.getPlayers()[0] == null) {
             int pos = 0;
             board.addPlayer(new Player(id, name), pos);
-            return String.format("LOGIN %s ID_%s PLAYER_%s NAME_%s", email, id, pos, name);
+            try {
+                NetworkServer.getInstance().sendMsgToClient(String.format("LOGIN %s ID_%s PLAYER_%s NAME_%s", email, id, pos, name), NetworkServer.getInstance().getClientIP().get(board.getTurn()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return ""; //String.format("LOGIN %s ID_%s PLAYER_%s NAME_%s", email, id, pos, name);
         } else {
             int pos = 1;
             board.addPlayer(new Player(id, name), pos);
@@ -121,6 +138,12 @@ public class Server {
             if(!started) {
                 command += " START";
                 started = true;
+            }
+            try {
+                NetworkServer.getInstance().sendMsgToClient(command, NetworkServer.getInstance().getClientIP().get(board.getTurn()));
+                NetworkServer.getInstance().sendMsgToClient(command, NetworkServer.getInstance().getClientIP().get(board.checkTurnCombat()));
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             return command;
         }
@@ -175,7 +198,7 @@ public class Server {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return String.format("P%s DEALT_CARDS %s", playerTurn, id.toString());
+            return ""; //String.format("P%s DEALT_CARDS %s", playerTurn, id.toString());
             //return "DEALT_CARDS P" + playerTurn + " " + id.toString();
         } else {
             for (int i = 0; i < handSize; i++) {
