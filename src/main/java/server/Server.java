@@ -195,7 +195,7 @@ public class Server {
 
     public String placeCard(int index) {
         var player = board.getPlayers()[board.getTurn()];
-        if (player.getTable().size() != board.maxTableSize) {
+        if (player.getTable().size() <= board.maxTableSize) {
             BasicCard card = player.getHand().get(index);
 
             if (player.getMana() >= card.getManaCost()) {
@@ -223,7 +223,7 @@ public class Server {
         var enemyPlayerTurn = board.getPlayers()[board.checkTurnCombat()];
     
         BasicCreatureCard player = null;
-        if(playerTurn.getTable().size() <= index + 1) {
+        if(playerTurn.getTable().size() >= (index + 1)) {
             player = ((BasicCreatureCard) playerTurn.getTable().get(index));
         } else {
             return String.format("P%s ATTACK_RESULT_FAILURE CREATURE_OUT_OF_BOUNDS", playerTurn);
@@ -237,31 +237,32 @@ public class Server {
                     enemyPlayerTurn.decrementHealth(player.getAttack());
                     //Should we return a string, example: SUCCESS PLAYER ALIVE/SUCCESS PLAYER DEAD?
                     if (checkPlayerAlive(enemyPlayerTurn)) {
-                        return String.format("P%s ATTACK_RESULT_SUCCESS P%s HP %s", playerTurn, enemyPlayerTurn, playerTurn.getHealth());
+                        return String.format("P%s ATTACK_RESULT_SUCCESS P%s HP %s", board.getTurn(), board.checkTurnCombat(), enemyPlayerTurn.getHealth());
                         //return "P" + board.checkTurnCombat() + "_PLAYER " + enemyPlayerTurn.getHealth();
                     } else {
                         System.out.printf("Player %s died, %s won!\n", enemyPlayerTurn.getName(), playerTurn.getName());
-                        return String.format("P%s ATTACK_RESULT_SUCCESS P%s_DEAD", playerTurn, enemyPlayerTurn);
+                        return String.format("P%s ATTACK_RESULT_SUCCESS P%s_DEAD", board.getTurn(), board.checkTurnCombat());
                         //System.out.printf("Player %s died, %s won!\n", enemyPlayerTurn.getName(), playerTurn.getName());
                         //return "P" + board.checkTurnCombat() + "_PLAYER DEAD";
                     }
                 } else {
-                    return String.format("P%s ATTACK_RESULT_FAILURE CREATURE_%s_IS_CONSUMED", playerTurn, index);
+                    return String.format("P%s ATTACK_RESULT_FAILURE CREATURE_%s_IS_CONSUMED", board.getTurn(), index);
                     //return "P" + board.getTurn() + " CREATURE " + index + " IS_CONSUMED";
                 }
             }
 
-            return String.format("P%s ATTACK_RESULT_FAILURE CARDS_ON_TABLE", playerTurn);
+            return String.format("P%s ATTACK_RESULT_FAILURE CARDS_ON_TABLE", board.checkTurnCombat());
             //return "P" + board.checkTurnCombat() + "_PLAYER FAIL CARDS_ON_TABLE";
     }
 
     public String attackEnemyCreature(int attackingCreatureIndex, int defendingCreatureIndex) {
         //String returnString = "ATTACK_RESULT";
         BasicCreatureCard playerCreature = null;
-        if(board.getPlayers()[board.getTurn()].getTable().size() <= attackingCreatureIndex + 1) {
+        // == NOT <= IN IF CONDITION
+        if(board.getPlayers()[board.getTurn()].getTable().size() >= (attackingCreatureIndex + 1)) {
             playerCreature = ((BasicCreatureCard) board.getPlayers()[board.getTurn()].getTable().get(attackingCreatureIndex));
         } else {
-            return String.format("P%s ATTACK_RESULT_FAILURE CREATURE_OUT_OF_BOUNDS",board.getPlayers()[board.getTurn()] );
+            return String.format("P%s ATTACK_RESULT_FAILURE CREATURE_OUT_OF_BOUNDS", board.getTurn());
             //return returnString + " WRONG_CREATURE";
         }
     
@@ -280,23 +281,23 @@ public class Server {
                 //returnString += " P" + board.getTurn() + "_TABLE " + attackingCreatureIndex + " HP " + player.getHealth();
                 //returnString += " | P" + board.checkTurnCombat() + "_TABLE " + defendingCreatureIndex + " HP " + enemyPlayer.getHealth();
                 return String.format("P%s_ATTACK_RESULT_SUCCESS CARD_%s HP %s | P%s_CARD_%s hp %s",
-                        board.getPlayers()[board.getTurn()],
+                        board.getTurn(),
                         attackingCreatureIndex,
                         playerCreature.getHealth(),
-                        board.getPlayers()[board.checkTurnCombat()],
+                        board.checkTurnCombat(),
                         defendingCreatureIndex,
                         enemyPlayerCreature.getHealth());
 
                 //return returnString;
             } else {
                 return String.format("P%s ATTACK_RESULT_FAILURE CREATURE_%s_IS_CONSUMED",
-                        board.getPlayers()[board.getTurn()],
+                        board.getTurn(),
                         attackingCreatureIndex);
                 //return returnString + " FAILED " + attackingCreatureIndex + " IS_CONSUMED";
             }
         } else {
 
-            return String.format("P%s ATTACK_RESULT_FAILURE NO_CARDS_ON_TABLE", board.getPlayers()[board.getTurn()]);
+            return String.format("P%s ATTACK_RESULT_FAILURE NO_ENEMY_CARDS_ON_TABLE", board.getTurn());
             //return returnString + " FAILED NO_ENEMY_CREATURES";
         }
     
