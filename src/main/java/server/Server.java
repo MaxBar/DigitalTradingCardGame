@@ -85,7 +85,7 @@ public class Server {
                 isDeckPopulated = true;
             }
             command = dealCards(board.getTurn());
-            board.increaseTurn(1);
+            //board.increaseTurn(1);
         } else if (input.startsWith("P" + board.getTurn() + "_DRAW")) {
             command = String.format("P%s DEALT_CARD %s", board.getTurn(), Integer.toString(dealCard(board.getTurn())));
             //+ board.getTurn() + " " + Integer.toString(dealCard(board.getTurn()));
@@ -111,11 +111,11 @@ public class Server {
         if(board.getPlayers()[0] == null) {
             int pos = 0;
             board.addPlayer(new Player(id, name), pos);
-            return String.format("LOGIN ID_%s PLAYER_%s NAME_%s", id, pos, name);
+            return String.format("LOGIN %s ID_%s PLAYER_%s NAME_%s", email, id, pos, name);
         } else {
             int pos = 1;
             board.addPlayer(new Player(id, name), pos);
-            String command = String.format("LOGIN ID_%s PLAYER_%s NAME_%s", id, pos, name);
+            String command = String.format("LOGIN %s ID_%s PLAYER_%s NAME_%s", email, id, pos, name);
 
             if(!started) {
                 command += " START";

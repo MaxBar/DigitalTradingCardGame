@@ -54,6 +54,28 @@ public class QueryHandler {
         return playerName;
     }
 
+    public String fetchPlayerEmail(String email) {
+        String query = "SELECT email FROM Player WHERE Player.email = '" + email + "'";
+        String playerEmail = "";
+        Statement st;
+        ResultSet rs = null;
+        try {
+            st = Database.con.createStatement();
+            rs = st.executeQuery(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            if (rs.first()) {
+                playerEmail = rs.getString("email");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return playerEmail;
+    }
+
     public List<Integer> fetchDeckCreatureCardId(int playerId, int deckId) {
         String query = "SELECT card.id FROM CreatureCard card JOIN Deck deck ON deck.creatureCardId = card.id " +
                 "WHERE deck.deckId = " + deckId + " AND deck.playerId = " + playerId + " AND deck.creatureCardId IS NOT NULL";
