@@ -323,14 +323,14 @@ public class Server {
     
                 //returnString += " P" + board.getTurn() + "_TABLE " + attackingCreatureIndex + " HP " + player.getHealth();
                 //returnString += " | P" + board.checkTurnCombat() + "_TABLE " + defendingCreatureIndex + " HP " + enemyPlayer.getHealth();
-                network.sendMsgToClient(String.format("P%s_ATTACK_RESULT_SUCCESS CARD_%s HP %s | P%s_CARD_%s hp %s",
+                network.sendMsgToClient(String.format("P%s_ATTACK_RESULT_SUCCESS CARD_%s HP %s | P%s_CARD_%s HP %s",
                         board.getTurn(),
                         attackingCreatureIndex,
                         playerCreature.getHealth(),
                         board.checkTurnCombat(),
                         defendingCreatureIndex,
                         enemyPlayerCreature.getHealth()), network.getClientIP().get(board.getTurn()));
-                network.sendMsgToClient(String.format("P%s_ATTACK_RESULT_SUCCESS CARD_%s HP %s | P%s_CARD_%s hp %s",
+                network.sendMsgToClient(String.format("P%s_ATTACK_RESULT_SUCCESS CARD_%s HP %s | P%s_CARD_%s HP %s",
                         board.getTurn(),
                         attackingCreatureIndex,
                         playerCreature.getHealth(),
