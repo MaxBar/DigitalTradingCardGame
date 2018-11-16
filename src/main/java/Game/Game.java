@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Game {
-    private static final Game GAME = new Game();
+    private static Game instance = null;
     
     QueryHandler queryHandler;
     private int started = 0;
@@ -38,14 +38,17 @@ public class Game {
     private int enemyMana;
     
     private Game() {
-        gameMenu = new GameMenu();
+        //gameMenu = new GameMenu();
         queryHandler = new QueryHandler();
         playerTableCards = new ArrayList<>();
         enemyTableCards = new ArrayList<>();
     }
     
     public static Game getInstance() {
-        return GAME;
+        if (instance == null) {
+            instance = new Game();
+        }
+        return instance;
     }
     
     public List<BasicCard> getPlayerTableCards() {
@@ -110,7 +113,12 @@ public class Game {
             for(int i = 0; i < player.getHand().size(); ++i) {
                 System.out.println(player.getHand().get(i));
             }
-            gameMenu.rootMenu.start();
+            try {
+                gameMenu = new GameMenu();
+                gameMenu.rootMenu.start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else if(serverOutput.equals("STARTED")) {
             ++started;
             if(started == 2) {
