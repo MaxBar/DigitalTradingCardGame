@@ -158,16 +158,16 @@ public class GameMenu {
 
         for (int i = 0; i < game.getPlayerTableCards().size() ; i++) {
             if(game.getPlayerTableCards().get(i)instanceof BasicCreatureCard && !game.getPlayerTableCards().get(i).getIsConsumed()){
-                var card = (BasicCreatureCard)game.getPlayer().getHand().get(i);
+                var card = (BasicCreatureCard)game.getPlayerTableCards().get(i);
                 System.out.printf((i + 1) + ") %s AP: %s DP: %s HP: %s\n",
-                        game.getPlayer().getHand().get(i).getName(),
+                        game.getPlayerTableCards().get(i).getName(),
                         card.getAttack(),
                         card.getDefense(),
                         card.getHealth());
             }else if(game.getPlayerTableCards().get(i)instanceof SpecialAbilityCreatureCard && !game.getPlayerTableCards().get(i).getIsConsumed()){
-                var card  = (SpecialAbilityCreatureCard)game.getPlayer().getHand().get(i);
+                var card  = (SpecialAbilityCreatureCard)game.getPlayerTableCards().get(i);
                 System.out.printf((i + 1) + ") %s Ability: %s AP: %s DP: %s HP: %s\n",
-                        game.getPlayer().getHand().get(i).getName(),
+                        game.getPlayerTableCards().get(i).getName(),
                         card.getAbilityDescription(),
                         card.getAttack(),
                         card.getDefense(),
@@ -175,7 +175,7 @@ public class GameMenu {
             }
 
         }
-        System.out.printf("%s) Back", game.getPlayerTableCards().size() + 1);
+        System.out.printf("%s) Back\n", game.getPlayerTableCards().size() + 1);
 
         int choice = sc.nextInt() - 1;
         if(choice < game.getPlayerTableCards().size() && game.getEnemyTableCards().size() > 0){

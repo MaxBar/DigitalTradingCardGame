@@ -160,7 +160,7 @@ public class Game {
             player.getHand().remove(index);
             Game.getInstance().getPlayerTableCards().add(card);
         }
-        System.out.printf("You placed %s\n", Game.getInstance().getPlayerTableCards().get(Game.getInstance().getPlayerTableCards().size()).getName());
+        System.out.printf("You placed %s\n", Game.getInstance().getPlayerTableCards().get(Game.getInstance().getPlayerTableCards().size() - 1).getName());
     }
 
     private void placeFailure(String serverOutput){
