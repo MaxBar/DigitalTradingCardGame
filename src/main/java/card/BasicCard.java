@@ -14,6 +14,7 @@ public class BasicCard {
         this.flavourText = flavourText;
         this.image = image;
         this.manaCost = manaCost;
+        this.isConsumed = true;
     }
 
     public int getId() {

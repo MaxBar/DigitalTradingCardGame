@@ -214,6 +214,9 @@ public class Game {
         String[] chunks = serverOutput.split(" ");
         turn = Integer.parseInt(chunks[3]);
         round = Integer.parseInt(chunks[1]);
+        for (BasicCard card : playerTableCards) {
+            card.setIsConsumed(false);
+        }
 
         if(round > 0){
             NetworkClient.getInstance().sendMessageToServer(String.format("P%s_DRAW", player.getPlayerTurn()));

@@ -134,6 +134,9 @@ public class GameMenu {
         int choice;
         sc.nextLine();
         choice = sc.nextInt() - 1;
+        if (choice == game.getPlayer().getHand().size() + 1) {
+            return;
+        }
         if(choice < game.getPlayer().getHand().size()){
             if(game.getPlayer().getHand().get(choice)instanceof BasicMagicCard) {
                 NetworkClient.getInstance().sendMessageToServer(String.format("USE P%s MAGIC_CREATURE %s", Game.getInstance().getTurn(), choice));
@@ -178,7 +181,9 @@ public class GameMenu {
         System.out.printf("%s) Back\n", game.getPlayerTableCards().size() + 1);
 
         int choice = sc.nextInt() - 1;
-        if(choice < game.getPlayerTableCards().size() && game.getEnemyTableCards().size() > 0){
+        if (choice == game.getPlayerTableCards().size()) {
+            System.out.println("inget");
+        } else if(choice < game.getPlayerTableCards().size() && game.getEnemyTableCards().size() > 0){
            NetworkClient.getInstance().sendMessageToServer(String.format("ATTACK P%s ENEMY_CREATURE %s", Game.getInstance().getTurn(), choice));
         }else{
             NetworkClient.getInstance().sendMessageToServer(String.format("ATTACK P%s ENEMY_PLAYER %s", Game.getInstance().getTurn(), choice));
