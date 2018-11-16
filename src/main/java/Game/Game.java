@@ -17,7 +17,7 @@ public class Game {
     private static final Game GAME = new Game();
     
     QueryHandler queryHandler;
-    private int started;
+    private int started = 0;
     private GameMenu gameMenu;
     // Player
     private Player player;
@@ -168,7 +168,7 @@ public class Game {
     private void login(String serverOutput) {
         String [] chunks = serverOutput.split (" ");
         String start = "";
-        if(chunks[1].equals("linn@hotmail.se")) {
+        if(chunks[1].equals("john@hotmail.se")) {
             int playerId = Integer.parseInt(chunks[2].substring(3));
             int playerTurn = Integer.parseInt(chunks[3].substring(7));
             String playerName = chunks[4].substring(5);

@@ -17,8 +17,8 @@ public class NetworkClient {
     private LinkedBlockingDeque<String> msgQueue = new LinkedBlockingDeque<>();
     
     private NetworkClient() throws SocketException, UnknownHostException {
-        String hostname = "192.168.1.150";
-        int serverPort = 25565;
+        String hostname = "10.155.90.41";
+        int serverPort = 150;
         serverAddress = InetAddress.getByName(hostname);
         this.serverPort = serverPort;
         

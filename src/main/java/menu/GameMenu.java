@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class GameMenu {
-    Player player  = Game.getInstance().getPlayer();
+    //Player player  = Game.getInstance();
     Game game = Game.getInstance();
     Scanner sc = new Scanner(System.in);
     public Thread rootMenu = new Thread() {
@@ -98,38 +98,38 @@ public class GameMenu {
         System.out.println(String.format("---------- SHOW %s's HAND ----------", Game.getInstance().getPlayer().getName()));
 
         for (int i = 0; i < Game.getInstance().getPlayer().getHand().size() ; i++) {
-            if(player.getHand().get(i)instanceof BasicCreatureCard){
-                var card = (BasicCreatureCard)player.getHand().get(i);
+            if(game.getPlayer().getHand().get(i)instanceof BasicCreatureCard){
+                var card = (BasicCreatureCard)game.getPlayer().getHand().get(i);
                 System.out.printf((i + 1) + ") %s AP: %s DP: %s HP: %s Mana cost: %s\n",
-                        player.getHand().get(i).getName(),
+                        game.getPlayer().getHand().get(i).getName(),
                         card.getAttack(),
                         card.getDefense(),
                         card.getHealth(),
                         card.getManaCost());
-            }else if(player.getHand().get(i)instanceof SpecialAbilityCreatureCard){
-                var card  = (SpecialAbilityCreatureCard)player.getHand().get(i);
+            }else if(game.getPlayer().getHand().get(i)instanceof SpecialAbilityCreatureCard){
+                var card  = (SpecialAbilityCreatureCard)game.getPlayer().getHand().get(i);
                 System.out.printf((i + 1) + ") %s Ability: %s AP: %s DP: %s HP: %s Mana cost: %s\n",
-                        player.getHand().get(i).getName(),
+                        game.getPlayer().getHand().get(i).getName(),
                         card.getAbilityDescription(),
                         card.getAttack(),
                         card.getDefense(),
                         card.getHealth(),
                         card.getManaCost());
 
-            }else if(player.getHand().get(i)instanceof BasicMagicCard){
-                var card = (BasicMagicCard)player.getHand().get(i);
+            }else if(game.getPlayer().getHand().get(i)instanceof BasicMagicCard){
+                var card = (BasicMagicCard)game.getPlayer().getHand().get(i);
                 System.out.printf((i + 1) + ") %s Ability: %s Mana cost: %s\n",
-                        player.getHand().get(i).getName(),
+                        game.getPlayer().getHand().get(i).getName(),
                         card.getAbilityDescription(),
                         card.getManaCost());
             }
 
         }
-        System.out.printf("%s) Back", player.getHand().size() + 1);
+        System.out.printf("%s) Back", game.getPlayer().getHand().size() + 1);
 
         int choice = sc.nextInt() - 1;
-        if(choice < player.getHand().size()){
-            if(player.getHand().get(choice)instanceof BasicMagicCard) {
+        if(choice < game.getPlayer().getHand().size()){
+            if(game.getPlayer().getHand().get(choice)instanceof BasicMagicCard) {
                 NetworkClient.getInstance().sendMessageToServer(String.format("USE P%s MAGIC_CREATURE %s", Game.getInstance().getTurn(), choice));
             }else{
                 NetworkClient.getInstance().sendMessageToServer(String.format("PLACE P%s_CREATURE %s ", Game.getInstance().getTurn(), choice));
@@ -151,16 +151,16 @@ public class GameMenu {
 
         for (int i = 0; i < game.getPlayerTableCards().size() ; i++) {
             if(game.getPlayerTableCards().get(i)instanceof BasicCreatureCard && !game.getPlayerTableCards().get(i).getIsConsumed()){
-                var card = (BasicCreatureCard)player.getHand().get(i);
+                var card = (BasicCreatureCard)game.getPlayer().getHand().get(i);
                 System.out.printf((i + 1) + ") %s AP: %s DP: %s HP: %s\n",
-                        player.getHand().get(i).getName(),
+                        game.getPlayer().getHand().get(i).getName(),
                         card.getAttack(),
                         card.getDefense(),
                         card.getHealth());
             }else if(game.getPlayerTableCards().get(i)instanceof SpecialAbilityCreatureCard && !game.getPlayerTableCards().get(i).getIsConsumed()){
-                var card  = (SpecialAbilityCreatureCard)player.getHand().get(i);
+                var card  = (SpecialAbilityCreatureCard)game.getPlayer().getHand().get(i);
                 System.out.printf((i + 1) + ") %s Ability: %s AP: %s DP: %s HP: %s\n",
-                        player.getHand().get(i).getName(),
+                        game.getPlayer().getHand().get(i).getName(),
                         card.getAbilityDescription(),
                         card.getAttack(),
                         card.getDefense(),
