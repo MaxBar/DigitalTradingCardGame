@@ -71,7 +71,7 @@ public class Server {
                 attackEnemyPlayer(Integer.parseInt(input.substring(cardIndex)));
             }
         } else if (input.startsWith("PLACE P" + board.getTurn())) {
-            placeCard(Integer.parseInt(input.substring(18)));
+            placeCard(Integer.parseInt(input.substring(18, 19)));
         } else if (input.startsWith("END_TURN")) {
             endTurn();
         } else if (input.startsWith("QUIT_GAME")) {
@@ -237,19 +237,19 @@ public class Server {
 
                 try {
                     network.sendMsgToClient(String.format("P%s PLACE_CREATURE_SUCCESS %s", board.getTurn(), index),network.getClientIP().get(board.getTurn()));
-                    network.sendMsgToClient(String.format("P%s PLACE_CREATURE_SUCCESS %s", board.getTurn(), index),network.getClientIP().get(board.checkTurnCombat()));
+                    network.sendMsgToClient(String.format("P%s PLACE_CREATURE_SUCCESS %s", board.getTurn(), board.getPlayers()[board.getTurn()].getHand().get(index).getId()),network.getClientIP().get(board.checkTurnCombat()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 //return "PLACE P" + board.getTurn() + "_CREATURE " + index;
             } else {
                 network.sendMsgToClient(String.format("P%s PLACE_CREATURE_FAILURE %s NO_MANA", board.getTurn(), index), network.getClientIP().get(board.getTurn()));
-                network.sendMsgToClient(String.format("P%s PLACE_CREATURE_FAILURE %s NO_MANA", board.getTurn(), index), network.getClientIP().get(board.checkTurnCombat()));
+                //network.sendMsgToClient(String.format("P%s PLACE_CREATURE_FAILURE %s NO_MANA", board.getTurn(), index), network.getClientIP().get(board.checkTurnCombat()));
                 //return "PLACE P" + board.getTurn() + "_FAILED NO_MANA";
             }
         }
         network.sendMsgToClient(String.format("P%s PLACE_CREATURE_FAILURE %s NO_ROOM", board.getTurn(), index), network.getClientIP().get(board.getTurn()));
-        network.sendMsgToClient(String.format("P%s PLACE_CREATURE_FAILURE %s NO_ROOM", board.getTurn(), index), network.getClientIP().get(board.checkTurnCombat()));
+        //network.sendMsgToClient(String.format("P%s PLACE_CREATURE_FAILURE %s NO_ROOM", board.getTurn(), index), network.getClientIP().get(board.checkTurnCombat()));
         //return "PLACE P" + board.getTurn() + "_FAILED NO_ROOM";
     }
 
@@ -462,8 +462,8 @@ public class Server {
             board.increaseTurn(1);
             board.getPlayers()[board.getTurn()].setMana(board.getRound());
         try {
-            network.sendMsgToClient(String.format("ROUND %s TURN %s", board.getRound(), board.getTurn()), network.getClientIP().get(0));
-            network.sendMsgToClient(String.format("ROUND %s TURN %s", board.getRound(), board.getTurn()), network.getClientIP().get(1));
+            network.sendMsgToClient(String.format("ROUND %s TURN %s", board.getRound(), board.getTurn()), network.getClientIP().get(board.getTurn()));
+            //network.sendMsgToClient(String.format("ROUND %s TURN %s", board.getRound(), board.getTurn()), network.getClientIP().get(1));
         } catch (IOException e) {
             e.printStackTrace();
         }
