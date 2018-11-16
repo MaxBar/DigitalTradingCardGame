@@ -224,11 +224,6 @@ public class Game {
     
         //System.out.println("Turn: " + turn);
         //System.out.println("Round: " + round);
-        if (player.getPlayerTurn() == turn) {
-
-            System.out.printf("---------- %s's TURN ----------\n", player.getName());
-        } else {
-            System.out.println("---------- ENEMY's TURN ----------\n");
-        }
+        System.out.printf("---------- %s's TURN ----------\n", player.getName());
     }
 }

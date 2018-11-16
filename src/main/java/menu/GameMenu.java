@@ -87,7 +87,7 @@ public class GameMenu {
                     break;
                 case 3:
                     NetworkClient.getInstance().sendMessageToServer("END_TURN");
-                    System.out.println("end");
+                    System.out.println("---------- ENEMY's TURN ----------\n");
                     break;
                 case 9:
                     break;
