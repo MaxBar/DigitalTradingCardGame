@@ -2,6 +2,8 @@ package Game;
 
 import NetworkClient.NetworkClient;
 import card.BasicCard;
+import card.BasicCreatureCard;
+import card.SpecialAbilityCreatureCard;
 import menu.GameMenu;
 import player.Player;
 import repository.QueryHandler;
@@ -24,7 +26,9 @@ public class Game {
     private int playerDeck;
     private int turn;
     private int round;
-    
+
+
+
     // Enemy player
     private List<BasicCard> enemyTableCards;
     private int enemyGraveyard;
@@ -87,10 +91,12 @@ public class Game {
     public int getStarted() {
         return started;
     }
+
+    public List<BasicCard> getEnemyTableCards() {
+        return enemyTableCards;
+    }
     
-    
-    
-    public void receiveCommand(String serverOutput) {
+    public void receiveCommand(String serverOutput) throws IOException {
         if(serverOutput.startsWith("LOGIN")) {
             login(serverOutput);
         } else if(serverOutput.substring(3).startsWith("DEALT_CARDS") && (Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn())) {
@@ -104,7 +110,6 @@ public class Game {
             for(int i = 0; i < player.getHand().size(); ++i) {
                 System.out.println(player.getHand().get(i));
             }
-            
             gameMenu.rootMenu.start();
         } else if(serverOutput.equals("STARTED")) {
             ++started;
@@ -113,9 +118,53 @@ public class Game {
             }
         } else if(serverOutput.startsWith("ROUND")) {
             endTurn(serverOutput);
+        }else if(serverOutput.substring(3).startsWith("PLACE_CREATURE_SUCCESS") && Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn()){
+            placeSuccess(serverOutput);
+        }else if(serverOutput.substring(3).startsWith("PLACE_CREATURE_FAILURE") && Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn()) {
+            placeFailure(serverOutput);
+        }else if(serverOutput.substring(3).startsWith("USE_CREATURE_SUCCESS") && Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn()){
+            useSuccess(serverOutput);
+        }else if(serverOutput.substring(3).startsWith("PLACE_CREATURE_FAILURE") && Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn()){
+            useFailure(serverOutput);
         }
     }
-    
+
+    private void useSuccess(String serverOutput){
+        String[] chunks = serverOutput.split(" ");
+        System.out.printf("You used %s\n", player.getHand().get(Integer.parseInt(chunks[2])).getName());
+        player.getHand().remove(Integer.parseInt(chunks[2]));
+        Game.getInstance().incrementPlayerGraveyard();
+
+    }
+    private void useFailure(String serverOutput){
+        String[] chunks = serverOutput.split(" ");
+        System.out.printf("Not enough mana to use %s", player.getHand().get(Integer.parseInt(chunks[2])).getName());
+    }
+
+    private void placeSuccess(String serverOutput){
+        int index = Integer.parseInt(serverOutput.substring(26,27));
+        if(player.getHand().get(index)instanceof BasicCreatureCard){
+            var card = (BasicCreatureCard)player.getHand().get(index);
+            player.getHand().remove(index);
+            Game.getInstance().getPlayerTableCards().add(card);
+        }else if(player.getHand().get(index)instanceof SpecialAbilityCreatureCard){
+            var card = (SpecialAbilityCreatureCard)player.getHand().get(index);
+            player.getHand().remove(index);
+            Game.getInstance().getPlayerTableCards().add(card);
+        }
+        System.out.printf("You placed %s\n", Game.getInstance().getPlayerTableCards().get(Game.getInstance().getPlayerTableCards().size()).getName());
+    }
+
+    private void placeFailure(String serverOutput){
+        String[] chunks = serverOutput.split(" ");
+        if(chunks[3] == "NO_MANA"){
+            System.out.printf("Not enough mana to place %s\n", player.getHand().get(Integer.parseInt(chunks[2])));
+        }else if(chunks[3] == "NO_ROOM"){
+            System.out.printf("Not enough room on table to place %s\n", player.getHand().get(Integer.parseInt(chunks[2])));
+        }
+    }
+
+
     private void login(String serverOutput) {
         String [] chunks = serverOutput.split (" ");
         String start = "";
@@ -153,12 +202,16 @@ public class Game {
         }
     }
     
-    private void endTurn(String serverOutput) {
+    private void endTurn(String serverOutput) throws IOException {
         String[] chunks = serverOutput.split(" ");
         turn = Integer.parseInt(chunks[3]);
         round = Integer.parseInt(chunks[1]);
+
+        if(round > 0){
+            NetworkClient.getInstance().sendMessageToServer(String.format("P%s_DRAW", player.getPlayerTurn()));
+        }
     
-        System.out.println("Turn: " + turn);
-        System.out.println("Round: " + round);
+        //System.out.println("Turn: " + turn);
+        //System.out.println("Round: " + round);
     }
 }
