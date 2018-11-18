@@ -406,17 +406,17 @@ public class Server {
                     network.sendMsgToClient("ENEMY_HAND DECREMENT", network.getClientIP().get(board.checkTurnCombat()));
                     network.sendMsgToClient(String.format("P%s GRAVEYARD INCREMENT", board.getTurn()), network.getClientIP().get(board.getTurn()));
                     network.sendMsgToClient(String.format("P%s GRAVEYARD INCREMENT", board.checkTurnCombat()), network.getClientIP().get(board.checkTurnCombat()));
-                    network.sendMsgToClient(String.format("USE_MAGIC_CREATURE_SUCCESS"), network.getClientIP().get(board.getTurn()));
+                    network.sendMsgToClient(String.format("P%s USE_MAGIC_CREATURE_SUCCESS %s", board.getTurn(), index), network.getClientIP().get(board.getTurn()));
                     int lastIndex = (enemyPlayer.getTable().size() - 1);
                     int dmg = ((BasicMagicCard) player.getTable().get(index)).getAbilityValue();
                     ((BasicCreatureCard) enemyPlayer.getTable().get(lastIndex)).decrementHealth(dmg);
                     checkCreatureAlive(lastIndex, board.checkTurnCombat());
                 } else {
-                    network.sendMsgToClient(String.format("USE_MAGIC_CREATURE_FAILURE NO_MANA"), network.getClientIP().get(board.getTurn()));
+                    network.sendMsgToClient(String.format("USE_MAGIC_CREATURE_FAILURE %s NO_MANA", index), network.getClientIP().get(board.getTurn()));
                 }
             }
         } else {
-            network.sendMsgToClient(String.format("USE_MAGIC_CREATURE_FAILURE NO_ENEMY_CREATURES"), network.getClientIP().get(board.getTurn()));
+            network.sendMsgToClient(String.format("USE_MAGIC_CREATURE_FAILURE %s NO_ENEMY_CREATURES", index), network.getClientIP().get(board.getTurn()));
         }
     }
 
