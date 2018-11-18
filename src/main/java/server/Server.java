@@ -179,7 +179,7 @@ public class Server {
     }
 
 
-    public void dealCards(int playerTurn) {
+    public void dealCards(int playerTurn) throws IOException {
         int handSize = 5;
         int ids[] = new int[handSize];
 
@@ -213,12 +213,15 @@ public class Server {
 
     }
 
-    public int dealCard(int playerTurn) {
+    public int dealCard(int playerTurn) throws IOException {
         int id;
         var deck = board.getPlayers()[board.getTurn()].getDeck();
         id = deck.get(deck.size() - 1).id;
         board.getPlayers()[board.getTurn()].getHand().add(deck.get(deck.size() - 1));
         deck.remove(deck.size() - 1);
+        network.sendMsgToClient(String.format("ENEMY_HAND INCREMENT"), network.getClientIP().get(board.checkTurnCombat()));
+        network.sendMsgToClient(String.format("ENEMY_DECK DECREMENT"), network.getClientIP().get(board.checkTurnCombat()));
+        network.sendMsgToClient(String.format("PLAYER_DECK DECREMENT"), network.getClientIP().get(board.checkTurnCombat()));
         return id;
     }
 
@@ -238,6 +241,7 @@ public class Server {
                 try {
                     network.sendMsgToClient(String.format("P%s PLACE_CREATURE_SUCCESS %s", board.getTurn(), index),network.getClientIP().get(board.getTurn()));
                     network.sendMsgToClient(String.format("P%s PLACE_CREATURE_SUCCESS %s", board.getTurn(), board.getPlayers()[board.getTurn()].getHand().get(index).getId()),network.getClientIP().get(board.checkTurnCombat()));
+                    network.sendMsgToClient(String.format("ENEMY_HAND DECREMENT"), network.getClientIP().get(board.checkTurnCombat()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -408,7 +412,7 @@ public class Server {
         return p.getHealth() > 0;
     }
 
-    public boolean checkCreatureAlive(int index, int player) {
+    public boolean checkCreatureAlive(int index, int player) throws IOException {
         // Player A turn
         // WRITE TEST FOR THIS FIRST
         //if (player == board.PLAYER_A) {
@@ -430,12 +434,14 @@ public class Server {
         }*/
     }
 
-    public void moveToGraveyard(int index, int player) {
+    public void moveToGraveyard(int index, int player) throws IOException {
         //if (player == board.PLAYER_A) {
             BasicCard card = board.getPlayers()[player].getTable().get(index);
 
             board.getPlayers()[player].getGraveyard().add(card);
             board.getPlayers()[player].getTable().remove(index);
+            network.sendMsgToClient(String.format("P%s GRAVEYARD INCREMENT", player), network.getClientIP().get(board.getTurn()));
+            network.sendMsgToClient(String.format("P%s GRAVEYARD INCREMENT", player), network.getClientIP().get(board.checkTurnCombat()));
 
           /*  game.getPlayerATableCards().remove(index);
             game.incrementPlayerAGraveyard();*/
