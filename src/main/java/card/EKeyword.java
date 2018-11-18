@@ -1,4 +1,6 @@
 package card;
 
-public class EKeyword {
+public enum EKeyword {
+    CHARGE,
+    DIRECTATTACK
 }

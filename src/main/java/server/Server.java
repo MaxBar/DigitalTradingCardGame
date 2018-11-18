@@ -3,6 +3,8 @@ package server;
 import board.Board;
 import card.BasicCard;
 import card.BasicCreatureCard;
+import card.BasicMagicCard;
+import card.EKeyword;
 import player.Player;
 import repository.QueryHandler;
 
@@ -72,6 +74,8 @@ public class Server {
             }
         } else if (input.startsWith("PLACE P" + board.getTurn())) {
             placeCard(Integer.parseInt(input.substring(18, 19)));
+        } else if(input.startsWith("USE P" + board.getTurn() + " MAGIC_CREATURE")){
+            useEnemyCreature((Integer.parseInt(input.substring(input.length()-1))));
         } else if (input.startsWith("END_TURN")) {
             endTurn();
         } else if (input.startsWith("QUIT_GAME")) {
@@ -358,6 +362,8 @@ public class Server {
             network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE NO_ENEMY_CARDS_ON_TABLE", board.getTurn()),network.getClientIP().get(board.checkTurnCombat()));
             //return returnString + " FAILED NO_ENEMY_CREATURES";
         }
+        
+        
     
 
 
@@ -386,6 +392,27 @@ public class Server {
                 return checkCreatureAlive(defendingCreatureIndex, board.PLAYER_A) ? attackMsg + success : successMsg + success;
             }
         }*/
+    }
+    
+    private void useEnemyCreature(int index) throws IOException {
+        var player = board.getPlayers()[board.getTurn()];
+        var enemyPlayer = board.getPlayers()[board.checkTurnCombat()];
+        if ((enemyPlayer.getTable().size()) > 0) {
+            BasicMagicCard card = (BasicMagicCard)player.getHand().get(index);
+            if (card.getKeyword() == EKeyword.DIRECTATTACK) {
+                if (player.getMana() >= card.getManaCost()) {
+                    player.decreaseMana(card.getManaCost());
+                    player.getHand().remove(index);
+                    network.sendMsgToClient("ENEMY_HAND DECREMENT", network.getClientIP().get(board.checkTurnCombat()));
+                    network.sendMsgToClient(String.format("P%s GRAVEYARD INCREMENT", board.getTurn()), network.getClientIP().get(board.getTurn()));
+                    network.sendMsgToClient(String.format("P%s GRAVEYARD INCREMENT", board.checkTurnCombat()), network.getClientIP().get(board.checkTurnCombat()));
+                    int lastIndex = (enemyPlayer.getTable().size() - 1);
+                    int dmg = ((BasicMagicCard) player.getTable().get(index)).getAbilityValue();
+                    ((BasicCreatureCard) enemyPlayer.getTable().get(lastIndex)).decrementHealth(dmg);
+                    checkCreatureAlive(lastIndex, board.checkTurnCombat());
+                }
+            }
+        }
     }
 
 /*

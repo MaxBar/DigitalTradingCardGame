@@ -3,6 +3,7 @@ package card;
 public class BasicMagicCard extends BasicCard {
     private String abilityDescription;
     private int abilityValue;
+    private EKeyword keyword;
 
     public BasicMagicCard(int id, String name, String flavourText, String image, int manaCost, String abilityDescription, int abilityValue) {
         super(id, name, flavourText, image, manaCost);
@@ -24,5 +25,12 @@ public class BasicMagicCard extends BasicCard {
 
     public void setAbilityValue(int abilityValue) {
         this.abilityValue = abilityValue;
+    }
+    
+    public EKeyword getKeyword() {
+        return keyword;
+    }
+    public void setKeyword(EKeyword keyword) {
+        this.keyword = keyword;
     }
 }
