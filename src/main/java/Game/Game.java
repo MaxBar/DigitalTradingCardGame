@@ -123,9 +123,29 @@ public class Game {
             attackFailure(serverOutput);
         }else if (serverOutput.substring(3).startsWith("ATTACK_RESULT_SUCCESS")){
             attackSuccess(serverOutput);
+        } else if(serverOutput.equals("ENEMY_HAND DECREMENT")) {
+            --enemyHand;
+        } else if(serverOutput.equals("ENEMY_HAND INCREMENT")) {
+            ++enemyHand;
+        } else if(serverOutput.equals("ENEMY_DECK DECREMENT")) {
+            --enemyDeck;
+        } else if(serverOutput.equals("PLAYER_DECK DECREMENT")) {
+            --playerDeck;
+        }
+        else if(serverOutput.substring(3).startsWith("GRAVEYARD")) {
+            incrementGraveyard(serverOutput);
+        }
+    }
+    
+    private void incrementGraveyard(String serverOutput) {
+        if(Integer.parseInt(serverOutput.substring(2, 3)) == turn) {
+            ++playerGraveyard;
+        } else {
+            ++enemyGraveyard;
         }
     }
 
+    // TODO REMOVE GRAVEYARD INCREMENT AND MOVE IT CHANGE ON STRING RECEIVE FROM SERVER
     private void useSuccess(String serverOutput){
         String[] chunks = serverOutput.split(" ");
         System.out.printf("You used %s\n", player.getHand().get(Integer.parseInt(chunks[2])).getName());
@@ -173,11 +193,11 @@ public class Game {
         } else {
             if (player.getHand().get(index) instanceof BasicCreatureCard) {
                 var card = queryHandler.fetchCreatureCardId(index);
-                Game.getInstance().enemyHand --;
+                //Game.getInstance().enemyHand --;
                 Game.getInstance().getEnemyTableCards().add(card);
             } else if (player.getHand().get(index) instanceof SpecialAbilityCreatureCard) {
                 var card = (SpecialAbilityCreatureCard) queryHandler.fetchSpecialAbilityCreatureCardId(index);
-                Game.getInstance().enemyHand --;
+                //Game.getInstance().enemyHand --;
                 Game.getInstance().getPlayerTableCards().add(card);
             }
         }
