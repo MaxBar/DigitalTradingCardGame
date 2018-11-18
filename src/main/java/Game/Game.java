@@ -126,7 +126,7 @@ public class Game {
             }
         } else if(serverOutput.startsWith("ROUND")) {
             endTurn(serverOutput);
-        }else if(serverOutput.substring(3).startsWith("PLACE_CREATURE_SUCCESS") && Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn()){
+        }else if(serverOutput.substring(3).startsWith("PLACE_CREATURE_SUCCESS")){
             placeSuccess(serverOutput);
         }else if(serverOutput.substring(3).startsWith("PLACE_CREATURE_FAILURE") && Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn()) {
             placeFailure(serverOutput);
@@ -134,6 +134,10 @@ public class Game {
             useSuccess(serverOutput);
         }else if(serverOutput.substring(3).startsWith("PLACE_CREATURE_FAILURE") && Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn()){
             useFailure(serverOutput);
+        }else if (serverOutput.substring(3).startsWith("ATTACK_RESULT_FAILURE")){
+            attackFailure(serverOutput);
+        }else if (serverOutput.substring(3).startsWith("ATTACK_RESULT_SUCCESS")){
+            attackSuccess(serverOutput);
         }
     }
 
@@ -150,28 +154,73 @@ public class Game {
     }
 
     private void placeSuccess(String serverOutput){
-        int index = Integer.parseInt(serverOutput.substring(26,27));
-        if(player.getHand().get(index)instanceof BasicCreatureCard){
-            var card = (BasicCreatureCard)player.getHand().get(index);
-            player.getHand().remove(index);
-            Game.getInstance().getPlayerTableCards().add(card);
-        }else if(player.getHand().get(index)instanceof SpecialAbilityCreatureCard){
-            var card = (SpecialAbilityCreatureCard)player.getHand().get(index);
-            player.getHand().remove(index);
-            Game.getInstance().getPlayerTableCards().add(card);
+        String[] chunks = serverOutput.split(" ");
+        int index = Integer.parseInt(chunks[2]);
+        if (player.getPlayerTurn() == Integer.parseInt(chunks[0].substring(1))) {
+            if (player.getHand().get(index) instanceof BasicCreatureCard) {
+                var card = player.getHand().get(index);
+                player.getHand().remove(index);
+                Game.getInstance().getPlayerTableCards().add(card);
+            } else if (player.getHand().get(index) instanceof SpecialAbilityCreatureCard) {
+                var card = (SpecialAbilityCreatureCard) player.getHand().get(index);
+                player.getHand().remove(index);
+                Game.getInstance().getPlayerTableCards().add(card);
+            }
+        } else {
+            if (player.getHand().get(index) instanceof BasicCreatureCard) {
+                var card = queryHandler.fetchCreatureCardId(index);
+                Game.getInstance().enemyHand --;
+                Game.getInstance().getEnemyTableCards().add(card);
+            } else if (player.getHand().get(index) instanceof SpecialAbilityCreatureCard) {
+                var card = (SpecialAbilityCreatureCard) queryHandler.fetchSpecialAbilityCreatureCardId(index);
+                Game.getInstance().enemyHand --;
+                Game.getInstance().getPlayerTableCards().add(card);
+            }
         }
-        System.out.printf("You placed %s\n", Game.getInstance().getPlayerTableCards().get(Game.getInstance().getPlayerTableCards().size() - 1).getName());
+        System.out.printf("P%s placed %s\n", turn,  Game.getInstance().getPlayerTableCards().get(Game.getInstance().getPlayerTableCards().size() - 1).getName());
     }
 
     private void placeFailure(String serverOutput){
         String[] chunks = serverOutput.split(" ");
         if(chunks[3] == "NO_MANA"){
             System.out.printf("Not enough mana to place %s\n", player.getHand().get(Integer.parseInt(chunks[2])));
-        }else if(chunks[3] == "NO_ROOM"){
+        }else if(chunks[3] == "NO_ROOM") {
             System.out.printf("Not enough room on table to place %s\n", player.getHand().get(Integer.parseInt(chunks[2])));
         }
     }
 
+    /** TODO */
+    private void attackFailure(String serverOutput) {
+        String[] chunks = serverOutput.split(" ");
+        String[] miniChunks = chunks[2].split("_");
+
+        if (chunks[2].equals("CREATURE_OUT_OF_BOUNDS")) {
+        } else if (chunks[2].equals("CARDS_ON_TABLE")) {
+        } else if (chunks[2].equals("NO_ENEMY_CARDS_ON_TABLE")) {
+        } else if (miniChunks[3].equals("CONSUMED")) {
+
+            System.out.printf("Failure, %s is consumed",
+                    Game.getInstance().getPlayerTableCards().get(Integer.parseInt(miniChunks[1])).getName());
+
+        }
+    }
+
+    /** TODO */
+    private void attackSuccess(String serverOutput) {
+        String[] chunks = serverOutput.split(" ");
+        String[] miniChunks = chunks[2].split("_");
+
+        if (chunks[2].startsWith("P")) {
+
+        }
+        if (miniChunks[1].startsWith("DEAD")) {
+
+        }
+        if (chunks[2].startsWith("CARD")) {
+
+        }
+
+    }
 
     private void login(String serverOutput) {
         String [] chunks = serverOutput.split (" ");

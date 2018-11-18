@@ -1,6 +1,8 @@
 package repository;
 
 import card.BasicCreatureCard;
+import card.EKeyword;
+import card.SpecialAbilityCreatureCard;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -101,6 +103,40 @@ public class QueryHandler {
                         rs.getInt("attackPower"),
                         rs.getInt("defensePower"),
                         rs.getInt("class"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return card;
+    }
+
+    public SpecialAbilityCreatureCard fetchSpecialAbilityCreatureCardId (int id) {
+        String query = "SELECT * FROM CreatureCard WHERE id = " + id;
+        SpecialAbilityCreatureCard card = null;
+        Statement st;
+        ResultSet rs = null;
+        try {
+            st = Database.con.createStatement();
+            rs = st.executeQuery(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            if (rs.first()) {
+                card = new SpecialAbilityCreatureCard(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("flavour"),
+                        rs.getString("image"),
+                        rs.getInt("mana"),
+                        rs.getInt("health"),
+                        rs.getInt("attackPower"),
+                        rs.getInt("defensePower"),
+                        rs.getInt("class"),
+                        EKeyword.valueOf(rs.getString("specialAbilityName")),
+                        rs.getString("specialAbility"),
+                        rs.getInt("abilityMinValue"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
