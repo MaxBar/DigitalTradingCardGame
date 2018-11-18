@@ -115,9 +115,9 @@ public class Game {
             placeSuccess(serverOutput);
         }else if(serverOutput.substring(3).startsWith("PLACE_CREATURE_FAILURE") && Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn()) {
             placeFailure(serverOutput);
-        }else if(serverOutput.substring(3).startsWith("USE_CREATURE_SUCCESS") && Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn()){
+        }else if(serverOutput.substring(3).startsWith("USE_MAGIC_CREATURE_SUCCESS") && Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn()){
             useSuccess(serverOutput);
-        }else if(serverOutput.substring(3).startsWith("USE_CREATURE_FAILURE") && Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn()){
+        }else if(serverOutput.substring(3).startsWith("USE_MAGIC_CREATURE_FAILURE") && Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn()){
             useFailure(serverOutput);
         }else if (serverOutput.substring(3).startsWith("ATTACK_RESULT_FAILURE")){
             attackFailure(serverOutput);
@@ -155,10 +155,10 @@ public class Game {
     }
     private void useFailure(String serverOutput){
         String[] chunks = serverOutput.split(" ");
-        if(chunks[3].equals("NO_MANA")) {
-            System.out.printf("Not enough mana to use %s\n", player.getHand().get(Integer.parseInt(chunks[2])).getName());
+        if(chunks[2].equals("NO_MANA")) {
+            System.out.printf("Not enough mana to use %s\n", player.getHand().get(Integer.parseInt(chunks[1])).getName());
         } else if(chunks[3].equals("NO_ENEMY_CREATURES")) {
-            System.out.printf("No enemy creature to attack with %s\n",player.getHand().get(Integer.parseInt(chunks[2])).getName());
+            System.out.printf("No enemy creature to attack with %s\n",player.getHand().get(Integer.parseInt(chunks[1])).getName());
         }
     }
     
