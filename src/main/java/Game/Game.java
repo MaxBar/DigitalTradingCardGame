@@ -117,7 +117,7 @@ public class Game {
             placeFailure(serverOutput);
         }else if(serverOutput.substring(3).startsWith("USE_CREATURE_SUCCESS") && Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn()){
             useSuccess(serverOutput);
-        }else if(serverOutput.substring(3).startsWith("PLACE_CREATURE_FAILURE") && Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn()){
+        }else if(serverOutput.substring(3).startsWith("USE_CREATURE_FAILURE") && Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn()){
             useFailure(serverOutput);
         }else if (serverOutput.substring(3).startsWith("ATTACK_RESULT_FAILURE")){
             attackFailure(serverOutput);
@@ -150,7 +150,7 @@ public class Game {
         String[] chunks = serverOutput.split(" ");
         System.out.printf("You used %s\n", player.getHand().get(Integer.parseInt(chunks[2])).getName());
         player.getHand().remove(Integer.parseInt(chunks[2]));
-        Game.getInstance().incrementPlayerGraveyard();
+        //Game.getInstance().incrementPlayerGraveyard();
 
     }
     private void useFailure(String serverOutput){
