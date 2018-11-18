@@ -103,22 +103,7 @@ public class Game {
         if(serverOutput.startsWith("LOGIN")) {
             login(serverOutput);
         } else if(serverOutput.substring(3).startsWith("DEALT_CARDS") && (Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn())) {
-            String cards = serverOutput.substring(15);
-            String[] chunks = cards.split(", ");
-            int[] cardIndices = new int[5];
-            for(int i = 0; i < chunks.length; ++i) {
-                cardIndices[i] = Integer.parseInt(chunks[i]);
-                player.getHand().add(queryHandler.fetchCreatureCardId(cardIndices[i]));
-            }
-            for(int i = 0; i < player.getHand().size(); ++i) {
-                System.out.println(player.getHand().get(i));
-            }
-            try {
-                gameMenu = new GameMenu();
-                gameMenu.rootMenu.start();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            dealtCards(serverOutput);
         } else if(serverOutput.equals("STARTED")) {
             ++started;
             if(started == 2) {
@@ -151,6 +136,25 @@ public class Game {
     private void useFailure(String serverOutput){
         String[] chunks = serverOutput.split(" ");
         System.out.printf("Not enough mana to use %s", player.getHand().get(Integer.parseInt(chunks[2])).getName());
+    }
+    
+    private void dealtCards(String serverOutput) {
+        String cards = serverOutput.substring(15);
+        String[] chunks = cards.split(", ");
+        int[] cardIndices = new int[5];
+        for(int i = 0; i < chunks.length; ++i) {
+            cardIndices[i] = Integer.parseInt(chunks[i]);
+            player.getHand().add(queryHandler.fetchCreatureCardId(cardIndices[i]));
+        }
+        for(int i = 0; i < player.getHand().size(); ++i) {
+            System.out.println(player.getHand().get(i));
+        }
+        try {
+            gameMenu = new GameMenu();
+            gameMenu.rootMenu.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void placeSuccess(String serverOutput){
