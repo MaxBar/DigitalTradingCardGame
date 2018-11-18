@@ -155,7 +155,11 @@ public class Game {
     }
     private void useFailure(String serverOutput){
         String[] chunks = serverOutput.split(" ");
-        System.out.printf("Not enough mana to use %s", player.getHand().get(Integer.parseInt(chunks[2])).getName());
+        if(chunks[3].equals("NO_MANA")) {
+            System.out.printf("Not enough mana to use %s\n", player.getHand().get(Integer.parseInt(chunks[2])).getName());
+        } else if(chunks[3].equals("NO_ENEMY_CREATURES")) {
+            System.out.printf("No enemy creature to attack with %s\n",player.getHand().get(Integer.parseInt(chunks[2])).getName());
+        }
     }
     
     private void dealtCards(String serverOutput) {
