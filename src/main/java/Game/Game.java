@@ -176,7 +176,19 @@ public class Game {
             incrementGraveyard(serverOutput);
         }else if (serverOutput.substring(3).startsWith("REMOVE_FROM_TABLE")) {
             removeFromTable(serverOutput);
+        }else if (serverOutput.substring(3).startsWith("CREATURE_HP")) {
+            changeCreatureHp(serverOutput);
         }
+    }
+
+    private void changeCreatureHp(String serverOutput) {
+        String[] chunks = serverOutput.split(" ");
+        if (Integer.parseInt(chunks[0].substring(1, 2)) == player.getPlayerTurn()) {
+            ((BasicCreatureCard)playerTableCards.get(Integer.parseInt(chunks[2]))).setHealth(Integer.parseInt(chunks[3]));
+        } else {
+            ((BasicCreatureCard)enemyTableCards.get(Integer.parseInt(chunks[2]))).setHealth(Integer.parseInt(chunks[3]));
+        }
+        GameMenu.printBoard();
     }
 
     private void removeFromTable(String serverOutput) {
@@ -425,8 +437,8 @@ public class Game {
         }
         player.setMana(round);
         enemyMana = round;
-        //System.out.println("Turn: " + turn);
-        //System.out.println("Round: " + round);
+        System.out.println("Turn: " + turn);
+        System.out.println("Round: " + round);
         System.out.printf("---------- %s's TURN ----------\n", player.getName());
     }
 }
