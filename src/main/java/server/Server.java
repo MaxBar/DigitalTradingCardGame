@@ -206,7 +206,7 @@ public class Server {
 
     public void dealCards(int playerTurn) throws IOException {
         int handSize = 5;
-        int ids[] = new int[handSize];
+        String ids[] = new String[handSize];
 
         if (playerTurn == board.getTurn()) {
             for (int i = 0; i < handSize; i++) {
@@ -215,7 +215,7 @@ public class Server {
             StringBuilder id = new StringBuilder();
             System.out.println(String.valueOf(ids));
             //String[] temp = Arrays.toString(ids).split("[\\[\\]]")[1].split(", ");
-            for (int id1 : ids) {
+            for (String id1 : ids) {
                 id.append(id1).append(", ");
             }
             id.setLength(id.length() - 2);
@@ -238,10 +238,17 @@ public class Server {
 
     }
 
-    public int dealCard() throws IOException {
-        int id;
-        var deck = board.getPlayers()[board.getTurn()].getDeck();
-        id = deck.get(deck.size() - 1).id;
+    public String dealCard() throws IOException {
+        String id;
+        List<BasicCard> deck = board.getPlayers()[board.getTurn()].getDeck();
+        id = Integer.toString(deck.get(deck.size() - 1).id);
+        if(deck.get(deck.size() - 1) instanceof SpecialAbilityCreatureCard) {
+            id = "S_" + id;
+        } else if(deck.get(deck.size() - 1) instanceof  BasicCreatureCard) {
+            id = "B_" + id;
+        } else if(deck.get(deck.size() - 1) instanceof  BasicMagicCard) {
+            id = "M_" + id;
+        }
         board.getPlayers()[board.getTurn()].getHand().add(deck.get(deck.size() - 1));
         if(deck.size() > 0) {
         //if(board.getPlayers()[board.getTurn()].getHand().size() > 0) {
@@ -253,10 +260,17 @@ public class Server {
         return id;
     }
     
-    public int dealTurnCard() throws IOException {
-        int id;
-        var deck = board.getPlayers()[board.getTurn()].getDeck();
-        id = deck.get(deck.size() - 1).id;
+    public String dealTurnCard() throws IOException {
+        String id;
+        List<BasicCard> deck = board.getPlayers()[board.getTurn()].getDeck();
+        id = Integer.toString(deck.get(deck.size() - 1).id);
+        if(deck.get(deck.size() - 1) instanceof SpecialAbilityCreatureCard) {
+            id = "S_" + id;
+        } else if(deck.get(deck.size() - 1) instanceof  BasicCreatureCard) {
+            id = "B_" + id;
+        } else if(deck.get(deck.size() - 1) instanceof  BasicMagicCard) {
+            id = "M_" + id;
+        }
         board.getPlayers()[board.getTurn()].getHand().add(deck.get(deck.size() - 1));
         if(deck.size() > 0) {
         //if(board.getPlayers()[board.getTurn()].getHand().size() > 0) {
@@ -271,7 +285,7 @@ public class Server {
 
 
     public void placeCard(int index) throws IOException {
-        var player = board.getPlayers()[board.getTurn()];
+        Player player = board.getPlayers()[board.getTurn()];
         if (player.getTable().size() <= board.maxTableSize) {
             BasicCard card = player.getHand().get(index);
 
@@ -290,6 +304,9 @@ public class Server {
                         ((SpecialAbilityCreatureCard)player.getTable().get(player.getTable().size() - 1)).getKeyword() == EKeyword.CHARGE) {
                     player.getTable().get(player.getTable().size() - 1).setIsConsumed(false);
                     network.sendMsgToClient(String.format("P%s CONSUMED_FALSE %s", board.getTurn(), player.getTable().size() - 1), network.getClientIP().get(board.getTurn()));
+                } else if(player.getTable().get(player.getTable().size() - 1) instanceof  SpecialAbilityCreatureCard &&
+                        ((SpecialAbilityCreatureCard)player.getTable().get(player.getTable().size() - 1)).getKeyword() == EKeyword.COOLDOWN) {
+                    ((SpecialAbilityCreatureCard) player.getTable().get(player.getTable().size() - 1)).decrementAbilityValue();
                 }
                 player.getHand().remove(index);
 
@@ -310,8 +327,8 @@ public class Server {
 
     //TODO Check if the attacking creature exists with same as enemy craeture method
     private void attackEnemyPlayer(int index) throws IOException {
-        var playerTurn = board.getPlayers()[board.getTurn()];
-        var enemyPlayerTurn = board.getPlayers()[board.checkTurnCombat()];
+        Player playerTurn = board.getPlayers()[board.getTurn()];
+        Player enemyPlayerTurn = board.getPlayers()[board.checkTurnCombat()];
     
         BasicCreatureCard player = null;
         if(playerTurn.getTable().size() >= (index + 1)) {
@@ -365,7 +382,7 @@ public class Server {
         }
     
         if (board.getPlayers()[board.checkTurnCombat()].getTable().size() != 0) {
-            var enemyPlayerCreature = ((BasicCreatureCard) board.getPlayers()[board.checkTurnCombat()].getTable().get(defendingCreatureIndex));
+            BasicCreatureCard enemyPlayerCreature = ((BasicCreatureCard) board.getPlayers()[board.checkTurnCombat()].getTable().get(defendingCreatureIndex));
             if (!playerCreature.getIsConsumed()) {
     
                 playerCreature.decrementHealth(enemyPlayerCreature.getDefense());
@@ -444,21 +461,23 @@ public class Server {
     }
     
     private void useEnemyCreature(int index) throws IOException {
-        var player = board.getPlayers()[board.getTurn()];
-        var enemyPlayer = board.getPlayers()[board.checkTurnCombat()];
+        Player player = board.getPlayers()[board.getTurn()];
+        Player enemyPlayer = board.getPlayers()[board.checkTurnCombat()];
         if ((enemyPlayer.getTable().size()) > 0) {
             BasicMagicCard card = (BasicMagicCard)player.getHand().get(index);
             if (card.getKeyword() == EKeyword.DIRECTATTACK) {
                 if (player.getMana() >= card.getManaCost()) {
                     player.decreaseMana(card.getManaCost());
-                    player.getHand().remove(index);
                     network.sendMsgToClient("ENEMY_HAND DECREMENT", network.getClientIP().get(board.checkTurnCombat()));
                     network.sendMsgToClient(String.format("P%s GRAVEYARD INCREMENT", board.getTurn()), network.getClientIP().get(board.getTurn()));
                     network.sendMsgToClient(String.format("P%s GRAVEYARD INCREMENT", board.getTurn()), network.getClientIP().get(board.checkTurnCombat()));
                     network.sendMsgToClient(String.format("P%s USE_MAGIC_CREATURE_SUCCESS %s", board.getTurn(), index), network.getClientIP().get(board.getTurn()));
                     int lastIndex = (enemyPlayer.getTable().size() - 1);
-                    int dmg = ((BasicMagicCard) player.getTable().get(index)).getAbilityValue();
+                    int dmg = ((BasicMagicCard) player.getHand().get(index)).getAbilityValue();
                     ((BasicCreatureCard) enemyPlayer.getTable().get(lastIndex)).decrementHealth(dmg);
+                    network.sendMsgToClient(String.format("P%s CREATURE_HP %s %s", board.checkTurnCombat(), lastIndex, ((BasicCreatureCard) enemyPlayer.getTable().get(lastIndex)).getHealth()), network.getClientIP().get(board.getTurn()));
+                    network.sendMsgToClient(String.format("P%s CREATURE_HP %s %s", board.checkTurnCombat(), lastIndex, ((BasicCreatureCard) enemyPlayer.getTable().get(lastIndex)).getHealth()), network.getClientIP().get(board.checkTurnCombat()));
+                    player.getHand().remove(index);
                     checkCreatureAlive(lastIndex, board.checkTurnCombat());
                 } else {
                     network.sendMsgToClient(String.format("USE_MAGIC_CREATURE_FAILURE %s NO_MANA", index), network.getClientIP().get(board.getTurn()));
@@ -545,13 +564,23 @@ public class Server {
     public void endTurn() {
 
         //if (board.getTurn() == board.PLAYER_A) {
-            for (int i = 0; i < board.getPlayers()[board.getTurn()].getTable().size(); i++) {
+            /*for (int i = 0; i < board.getPlayers()[board.getTurn()].getTable().size(); i++) {
                 board.getPlayers()[board.getTurn()].getTable().get(i).setIsConsumed(false);
+            }*/
+        for(BasicCard card : board.getPlayers()[board.getTurn()].getTable()) {
+            if (card instanceof SpecialAbilityCreatureCard && ((SpecialAbilityCreatureCard) card).getKeyword() == EKeyword.COOLDOWN && ((SpecialAbilityCreatureCard) card).getAbilityValue() > 0) {
+                ((SpecialAbilityCreatureCard) card).decrementAbilityValue();
+            } else if (card instanceof SpecialAbilityCreatureCard && ((SpecialAbilityCreatureCard) card).getKeyword() == EKeyword.COOLDOWN && ((SpecialAbilityCreatureCard) card).getAbilityValue() == 0) {
+                card.setIsConsumed(false);
+            } else {
+                card.setIsConsumed(false);
             }
+        }
             board.increaseTurn(1);
             board.getPlayers()[board.getTurn()].setMana(board.getRound());
         try {
             network.sendMsgToClient(String.format("ROUND %s TURN %s", board.getRound(), board.getTurn()), network.getClientIP().get(board.getTurn()));
+            network.sendMsgToClient(String.format("ROUND %s TURN %s", board.getRound(), board.getTurn()), network.getClientIP().get(board.checkTurnCombat()));
             //network.sendMsgToClient(String.format("ROUND %s TURN %s", board.getRound(), board.getTurn()), network.getClientIP().get(1));
         } catch (IOException e) {
             e.printStackTrace();
