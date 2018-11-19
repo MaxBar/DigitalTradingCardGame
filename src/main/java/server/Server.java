@@ -328,8 +328,6 @@ public class Server {
     
                 playerCreature.setIsConsumed(true);
     
-                boolean attackingCreature = checkCreatureAlive(attackingCreatureIndex, board.getTurn());
-                boolean defendingCreature = checkCreatureAlive(defendingCreatureIndex, board.checkTurnCombat());
     
                 //returnString += " P" + board.getTurn() + "_TABLE " + attackingCreatureIndex + " HP " + player.getHealth();
                 //returnString += " | P" + board.checkTurnCombat() + "_TABLE " + defendingCreatureIndex + " HP " + enemyPlayer.getHealth();
@@ -347,6 +345,9 @@ public class Server {
                         board.checkTurnCombat(),
                         defendingCreatureIndex,
                         enemyPlayerCreature.getHealth()), network.getClientIP().get(board.checkTurnCombat()));
+                
+                boolean attackingCreature = checkCreatureAlive(attackingCreatureIndex, board.getTurn());
+                boolean defendingCreature = checkCreatureAlive(defendingCreatureIndex, board.checkTurnCombat());
 
                 //return returnString;
             } else {
@@ -474,6 +475,7 @@ public class Server {
 
             board.getPlayers()[player].getGraveyard().add(card);
             board.getPlayers()[player].getTable().remove(index);
+            network.sendMsgToClient(String.format("P%s REMOVE_FROM_TABLE %s", player, index), network.getClientIP().get(board.getTurn()));
             network.sendMsgToClient(String.format("P%s GRAVEYARD INCREMENT", player), network.getClientIP().get(board.getTurn()));
             network.sendMsgToClient(String.format("P%s GRAVEYARD INCREMENT", player), network.getClientIP().get(board.checkTurnCombat()));
 
