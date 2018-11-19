@@ -223,9 +223,11 @@ public class Server {
         id = deck.get(deck.size() - 1).id;
         board.getPlayers()[board.getTurn()].getHand().add(deck.get(deck.size() - 1));
         deck.remove(deck.size() - 1);
-        network.sendMsgToClient(String.format("ENEMY_HAND INCREMENT"), network.getClientIP().get(board.checkTurnCombat()));
-        network.sendMsgToClient(String.format("ENEMY_DECK DECREMENT"), network.getClientIP().get(board.checkTurnCombat()));
-        network.sendMsgToClient(String.format("PLAYER_DECK DECREMENT"), network.getClientIP().get(board.checkTurnCombat()));
+        if(board.getPlayers()[board.getTurn()].getHand().size() > 0) {
+            network.sendMsgToClient(String.format("ENEMY_HAND INCREMENT"), network.getClientIP().get(board.checkTurnCombat()));
+            network.sendMsgToClient(String.format("ENEMY_DECK DECREMENT"), network.getClientIP().get(board.checkTurnCombat()));
+            network.sendMsgToClient(String.format("PLAYER_DECK DECREMENT"), network.getClientIP().get(board.checkTurnCombat()));
+        }
         return id;
     }
 
@@ -331,14 +333,14 @@ public class Server {
     
                 //returnString += " P" + board.getTurn() + "_TABLE " + attackingCreatureIndex + " HP " + player.getHealth();
                 //returnString += " | P" + board.checkTurnCombat() + "_TABLE " + defendingCreatureIndex + " HP " + enemyPlayer.getHealth();
-                network.sendMsgToClient(String.format("P%s_ATTACK_RESULT_SUCCESS CARD_%s HP %s | P%s_CARD_%s HP %s",
+                network.sendMsgToClient(String.format("P%s ATTACK_RESULT_SUCCESS CARD_%s HP %s | P%s_CARD_%s HP %s",
                         board.getTurn(),
                         attackingCreatureIndex,
                         playerCreature.getHealth(),
                         board.checkTurnCombat(),
                         defendingCreatureIndex,
                         enemyPlayerCreature.getHealth()), network.getClientIP().get(board.getTurn()));
-                network.sendMsgToClient(String.format("P%s_ATTACK_RESULT_SUCCESS CARD_%s HP %s | P%s_CARD_%s HP %s",
+                network.sendMsgToClient(String.format("P%s ATTACK_RESULT_SUCCESS CARD_%s HP %s | P%s_CARD_%s HP %s",
                         board.getTurn(),
                         attackingCreatureIndex,
                         playerCreature.getHealth(),
@@ -405,7 +407,7 @@ public class Server {
                     player.getHand().remove(index);
                     network.sendMsgToClient("ENEMY_HAND DECREMENT", network.getClientIP().get(board.checkTurnCombat()));
                     network.sendMsgToClient(String.format("P%s GRAVEYARD INCREMENT", board.getTurn()), network.getClientIP().get(board.getTurn()));
-                    network.sendMsgToClient(String.format("P%s GRAVEYARD INCREMENT", board.checkTurnCombat()), network.getClientIP().get(board.checkTurnCombat()));
+                    network.sendMsgToClient(String.format("P%s GRAVEYARD INCREMENT", board.getTurn()), network.getClientIP().get(board.checkTurnCombat()));
                     network.sendMsgToClient(String.format("P%s USE_MAGIC_CREATURE_SUCCESS %s", board.getTurn(), index), network.getClientIP().get(board.getTurn()));
                     int lastIndex = (enemyPlayer.getTable().size() - 1);
                     int dmg = ((BasicMagicCard) player.getTable().get(index)).getAbilityValue();
