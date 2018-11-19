@@ -58,7 +58,7 @@ public class Main {
         private static Thread inputThread = new Thread() {
             public void run() {
                 Scanner scanner = new Scanner(System.in);
-                
+
                 while(true) {
                     if(Game.getInstance().getStarted() < 1) {
                         String msg = scanner.nextLine();
