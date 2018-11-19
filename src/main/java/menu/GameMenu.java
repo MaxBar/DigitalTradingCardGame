@@ -127,6 +127,7 @@ public class GameMenu {
                 }
             }
         }
+
         System.out.printf("%s) Back\n", game.getPlayer().getHand().size() + 1);
         Scanner sc = new Scanner(System.in);
 
@@ -159,18 +160,20 @@ public class GameMenu {
         System.out.println(String.format("---------- SHOW %s's ATTACK CHOICES ----------", Game.getInstance().getPlayer().getName()));
 
         for (int i = 0; i < game.getPlayerTableCards().size() ; i++) {
-            if(game.getPlayerTableCards().get(i)instanceof BasicCreatureCard && !game.getPlayerTableCards().get(i).getIsConsumed()){
-                var card = (BasicCreatureCard)game.getPlayerTableCards().get(i);
-                System.out.printf((i + 1) + ") %s AP: %s DP: %s HP: %s\n",
-                        game.getPlayerTableCards().get(i).getName(),
-                        card.getAttack(),
-                        card.getDefense(),
-                        card.getHealth());
-            }else if(game.getPlayerTableCards().get(i)instanceof SpecialAbilityCreatureCard && !game.getPlayerTableCards().get(i).getIsConsumed()){
+
+
+            if(game.getPlayerTableCards().get(i)instanceof SpecialAbilityCreatureCard && !game.getPlayerTableCards().get(i).getIsConsumed()){
                 var card  = (SpecialAbilityCreatureCard)game.getPlayerTableCards().get(i);
                 System.out.printf((i + 1) + ") %s Ability: %s AP: %s DP: %s HP: %s\n",
                         game.getPlayerTableCards().get(i).getName(),
                         card.getAbilityDescription(),
+                        card.getAttack(),
+                        card.getDefense(),
+                        card.getHealth());
+            }else if(game.getPlayerTableCards().get(i)instanceof BasicCreatureCard && !game.getPlayerTableCards().get(i).getIsConsumed()){
+                var card = (BasicCreatureCard)game.getPlayerTableCards().get(i);
+                System.out.printf((i + 1) + ") %s AP: %s DP: %s HP: %s\n",
+                        game.getPlayerTableCards().get(i).getName(),
                         card.getAttack(),
                         card.getDefense(),
                         card.getHealth());
@@ -188,6 +191,41 @@ public class GameMenu {
             NetworkClient.getInstance().sendMessageToServer(String.format("ATTACK P%s ENEMY_PLAYER %s", Game.getInstance().getTurn(), choice));
         }
 
+    }
+
+    public static void printBoard() {
+        Game game = Game.getInstance();
+        int tableSize = 5;
+        System.out.println("**************************************");
+        System.out.printf("%s - HP: %s MP: %s \t\t| ENEMY - HP: %s MP: %s\n",
+                Game.getInstance().getPlayer().getName(), Game.getInstance().getPlayer().getHealth(), game.getPlayer().getMana(),
+                Game.getInstance().getEnemyHealth(), game.getEnemyMana());
+        System.out.println("--------------------------------------");
+        for(int i = 0; i < tableSize; ++i) {
+            String finalString = "";
+            if(game.getPlayerTableCards().size() - 1 >= i) {
+                finalString = String.format("%-12s HP: %s \t| ", game.getPlayerTableCards().get(i).getName(), ((BasicCreatureCard)game.getPlayerTableCards().get(i)).getHealth());
+            } else {
+                finalString = "EMPTY \t\t\t\t| ";
+            }
+            if(game.getEnemyTableCards().size() - 1 >= i) {
+                finalString += String.format("%-12s HP: %s", game.getEnemyTableCards().get(i).getName(), ((BasicCreatureCard)game.getEnemyTableCards().get(i)).getHealth());
+            } else {
+                finalString += "EMPTY";
+            }
+            System.out.println(finalString);
+        }
+        System.out.println("--------------------------------------");
+        String player = game.getPlayerGraveyard() > 1 ? "cards" : "card";
+        String enemy = game.getEnemyGraveyard() > 1 ? "cards" : "card";
+        System.out.println(String.format("Graveyard: %s %s \t| Graveyard: %s %s", game.getPlayerGraveyard(), player, game.getEnemyGraveyard(), enemy));
+        player = game.getPlayerDeck() > 1 ? "cards" : "card";
+        enemy = game.getEnemyDeck() > 1 ? "cards" : "card";
+        System.out.println(String.format("Deck: %s %s \t\t| Deck: %s %s", game.getPlayerDeck(), player, game.getEnemyDeck(), enemy));
+        player = game.getPlayer().getHand().size() > 1 ? "cards" : "card";
+        enemy = game.getEnemyHand() > 1 ? "cards" : "card";
+        System.out.println(String.format("Hand: %s %s \t\t| Hand: %s %s", game.getPlayer().getHand().size(), player, game.getEnemyHand(), enemy));
+        System.out.println("**************************************");
     }
 
 }
