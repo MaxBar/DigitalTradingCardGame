@@ -123,8 +123,10 @@ public class Game {
             if(started == 2) {
                 startGame();
             }
-        } else if(serverOutput.startsWith("ROUND")) {
+        }else if(serverOutput.startsWith("ROUND")) {
             endTurn(serverOutput);
+        }else if (serverOutput.startsWith("DRAW_CARD")) {
+            dealtCard(serverOutput);
         }else if(serverOutput.substring(3).startsWith("PLACE_CREATURE_SUCCESS")){
             placeSuccess(serverOutput);
         }else if(serverOutput.substring(3).startsWith("PLACE_CREATURE_FAILURE") && Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn()) {
@@ -138,7 +140,6 @@ public class Game {
         }else if (serverOutput.substring(3).startsWith("ATTACK_RESULT_SUCCESS")){
             attackSuccess(serverOutput);
         }else if (serverOutput.substring(3).startsWith("CONSUMED")) {
-            System.out.println(serverOutput.substring(17));
             changeConsumed(Integer.parseInt(serverOutput.substring(18)));
         }else if(serverOutput.equals("ENEMY_HAND DECREMENT")) {
             --enemyHand;
@@ -155,7 +156,6 @@ public class Game {
     }
 
     private void changeConsumed(int index) {
-        System.out.println(index);
         playerTableCards.get(index).setIsConsumed(!playerTableCards.get(index).getIsConsumed());
     }
 
@@ -181,6 +181,16 @@ public class Game {
             System.out.printf("Not enough mana to use %s\n", player.getHand().get(Integer.parseInt(chunks[1])).getName());
         } else if(chunks[3].equals("NO_ENEMY_CREATURES")) {
             System.out.printf("No enemy creature to attack with %s\n",player.getHand().get(Integer.parseInt(chunks[1])).getName());
+        }
+    }
+
+    private void dealtCard(String serverOutput) {
+        String[] chunks = serverOutput.split(" ");
+        int id = Integer.parseInt(chunks[1]);
+        if (queryHandler.fetchCheckCardType(id) == 0) {
+            player.getHand().add(queryHandler.fetchCreatureCardId(id));
+        } else if (queryHandler.fetchCheckCardType(id) == 1) {
+            player.getHand().add(queryHandler.fetchSpecialAbilityCreatureCardId(id));
         }
     }
     
