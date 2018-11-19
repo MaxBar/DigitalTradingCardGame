@@ -3,6 +3,7 @@ package Game;
 import NetworkClient.NetworkClient;
 import card.BasicCard;
 import card.BasicCreatureCard;
+import card.EKeyword;
 import card.SpecialAbilityCreatureCard;
 import menu.GameMenu;
 import net.bytebuddy.implementation.bytecode.Duplication;
@@ -295,6 +296,9 @@ public class Game {
                 var card = (SpecialAbilityCreatureCard) player.getHand().get(index);
                 player.getHand().remove(index);
                 Game.getInstance().getPlayerTableCards().add(card);
+                if(((SpecialAbilityCreatureCard)Game.getInstance().getPlayerTableCards().get(Game.getInstance().getPlayerTableCards().size() - 1)).getKeyword() == EKeyword.COOLDOWN) {
+                    ((SpecialAbilityCreatureCard) Game.getInstance().getPlayerTableCards().get(Game.getInstance().getPlayerTableCards().size() - 1)).decrementAbilityValue();
+                }
             }
             System.out.printf("P%s placed %s\n", turn,  Game.getInstance().getPlayerTableCards().get(Game.getInstance().getPlayerTableCards().size() - 1).getName());
         } else {
@@ -391,7 +395,7 @@ public class Game {
     private void login(String serverOutput) {
         String [] chunks = serverOutput.split (" ");
         String start = "";
-        if(chunks[1].equals("john@hotmail.se")) {
+        if(chunks[1].equals("linn@hotmail.se")) {
             int playerId = Integer.parseInt(chunks[2].substring(3));
             int playerTurn = Integer.parseInt(chunks[3].substring(7));
             String playerName = chunks[4].substring(5);
@@ -429,9 +433,21 @@ public class Game {
         String[] chunks = serverOutput.split(" ");
         turn = Integer.parseInt(chunks[3]);
         round = Integer.parseInt(chunks[1]);
-        for (BasicCard card : playerTableCards) {
-            card.setIsConsumed(false);
+        
+        for(var card: playerTableCards) {
+            if(card instanceof SpecialAbilityCreatureCard && ((SpecialAbilityCreatureCard) card).getKeyword() == EKeyword.COOLDOWN && ((SpecialAbilityCreatureCard) card).getAbilityValue() > 0) {
+                System.out.println(((SpecialAbilityCreatureCard) card).getAbilityValue());
+                ((SpecialAbilityCreatureCard)card).decrementAbilityValue();
+            } else if(card instanceof  SpecialAbilityCreatureCard && ((SpecialAbilityCreatureCard) card).getKeyword() == EKeyword.COOLDOWN && ((SpecialAbilityCreatureCard) card).getAbilityValue() == 0) {
+                card.setIsConsumed(false);
+            } else {
+                card.setIsConsumed(false);
+            }
         }
+        
+        /*for (BasicCard card : playerTableCards) {
+            card.setIsConsumed(false);
+        }*/
         if(round > 0){
             NetworkClient.getInstance().sendMessageToServer(String.format("P%s_DRAW", player.getPlayerTurn()));
         }
