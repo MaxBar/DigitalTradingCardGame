@@ -289,7 +289,8 @@ public class Game {
                 System.out.printf("Your card %s took damage and have HP: %s",
                         playerTableCards.get(Integer.parseInt(playerCard[1])).getName(),
                         ((BasicCreatureCard)playerTableCards.get(Integer.parseInt(playerCard[1]))).getHealth());
-            } else if(serverOutput.startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {
+            }
+            if(serverOutput.startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {
                 ((BasicCreatureCard)playerTableCards.get(Integer.parseInt(enemyCard[2]))).setHealth(Integer.parseInt(chunks[8]));
                 System.out.printf("Enemy card %s took damage and have HP: %s",
                         enemyTableCards.get(Integer.parseInt(enemyCard[2])).getName(),
