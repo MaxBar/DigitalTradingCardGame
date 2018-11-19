@@ -206,7 +206,7 @@ public class Server {
 
     public void dealCards(int playerTurn) throws IOException {
         int handSize = 5;
-        int ids[] = new int[handSize];
+        String ids[] = new String[handSize];
 
         if (playerTurn == board.getTurn()) {
             for (int i = 0; i < handSize; i++) {
@@ -215,7 +215,7 @@ public class Server {
             StringBuilder id = new StringBuilder();
             System.out.println(String.valueOf(ids));
             //String[] temp = Arrays.toString(ids).split("[\\[\\]]")[1].split(", ");
-            for (int id1 : ids) {
+            for (String id1 : ids) {
                 id.append(id1).append(", ");
             }
             id.setLength(id.length() - 2);
@@ -238,10 +238,17 @@ public class Server {
 
     }
 
-    public int dealCard() throws IOException {
-        int id;
+    public String dealCard() throws IOException {
+        String id;
         var deck = board.getPlayers()[board.getTurn()].getDeck();
-        id = deck.get(deck.size() - 1).id;
+        id = Integer.toString(deck.get(deck.size() - 1).id);
+        if(deck.get(deck.size() - 1) instanceof SpecialAbilityCreatureCard) {
+            id = "S_" + id;
+        } else if(deck.get(deck.size() - 1) instanceof  BasicCreatureCard) {
+            id = "B_" + id;
+        } else if(deck.get(deck.size() - 1) instanceof  BasicMagicCard) {
+            id = "M_" + id;
+        }
         board.getPlayers()[board.getTurn()].getHand().add(deck.get(deck.size() - 1));
         if(deck.size() > 0) {
         //if(board.getPlayers()[board.getTurn()].getHand().size() > 0) {
@@ -253,10 +260,17 @@ public class Server {
         return id;
     }
     
-    public int dealTurnCard() throws IOException {
-        int id;
+    public String dealTurnCard() throws IOException {
+        String id;
         var deck = board.getPlayers()[board.getTurn()].getDeck();
-        id = deck.get(deck.size() - 1).id;
+        id = Integer.toString(deck.get(deck.size() - 1).id);
+        if(deck.get(deck.size() - 1) instanceof SpecialAbilityCreatureCard) {
+            id = "S_" + id;
+        } else if(deck.get(deck.size() - 1) instanceof  BasicCreatureCard) {
+            id = "B_" + id;
+        } else if(deck.get(deck.size() - 1) instanceof  BasicMagicCard) {
+            id = "M_" + id;
+        }
         board.getPlayers()[board.getTurn()].getHand().add(deck.get(deck.size() - 1));
         if(deck.size() > 0) {
         //if(board.getPlayers()[board.getTurn()].getHand().size() > 0) {
