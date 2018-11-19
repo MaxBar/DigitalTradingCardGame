@@ -110,6 +110,33 @@ public class QueryHandler {
         return card;
     }
 
+    // 0 = BasicCreatureCard
+    // 1 = SpecialAbilityCreatureCard
+    public int fetchCheckCardType (int id) {
+        String query = "SELECT * FROM CreatureCard WHERE id = " + id;
+        Statement st;
+        ResultSet rs = null;
+        try {
+            st = Database.con.createStatement();
+            rs = st.executeQuery(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            if (rs.first()) {
+                if (rs.getString("specialAbility") == null) {
+                    return 0;
+                } else if (rs.getString("specialAbility") != null) {
+                    return 1;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
     public SpecialAbilityCreatureCard fetchSpecialAbilityCreatureCardId (int id) {
         String query = "SELECT * FROM CreatureCard WHERE id = " + id;
         SpecialAbilityCreatureCard card = null;

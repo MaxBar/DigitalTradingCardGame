@@ -208,18 +208,19 @@ public class Game {
                 player.getHand().remove(index);
                 Game.getInstance().getPlayerTableCards().add(card);
             }
+            System.out.printf("P%s placed %s\n", turn,  Game.getInstance().getPlayerTableCards().get(Game.getInstance().getPlayerTableCards().size() - 1).getName());
         } else {
-            if (player.getHand().get(index) instanceof BasicCreatureCard) {
+            if (queryHandler.fetchCheckCardType(index) == 0) {
                 var card = queryHandler.fetchCreatureCardId(index);
                 //Game.getInstance().enemyHand --;
                 Game.getInstance().getEnemyTableCards().add(card);
-            } else if (player.getHand().get(index) instanceof SpecialAbilityCreatureCard) {
+            } else if (queryHandler.fetchCheckCardType(index) == 1) {
                 var card = (SpecialAbilityCreatureCard) queryHandler.fetchSpecialAbilityCreatureCardId(index);
                 //Game.getInstance().enemyHand --;
-                Game.getInstance().getPlayerTableCards().add(card);
+                Game.getInstance().getEnemyTableCards().add(card);
             }
+            System.out.printf("P%s placed %s\n", turn,  Game.getInstance().getEnemyTableCards().get(Game.getInstance().getEnemyTableCards().size() - 1).getName());
         }
-        System.out.printf("P%s placed %s\n", turn,  Game.getInstance().getPlayerTableCards().get(Game.getInstance().getPlayerTableCards().size() - 1).getName());
     }
 
     private void placeFailure(String serverOutput){
