@@ -1,10 +1,7 @@
 package server;
 
 import board.Board;
-import card.BasicCard;
-import card.BasicCreatureCard;
-import card.BasicMagicCard;
-import card.EKeyword;
+import card.*;
 import player.Player;
 import repository.QueryHandler;
 
@@ -68,7 +65,7 @@ public class Server {
         int attackCreatureEnd = 26;
         if (input.startsWith("ATTACK")) {
             if (input.substring(attackStart).startsWith("P" + board.getTurn() + " ENEMY_CREATURE")) {
-               attackEnemyCreature(Integer.parseInt(input.substring(attackCreature, attackCreatureEnd)), Integer.parseInt(input.substring(defendCheck)));
+               attackEnemyCreature(Integer.parseInt(input.substring(attackCreature, attackCreatureEnd)), board.getPlayers()[board.checkTurnCombat()].getTable().size() - 1);//, Integer.parseInt(input.substring(defendCheck)));
             } else if (input.substring(attackStart).startsWith("P" + board.getTurn() + " ENEMY_PLAYER")) {
                 attackEnemyPlayer(Integer.parseInt(input.substring(cardIndex)));
             }
@@ -102,7 +99,9 @@ public class Server {
             dealCards(board.getTurn());
             //board.increaseTurn(1);
         } else if (input.startsWith("P" + board.getTurn() + "_DRAW")) {
-            String.format("P%s DEALT_CARD %s", board.getTurn(), Integer.toString(dealCard(board.getTurn())));
+            System.out.println("I Draw");
+            dealTurnCard();
+            //network.sendMsgToClient(String.format("P%s DEALT_CARD %s", board.getTurn(), Integer.toString(dealCard(board.getTurn()))), network.getClientIP().get(board.getTurn()));
             //+ board.getTurn() + " " + Integer.toString(dealCard(board.getTurn()));
         } else {
 
@@ -161,21 +160,43 @@ public class Server {
         } else {
             deckId = 2;
         }
+        
         List<Integer> player0 = queryHandler.fetchDeckCreatureCardId(board.getPlayers()[0].getId(), deckId);
+        List<Integer> player0Magic = queryHandler.fetchDeckMagicCardId(board.getPlayers()[0].getId(), deckId);
 
         if (board.getPlayers()[1].getId() == 9) {
             deckId = 2;
         } else {
             deckId = 1;
         }
+        
         List<Integer> player1 = queryHandler.fetchDeckCreatureCardId(board.getPlayers()[1].getId(), deckId);
+        List<Integer> player1Magic = queryHandler.fetchDeckMagicCardId(board.getPlayers()[1].getId(), deckId);
 
         for (int id : player0) {
-            board.getPlayers()[0].getDeck().add(queryHandler.fetchCreatureCardId(id));
+            if(queryHandler.fetchCheckCardType(id) == 0) {
+                board.getPlayers()[0].getDeck().add(queryHandler.fetchCreatureCardId(id));
+            } else if(queryHandler.fetchCheckCardType(id) == 1) {
+                board.getPlayers()[0].getDeck().add(queryHandler.fetchSpecialAbilityCreatureCardId(id));
+            }
+            
         }
+        
+        for(int id : player0Magic) {
+            board.getPlayers()[0].getDeck().add(queryHandler.fetchMagicCardId(id));
+        }
+        
 
         for (int id : player1) {
-            board.getPlayers()[1].getDeck().add(queryHandler.fetchCreatureCardId(id));
+            if(queryHandler.fetchCheckCardType(id) == 0) {
+                board.getPlayers()[1].getDeck().add(queryHandler.fetchCreatureCardId(id));
+            } else if(queryHandler.fetchCheckCardType(id) == 1) {
+                board.getPlayers()[1].getDeck().add(queryHandler.fetchSpecialAbilityCreatureCardId(id));
+            }
+        }
+        
+        for(int id : player1Magic) {
+            board.getPlayers()[1].getDeck().add(queryHandler.fetchMagicCardId(id));
         }
         
         shuffleDeck(board.getPlayers()[0].getDeck());
@@ -189,7 +210,7 @@ public class Server {
 
         if (playerTurn == board.getTurn()) {
             for (int i = 0; i < handSize; i++) {
-                ids[i] = dealCard(playerTurn);
+                ids[i] = dealCard();
             }
             StringBuilder id = new StringBuilder();
             System.out.println(String.valueOf(ids));
@@ -207,7 +228,7 @@ public class Server {
             //return "DEALT_CARDS P" + playerTurn + " " + id.toString();
         } else {
             for (int i = 0; i < handSize; i++) {
-                ids[i] = dealCard(playerTurn);
+                ids[i] = dealCard();
             }
 
             //System.out.println(Arrays.toString(ids).split("[\\[\\]]")[1].split(", "));
@@ -217,17 +238,34 @@ public class Server {
 
     }
 
-    public int dealCard(int playerTurn) throws IOException {
+    public int dealCard() throws IOException {
         int id;
         var deck = board.getPlayers()[board.getTurn()].getDeck();
         id = deck.get(deck.size() - 1).id;
         board.getPlayers()[board.getTurn()].getHand().add(deck.get(deck.size() - 1));
-        deck.remove(deck.size() - 1);
-        if(board.getPlayers()[board.getTurn()].getHand().size() > 0) {
+        if(deck.size() > 0) {
+        //if(board.getPlayers()[board.getTurn()].getHand().size() > 0) {
             network.sendMsgToClient(String.format("ENEMY_HAND INCREMENT"), network.getClientIP().get(board.checkTurnCombat()));
             network.sendMsgToClient(String.format("ENEMY_DECK DECREMENT"), network.getClientIP().get(board.checkTurnCombat()));
-            network.sendMsgToClient(String.format("PLAYER_DECK DECREMENT"), network.getClientIP().get(board.checkTurnCombat()));
+            network.sendMsgToClient(String.format("PLAYER_DECK DECREMENT"), network.getClientIP().get(board.getTurn()));
         }
+        deck.remove(deck.size() - 1);
+        return id;
+    }
+    
+    public int dealTurnCard() throws IOException {
+        int id;
+        var deck = board.getPlayers()[board.getTurn()].getDeck();
+        id = deck.get(deck.size() - 1).id;
+        board.getPlayers()[board.getTurn()].getHand().add(deck.get(deck.size() - 1));
+        if(deck.size() > 0) {
+        //if(board.getPlayers()[board.getTurn()].getHand().size() > 0) {
+            network.sendMsgToClient(String.format("ENEMY_HAND INCREMENT"), network.getClientIP().get(board.checkTurnCombat()));
+            network.sendMsgToClient(String.format("ENEMY_DECK DECREMENT"), network.getClientIP().get(board.checkTurnCombat()));
+            network.sendMsgToClient(String.format("PLAYER_DECK DECREMENT"), network.getClientIP().get(board.getTurn()));
+            network.sendMsgToClient(String.format("DRAW_CARD %s", id), network.getClientIP().get(board.getTurn()));
+        }
+        deck.remove(deck.size() - 1);
         return id;
     }
 
@@ -238,27 +276,33 @@ public class Server {
             BasicCard card = player.getHand().get(index);
 
             if (player.getMana() >= card.getManaCost()) {
-
-                player.decreaseMana(card.getManaCost());
-                player.getHand().remove(index);
-                player.getTable().add(card);
-                player.getTable().get(player.getTable().size() - 1).setIsConsumed(true);
-
                 try {
                     network.sendMsgToClient(String.format("P%s PLACE_CREATURE_SUCCESS %s", board.getTurn(), index),network.getClientIP().get(board.getTurn()));
-                    network.sendMsgToClient(String.format("P%s PLACE_CREATURE_SUCCESS %s", board.getTurn(), board.getPlayers()[board.getTurn()].getHand().get(index).getId()),network.getClientIP().get(board.checkTurnCombat()));
+                    network.sendMsgToClient(String.format("P%s PLACE_CREATURE_SUCCESS %s", board.getTurn(), card.getId()),network.getClientIP().get(board.checkTurnCombat()));
                     network.sendMsgToClient(String.format("ENEMY_HAND DECREMENT"), network.getClientIP().get(board.checkTurnCombat()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+                player.decreaseMana(card.getManaCost());
+                player.getTable().add(card);
+                if(player.getTable().get(player.getTable().size() - 1) instanceof SpecialAbilityCreatureCard &&
+                        ((SpecialAbilityCreatureCard)player.getTable().get(player.getTable().size() - 1)).getKeyword() == EKeyword.CHARGE) {
+                    player.getTable().get(player.getTable().size() - 1).setIsConsumed(false);
+                    network.sendMsgToClient(String.format("P%s CONSUMED_FALSE %s", board.getTurn(), player.getTable().size() - 1), network.getClientIP().get(board.getTurn()));
+                }
+                player.getHand().remove(index);
+
+                
                 //return "PLACE P" + board.getTurn() + "_CREATURE " + index;
             } else {
                 network.sendMsgToClient(String.format("P%s PLACE_CREATURE_FAILURE %s NO_MANA", board.getTurn(), index), network.getClientIP().get(board.getTurn()));
                 //network.sendMsgToClient(String.format("P%s PLACE_CREATURE_FAILURE %s NO_MANA", board.getTurn(), index), network.getClientIP().get(board.checkTurnCombat()));
                 //return "PLACE P" + board.getTurn() + "_FAILED NO_MANA";
             }
+        } else {
+            network.sendMsgToClient(String.format("P%s PLACE_CREATURE_FAILURE %s NO_ROOM", board.getTurn(), index), network.getClientIP().get(board.getTurn()));
         }
-        network.sendMsgToClient(String.format("P%s PLACE_CREATURE_FAILURE %s NO_ROOM", board.getTurn(), index), network.getClientIP().get(board.getTurn()));
         //network.sendMsgToClient(String.format("P%s PLACE_CREATURE_FAILURE %s NO_ROOM", board.getTurn(), index), network.getClientIP().get(board.checkTurnCombat()));
         //return "PLACE P" + board.getTurn() + "_FAILED NO_ROOM";
     }
@@ -295,15 +339,16 @@ public class Server {
                         //System.out.printf("Player %s died, %s won!\n", enemyPlayerTurn.getName(), playerTurn.getName());
                         //return "P" + board.checkTurnCombat() + "_PLAYER DEAD";
                     }
+                    network.sendMsgToClient(String.format("P%s CONSUMED_TRUE_ %s", board.getTurn(), index), network.getClientIP().get(board.getTurn()));
                 } else {
                     network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE CREATURE_%s_IS_CONSUMED", board.getTurn(), index),  network.getClientIP().get(board.getTurn()));
                     network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE CREATURE_%s_IS_CONSUMED", board.getTurn(), index),  network.getClientIP().get(board.checkTurnCombat()));
                     //return "P" + board.getTurn() + " CREATURE " + index + " IS_CONSUMED";
                 }
+            } else {
+                network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE CARDS_ON_TABLE", board.checkTurnCombat()), network.getClientIP().get(board.getTurn()));
+                network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE CARDS_ON_TABLE", board.checkTurnCombat()), network.getClientIP().get(board.checkTurnCombat()));
             }
-
-            network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE CARDS_ON_TABLE", board.checkTurnCombat()),network.getClientIP().get(board.getTurn()));
-            network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE CARDS_ON_TABLE", board.checkTurnCombat()),network.getClientIP().get(board.checkTurnCombat()));
             //return "P" + board.checkTurnCombat() + "_PLAYER FAIL CARDS_ON_TABLE";
     }
 
@@ -345,10 +390,11 @@ public class Server {
                         board.checkTurnCombat(),
                         defendingCreatureIndex,
                         enemyPlayerCreature.getHealth()), network.getClientIP().get(board.checkTurnCombat()));
-                
+    
+                network.sendMsgToClient(String.format("P%s CONSUMED_TRUE  %s", board.getTurn(), attackingCreatureIndex), network.getClientIP().get(board.getTurn()));
+    
                 boolean attackingCreature = checkCreatureAlive(attackingCreatureIndex, board.getTurn());
                 boolean defendingCreature = checkCreatureAlive(defendingCreatureIndex, board.checkTurnCombat());
-
                 //return returnString;
             } else {
                 network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE CREATURE_%s_IS_CONSUMED",
@@ -476,6 +522,7 @@ public class Server {
             board.getPlayers()[player].getGraveyard().add(card);
             board.getPlayers()[player].getTable().remove(index);
             network.sendMsgToClient(String.format("P%s REMOVE_FROM_TABLE %s", player, index), network.getClientIP().get(board.getTurn()));
+            network.sendMsgToClient(String.format("P%s REMOVE_FROM_TABLE %s", player, index), network.getClientIP().get(board.checkTurnCombat()));
             network.sendMsgToClient(String.format("P%s GRAVEYARD INCREMENT", player), network.getClientIP().get(board.getTurn()));
             network.sendMsgToClient(String.format("P%s GRAVEYARD INCREMENT", player), network.getClientIP().get(board.checkTurnCombat()));
 

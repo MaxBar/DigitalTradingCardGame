@@ -1,6 +1,9 @@
 package repository;
 
 import card.BasicCreatureCard;
+import card.BasicMagicCard;
+import card.EKeyword;
+import card.SpecialAbilityCreatureCard;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -75,6 +78,33 @@ public class QueryHandler {
         }
         return playerEmail;
     }
+    
+    // 0 = BasicCreatureCard
+    // 1 = SpecialAbilityCreatureCard
+    public int fetchCheckCardType (int id) {
+        String query = "SELECT * FROM CreatureCard WHERE id = " + id;
+        Statement st;
+        ResultSet rs = null;
+        try {
+            st = Database.con.createStatement();
+            rs = st.executeQuery(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        try {
+            if (rs.first()) {
+                String text = rs.getString("specialAbility");
+                if (rs.wasNull())
+                    return 0;
+                else
+                    return 1;
+            }
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        }
+        return -1;
+    }
 
     public List<Integer> fetchDeckCreatureCardId(int playerId, int deckId) {
         String query = "SELECT card.id FROM CreatureCard card JOIN Deck deck ON deck.creatureCardId = card.id " +
@@ -97,6 +127,36 @@ public class QueryHandler {
             e.printStackTrace();
         }
         return ids;
+    }
+    
+    public BasicMagicCard fetchMagicCardId(int id) {
+        String query = "SELECT * FROM MagicCard WHERE id = " + id;
+        BasicMagicCard card = null;
+        Statement st;
+        ResultSet rs = null;
+        try {
+            st = Database.con.createStatement();
+            rs = st.executeQuery(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        try {
+            if (rs.first()) {
+                card = new BasicMagicCard(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("flavour"),
+                        rs.getString("image"),
+                        rs.getInt("mana"),
+                        EKeyword.valueOf(rs.getString("abilityName")),
+                        rs.getString("abilityDescription"),
+                        rs.getInt("abilityMin"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return card;
     }
 
     public BasicCreatureCard fetchCreatureCardId(int id) {
@@ -123,6 +183,40 @@ public class QueryHandler {
                         rs.getInt("attackPower"),
                         rs.getInt("defensePower"),
                         rs.getInt("class"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return card;
+    }
+    
+    public SpecialAbilityCreatureCard fetchSpecialAbilityCreatureCardId (int id) {
+        String query = "SELECT * FROM CreatureCard WHERE id = " + id;
+        SpecialAbilityCreatureCard card = null;
+        Statement st;
+        ResultSet rs = null;
+        try {
+            st = Database.con.createStatement();
+            rs = st.executeQuery(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        try {
+            if (rs.first()) {
+                card = new SpecialAbilityCreatureCard(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("flavour"),
+                        rs.getString("image"),
+                        rs.getInt("mana"),
+                        rs.getInt("health"),
+                        rs.getInt("attackPower"),
+                        rs.getInt("defensePower"),
+                        rs.getInt("class"),
+                        EKeyword.valueOf(rs.getString("specialAbilityName")),
+                        rs.getString("specialAbility"),
+                        rs.getInt("abilityMinValue"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
