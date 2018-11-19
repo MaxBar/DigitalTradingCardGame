@@ -29,7 +29,12 @@ public class SpecialAbilityCreatureCard extends BasicCreatureCard {
     public void setAbilityValue(int abilityValue) {
         this.abilityValue = abilityValue;
     }
-    
+
+    public void decrementAbilityValue() {
+        --abilityValue;
+    }
+
+
     public EKeyword getKeyword() {
         return keyword;
     }

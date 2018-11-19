@@ -304,6 +304,9 @@ public class Server {
                         ((SpecialAbilityCreatureCard)player.getTable().get(player.getTable().size() - 1)).getKeyword() == EKeyword.CHARGE) {
                     player.getTable().get(player.getTable().size() - 1).setIsConsumed(false);
                     network.sendMsgToClient(String.format("P%s CONSUMED_FALSE %s", board.getTurn(), player.getTable().size() - 1), network.getClientIP().get(board.getTurn()));
+                } else if(player.getTable().get(player.getTable().size() - 1) instanceof  SpecialAbilityCreatureCard &&
+                        ((SpecialAbilityCreatureCard)player.getTable().get(player.getTable().size() - 1)).getKeyword() == EKeyword.COOLDOWN) {
+                    ((SpecialAbilityCreatureCard) player.getTable().get(player.getTable().size() - 1)).decrementAbilityValue();
                 }
                 player.getHand().remove(index);
 
@@ -561,9 +564,18 @@ public class Server {
     public void endTurn() {
 
         //if (board.getTurn() == board.PLAYER_A) {
-            for (int i = 0; i < board.getPlayers()[board.getTurn()].getTable().size(); i++) {
+            /*for (int i = 0; i < board.getPlayers()[board.getTurn()].getTable().size(); i++) {
                 board.getPlayers()[board.getTurn()].getTable().get(i).setIsConsumed(false);
+            }*/
+        for(BasicCard card : board.getPlayers()[board.getTurn()].getTable()) {
+            if (card instanceof SpecialAbilityCreatureCard && ((SpecialAbilityCreatureCard) card).getKeyword() == EKeyword.COOLDOWN && ((SpecialAbilityCreatureCard) card).getAbilityValue() > 0) {
+                ((SpecialAbilityCreatureCard) card).decrementAbilityValue();
+            } else if (card instanceof SpecialAbilityCreatureCard && ((SpecialAbilityCreatureCard) card).getKeyword() == EKeyword.COOLDOWN && ((SpecialAbilityCreatureCard) card).getAbilityValue() == 0) {
+                card.setIsConsumed(false);
+            } else {
+                card.setIsConsumed(false);
             }
+        }
             board.increaseTurn(1);
             board.getPlayers()[board.getTurn()].setMana(board.getRound());
         try {
