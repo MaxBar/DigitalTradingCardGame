@@ -5,6 +5,8 @@ import card.BasicMagicCard;
 import card.EKeyword;
 import card.SpecialAbilityCreatureCard;
 
+import javax.swing.plaf.nimbus.State;
+import javax.xml.crypto.Data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -12,6 +14,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QueryHandler {
+
+    public void saveWinner(int id) {
+        String query = "UPDATE Player SET Wins = Wins + 1 WHERE id = " + id;
+        Statement st;
+
+        try {
+            st = Database.con.createStatement();
+            st.executeUpdate(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveLoser(int id) {
+        String query = "UPDATE Player SET Lost = Lost + 1 WHERE id = " + id;
+        Statement st;
+
+        try {
+            st = Database.con.createStatement();
+            st.executeUpdate(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public int fetchPlayerId(String email) {
         String query = "SELECT id FROM Player WHERE Player.email = '" + email + "'";

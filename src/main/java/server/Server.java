@@ -351,6 +351,8 @@ public class Server {
                         //return "P" + board.checkTurnCombat() + "_PLAYER " + enemyPlayerTurn.getHealth();
                     } else {
                         System.out.printf("Player %s died, %s won!\n", enemyPlayerTurn.getName(), playerTurn.getName());
+                        queryHandler.saveWinner(playerTurn.getId());
+                        queryHandler.saveLoser(enemyPlayerTurn.getId());
                         network.sendMsgToClient(String.format("P%s ATTACK_RESULT_SUCCESS P%s_DEAD", board.getTurn(), board.checkTurnCombat()), network.getClientIP().get(board.getTurn()));
                         network.sendMsgToClient(String.format("P%s ATTACK_RESULT_SUCCESS P%s_DEAD", board.getTurn(), board.checkTurnCombat()), network.getClientIP().get(board.checkTurnCombat()));
                         //System.out.printf("Player %s died, %s won!\n", enemyPlayerTurn.getName(), playerTurn.getName());
@@ -584,6 +586,15 @@ public class Server {
             //network.sendMsgToClient(String.format("ROUND %s TURN %s", board.getRound(), board.getTurn()), network.getClientIP().get(1));
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        Player playerTurn = board.getPlayers()[board.getTurn()];
+        Player enemyPlayerTurn = board.getPlayers()[board.checkTurnCombat()];
+
+        if(board.getPlayers()[board.getTurn()].getHand().size() == 0 && board.getPlayers()[board.getTurn()].getDeck().size() == 0) {
+            System.out.printf("Player %s lost, no cards left, %s won!\n", playerTurn.getName(), enemyPlayerTurn.getName());
+            queryHandler.saveLoser(playerTurn.getId());
+            queryHandler.saveWinner(enemyPlayerTurn.getId());
+            quitGame();
         }
 
         /*} else {
