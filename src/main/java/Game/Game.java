@@ -26,6 +26,7 @@ public class Game {
     private int playerDeck;
     private int turn;
     private int round;
+    private int enemyTurn;
 
 
 
@@ -57,6 +58,19 @@ public class Game {
     
     public Player getPlayer() {
         return player;
+    }
+    
+    public int checkCombatTurn(int playerTurn) {
+        if(turn == playerTurn && turn == 1) {
+            return 0;
+        } else if(turn != playerTurn && turn == 1) {
+            return turn;
+        } else if(turn == playerTurn && turn == 0) {
+            return 1;
+        } else if(turn != playerTurn && turn == 0) {
+            return turn;
+        }
+        //return turn == playerTurn ? 1 : playerTurn;
     }
 
     /*public void setPlayer(Player player) {
@@ -210,9 +224,9 @@ public class Game {
 
     private void placeFailure(String serverOutput){
         String[] chunks = serverOutput.split(" ");
-        if(chunks[3] == "NO_MANA"){
+        if(chunks[3].equals("NO_MANA")){
             System.out.printf("Not enough mana to place %s\n", player.getHand().get(Integer.parseInt(chunks[2])));
-        }else if(chunks[3] == "NO_ROOM") {
+        }else if(chunks[3].equals("NO_ROOM")) {
             System.out.printf("Not enough room on table to place %s\n", player.getHand().get(Integer.parseInt(chunks[2])));
         }
     }
@@ -220,32 +234,48 @@ public class Game {
     /** TODO */
     private void attackFailure(String serverOutput) {
         String[] chunks = serverOutput.split(" ");
-        String[] miniChunks = chunks[2].split("_");
+        String[] innerChunks = chunks[2].split("_");
 
         if (chunks[2].equals("CREATURE_OUT_OF_BOUNDS")) {
+            System.out.println("Chosen index is not a card");
         } else if (chunks[2].equals("CARDS_ON_TABLE")) {
+            System.out.println("There are enemy creatures currently on table");
         } else if (chunks[2].equals("NO_ENEMY_CARDS_ON_TABLE")) {
-        } else if (miniChunks[3].equals("CONSUMED")) {
-
+            System.out.println("No enemy creature to attack");
+        } else if (innerChunks[3].equals("CONSUMED")) {
             System.out.printf("Failure, %s is consumed",
-                    Game.getInstance().getPlayerTableCards().get(Integer.parseInt(miniChunks[1])).getName());
-
+                    Game.getInstance().getPlayerTableCards().get(Integer.parseInt(innerChunks[1])).getName());
         }
     }
 
     /** TODO */
-    private void attackSuccess(String serverOutput) {
+    private void attackSuccess(String serverOutput) throws IOException {
         String[] chunks = serverOutput.split(" ");
-        String[] miniChunks = chunks[2].split("_");
+        String[] innerChunks = chunks[2].split("_");
 
-        if (chunks[2].startsWith("P")) {
-
-        }
-        if (miniChunks[1].startsWith("DEAD")) {
-
-        }
-        if (chunks[2].startsWith("CARD")) {
-
+        if (chunks[2].startsWith("P" + player.getPlayerTurn())) {
+            player.setHealth(Integer.parseInt(chunks[4]));
+            System.out.printf("Player %s took damage and has HP: \n", player.getName(), Integer.parseInt(chunks[4]));
+        } else if(chunks[2].startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {//Game.getInstance().checkCombatTurn())) {
+            enemyHealth -= Integer.parseInt(chunks[4]);
+            System.out.printf("Enemy Player took %s damage\n", Integer.parseInt(chunks[4]));
+        } else if (innerChunks[1].startsWith("DEAD") && chunks[2].startsWith("P" + player.getPlayerTurn())) {
+            //TODO Add loss to highscore (in player)
+            System.out.println("You died, GAME OVER!");
+            System.exit(0);
+        } else if(innerChunks[1].startsWith("DEAD") && chunks[2].startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {
+            //TODO Add win to highscore (in player)
+            System.out.println("Enemy player died, YOU WON!");
+            System.exit(0);
+        } else if (chunks[2].startsWith("CARD")) {
+            String[] playerCard = chunks[2].split("_");
+            String[] enemyCard = chunks[6].split("_");
+            
+            if(serverOutput.startsWith("P" + player.getPlayerTurn())) {
+                ((BasicCreatureCard)playerTableCards.get(Integer.parseInt(playerCard[1]))).setHealth(Integer.parseInt(chunks[4]));
+            } else if(serverOutput.startsWith("P" + checkCombatTurn())) {
+                ((BasicCreatureCard)playerTableCards.get(Integer.parseInt(enemyCard[2]))).setHealth(Integer.parseInt(chunks[8]));
+            }
         }
 
     }
