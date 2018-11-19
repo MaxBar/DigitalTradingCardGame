@@ -137,7 +137,10 @@ public class Game {
             attackFailure(serverOutput);
         }else if (serverOutput.substring(3).startsWith("ATTACK_RESULT_SUCCESS")){
             attackSuccess(serverOutput);
-        } else if(serverOutput.equals("ENEMY_HAND DECREMENT")) {
+        }else if (serverOutput.substring(3).startsWith("CONSUMED")) {
+            System.out.println(serverOutput.substring(17));
+            changeConsumed(Integer.parseInt(serverOutput.substring(18)));
+        }else if(serverOutput.equals("ENEMY_HAND DECREMENT")) {
             --enemyHand;
         } else if(serverOutput.equals("ENEMY_HAND INCREMENT")) {
             ++enemyHand;
@@ -150,7 +153,12 @@ public class Game {
             incrementGraveyard(serverOutput);
         }
     }
-    
+
+    private void changeConsumed(int index) {
+        System.out.println(index);
+        playerTableCards.get(index).setIsConsumed(!playerTableCards.get(index).getIsConsumed());
+    }
+
     private void incrementGraveyard(String serverOutput) {
         if(Integer.parseInt(serverOutput.substring(1, 2)) == turn) {
             ++playerGraveyard;
@@ -182,7 +190,11 @@ public class Game {
         int[] cardIndices = new int[5];
         for(int i = 0; i < chunks.length; ++i) {
             cardIndices[i] = Integer.parseInt(chunks[i]);
-            player.getHand().add(queryHandler.fetchCreatureCardId(cardIndices[i]));
+            if (queryHandler.fetchCheckCardType(cardIndices[i]) == 0) {
+                player.getHand().add(queryHandler.fetchCreatureCardId(cardIndices[i]));
+            } else if (queryHandler.fetchCheckCardType(cardIndices[i]) == 1) {
+                player.getHand().add(queryHandler.fetchSpecialAbilityCreatureCardId(cardIndices[i]));
+            }
         }
         for(int i = 0; i < player.getHand().size(); ++i) {
             System.out.println(player.getHand().get(i));
@@ -256,10 +268,10 @@ public class Game {
 
         if (chunks[2].startsWith("P" + player.getPlayerTurn())) {
             player.setHealth(Integer.parseInt(chunks[4]));
-            System.out.printf("Player %s took damage and has HP: \n", player.getName(), Integer.parseInt(chunks[4]));
+            System.out.printf("Player %s took damage and has HP: %s\n", player.getName(), Integer.parseInt(chunks[4]));
         } else if(chunks[2].startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {//Game.getInstance().checkCombatTurn())) {
             enemyHealth -= Integer.parseInt(chunks[4]);
-            System.out.printf("Enemy Player took %s damage\n", Integer.parseInt(chunks[4]));
+            System.out.printf("Enemy Player took damage and has HP: %s\n", Integer.parseInt(chunks[4]));
         } else if (innerChunks[1].startsWith("DEAD") && chunks[2].startsWith("P" + player.getPlayerTurn())) {
             //TODO Add loss to highscore (in player)
             System.out.println("You died, GAME OVER!");

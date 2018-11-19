@@ -100,16 +100,7 @@ public class GameMenu {
 
         for (int i = 0; i < game.getPlayer().getHand().size() ; ++i) {
             if (game.getPlayer().getHand().get(i) != null) {
-                if (game.getPlayer().getHand().get(i) instanceof BasicCreatureCard) {
-                    var card = (BasicCreatureCard) game.getPlayer().getHand().get(i);
-                    System.out.printf((i + 1) + ") %s AP: %s DP: %s HP: %s Mana cost: %s\n",
-                            game.getPlayer().getHand().get(i).getName(),
-                            card.getAttack(),
-                            card.getDefense(),
-                            card.getHealth(),
-                            card.getManaCost());
-                    System.out.flush();
-                } else if (game.getPlayer().getHand().get(i) instanceof SpecialAbilityCreatureCard) {
+                if (game.getPlayer().getHand().get(i) instanceof SpecialAbilityCreatureCard) {
                     var card = (SpecialAbilityCreatureCard) game.getPlayer().getHand().get(i);
                     System.out.printf((i + 1) + ") %s Ability: %s AP: %s DP: %s HP: %s Mana cost: %s\n",
                             game.getPlayer().getHand().get(i).getName(),
@@ -118,7 +109,15 @@ public class GameMenu {
                             card.getDefense(),
                             card.getHealth(),
                             card.getManaCost());
-
+                } else if (game.getPlayer().getHand().get(i) instanceof BasicCreatureCard) {
+                    var card = (BasicCreatureCard) game.getPlayer().getHand().get(i);
+                    System.out.printf((i + 1) + ") %s AP: %s DP: %s HP: %s Mana cost: %s\n",
+                            game.getPlayer().getHand().get(i).getName(),
+                            card.getAttack(),
+                            card.getDefense(),
+                            card.getHealth(),
+                            card.getManaCost());
+                    System.out.flush();
                 } else if (game.getPlayer().getHand().get(i) instanceof BasicMagicCard) {
                     var card = (BasicMagicCard) game.getPlayer().getHand().get(i);
                     System.out.printf((i + 1) + ") %s Ability: %s Mana cost: %s\n",
