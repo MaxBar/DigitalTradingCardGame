@@ -67,7 +67,7 @@ public class Game {
             return turn;
         } else if(turn == playerTurn && turn == 0) {
             return 1;
-        } else if(turn != playerTurn && turn == 0) {
+        } else {
             return turn;
         }
         //return turn == playerTurn ? 1 : playerTurn;
@@ -273,8 +273,14 @@ public class Game {
             
             if(serverOutput.startsWith("P" + player.getPlayerTurn())) {
                 ((BasicCreatureCard)playerTableCards.get(Integer.parseInt(playerCard[1]))).setHealth(Integer.parseInt(chunks[4]));
-            } else if(serverOutput.startsWith("P" + checkCombatTurn())) {
+                System.out.printf("Your card %s took damage and have HP: %s",
+                        playerTableCards.get(Integer.parseInt(playerCard[1])).getName(),
+                        ((BasicCreatureCard)playerTableCards.get(Integer.parseInt(playerCard[1]))).getHealth());
+            } else if(serverOutput.startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {
                 ((BasicCreatureCard)playerTableCards.get(Integer.parseInt(enemyCard[2]))).setHealth(Integer.parseInt(chunks[8]));
+                System.out.printf("Enemy card %s took damage and have HP: %s",
+                        enemyTableCards.get(Integer.parseInt(enemyCard[2])).getName(),
+                        ((BasicCreatureCard)enemyTableCards.get(Integer.parseInt(enemyCard[2]))).getHealth());
             }
         }
 
