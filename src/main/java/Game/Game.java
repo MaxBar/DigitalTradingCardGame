@@ -143,15 +143,25 @@ public class Game {
             changeConsumed(Integer.parseInt(serverOutput.substring(18)));
         }else if(serverOutput.equals("ENEMY_HAND DECREMENT")) {
             --enemyHand;
-        } else if(serverOutput.equals("ENEMY_HAND INCREMENT")) {
+        }else if(serverOutput.equals("ENEMY_HAND INCREMENT")) {
             ++enemyHand;
-        } else if(serverOutput.equals("ENEMY_DECK DECREMENT")) {
+        }else if(serverOutput.equals("ENEMY_DECK DECREMENT")) {
             --enemyDeck;
-        } else if(serverOutput.equals("PLAYER_DECK DECREMENT")) {
+        }else if(serverOutput.equals("PLAYER_DECK DECREMENT")) {
             --playerDeck;
-        }
-        else if(serverOutput.substring(3).startsWith("GRAVEYARD")) {
+        }else if(serverOutput.substring(3).startsWith("GRAVEYARD")) {
             incrementGraveyard(serverOutput);
+        }else if (serverOutput.substring(3).startsWith("REMOVE_FROM_TABLE")) {
+            removeFromTable(serverOutput);
+        }
+    }
+
+    private void removeFromTable(String serverOutput) {
+        String[] chunks = serverOutput.split(" ");
+        if (Integer.parseInt(chunks[0].substring(1)) == player.getPlayerTurn()) {
+            playerTableCards.remove(Integer.parseInt(chunks[2]));
+        } else {
+            enemyTableCards.remove(Integer.parseInt(chunks[2]));
         }
     }
 
