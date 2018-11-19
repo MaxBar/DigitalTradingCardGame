@@ -122,7 +122,8 @@ public class GameMenu {
                     var card = (BasicMagicCard) game.getPlayer().getHand().get(i);
                     System.out.printf((i + 1) + ") %s Ability: %s Mana cost: %s\n",
                             game.getPlayer().getHand().get(i).getName(),
-                            card.getAbilityDescription(),
+                            //card.getAbilityDescription(),
+                            String.format(card.getAbilityDescription(), ((BasicMagicCard) game.getPlayer().getHand().get(i)).getAbilityValue()),
                             card.getManaCost());
                 }
             }
