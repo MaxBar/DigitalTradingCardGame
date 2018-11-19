@@ -125,14 +125,14 @@ public class QueryHandler {
 
         try {
             if (rs.first()) {
-                if (rs.getString("specialAbility") == null) {
+                String text = rs.getString("specialAbility");
+                    if (rs.wasNull())
                     return 0;
-                } else if (rs.getString("specialAbility") != null) {
-                    return 1;
+                    else
+                        return 1;
                 }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            } catch (SQLException e1) {
+            e1.printStackTrace();
         }
         return -1;
     }
