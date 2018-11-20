@@ -25,7 +25,7 @@ public class Game {
     private Player player;
     private List<BasicCard> playerTableCards = new ArrayList<>();
     private int playerGraveyard;
-    private int playerDeck = 11;
+    private int playerDeck = 20;
     private int turn;
     private int round;
     private int enemyTurn;
@@ -58,7 +58,7 @@ public class Game {
     private List<BasicCard> enemyTableCards;
     private int enemyGraveyard;
     private int enemyHand;
-    private int enemyDeck = 11;
+    private int enemyDeck = 20;
     private int enemyHealth = 20;
     private int enemyMana = 1;
     
@@ -350,17 +350,19 @@ public class Game {
         if (chunks[2].startsWith("P" + player.getPlayerTurn())) {
             player.setHealth(Integer.parseInt(chunks[4]));
             System.out.printf("Player %s took damage and has HP: %s\n", player.getName(), Integer.parseInt(chunks[4]));
-        } else if(chunks[2].startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {//Game.getInstance().checkCombatTurn())) {
-            enemyHealth = Integer.parseInt(chunks[4]);
-            System.out.printf("Enemy Player took damage and has HP: %s\n", Integer.parseInt(chunks[4]));
-        } else if (innerChunks[1].startsWith("DEAD") && chunks[2].startsWith("P" + player.getPlayerTurn())) {
+        } else if(innerChunks.length > 1) {
+            if (innerChunks[1].startsWith("DEAD") && chunks[2].startsWith("P" + player.getPlayerTurn())) {
             //TODO Add loss to highscore (in player)
             System.out.println("You died, GAME OVER!");
             System.exit(0);
-        } else if(innerChunks[1].startsWith("DEAD") && chunks[2].startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {
-            //TODO Add win to highscore (in player)
-            System.out.println("Enemy player died, YOU WON!");
-            System.exit(0);
+            } else if(innerChunks[1].startsWith("DEAD") && chunks[2].startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {
+                //TODO Add win to highscore (in player)
+                System.out.println("Enemy player died, YOU WON!");
+                System.exit(0);
+            }
+        } else if(chunks[2].startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {//Game.getInstance().checkCombatTurn())) {
+            enemyHealth = Integer.parseInt(chunks[4]);
+            System.out.printf("Enemy Player took damage and has HP: %s\n", Integer.parseInt(chunks[4]));
         } else if (chunks[2].startsWith("CARD")) {
             String[] playerCard = chunks[2].split("_");
             String[] enemyCard = chunks[6].split("_");
@@ -395,7 +397,7 @@ public class Game {
     private void login(String serverOutput) {
         String [] chunks = serverOutput.split (" ");
         String start = "";
-        if(chunks[1].equals("linn@hotmail.se")) {
+        if(chunks[1].equals("john@hotmail.se")) {
             int playerId = Integer.parseInt(chunks[2].substring(3));
             int playerTurn = Integer.parseInt(chunks[3].substring(7));
             String playerName = chunks[4].substring(5);
