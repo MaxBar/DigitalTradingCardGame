@@ -453,8 +453,8 @@ public class Game {
         }
         player.setMana(round);
         enemyMana = round;
-        System.out.println("Turn: " + turn);
-        System.out.println("Round: " + round);
-        System.out.printf("---------- %s's TURN ----------\n", player.getName());
+        if (turn == player.getPlayerTurn()) {
+            System.out.printf("---------- %s's TURN ----------\n", player.getName());
+        }
     }
 }

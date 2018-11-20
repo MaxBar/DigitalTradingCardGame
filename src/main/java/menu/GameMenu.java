@@ -78,11 +78,9 @@ public class GameMenu {
         if(Game.getInstance().getTurn() == Game.getInstance().getPlayer().getPlayerTurn()) {
             switch (choice) {
                 case 1:
-                    System.out.println("place");
                     showHand();
                     break;
                 case 2:
-                    System.out.println("attack");
                     showAttackCards();
                     break;
                 case 3:
