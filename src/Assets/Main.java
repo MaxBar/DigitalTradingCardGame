@@ -22,7 +22,7 @@ public class Main extends Application {
 
 
     public void renderGame(Stage gameStage) throws Exception {
-        Parent game = FXMLLoader.load(getClass().getResource("game.fxml"));
+        Parent game = FXMLLoader.load(getClass().getResource("../GUI/game.fxml"));
         gameStage.setTitle("Candy Wars");
         gameStage.setScene(new Scene(game, 1280, 720));
         gameStage.show();
