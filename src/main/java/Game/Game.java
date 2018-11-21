@@ -289,11 +289,11 @@ public class Game {
         int index = Integer.parseInt(chunks[2]);
         if (player.getPlayerTurn() == Integer.parseInt(chunks[0].substring(1))) {
             if (player.getHand().get(index) instanceof BasicCreatureCard) {
-                var card = player.getHand().get(index);
+                BasicCreatureCard card = (BasicCreatureCard)player.getHand().get(index);
                 player.getHand().remove(index);
                 Game.getInstance().getPlayerTableCards().add(card);
             } else if (player.getHand().get(index) instanceof SpecialAbilityCreatureCard) {
-                var card = (SpecialAbilityCreatureCard) player.getHand().get(index);
+                SpecialAbilityCreatureCard card = (SpecialAbilityCreatureCard) player.getHand().get(index);
                 player.getHand().remove(index);
                 Game.getInstance().getPlayerTableCards().add(card);
                 if(((SpecialAbilityCreatureCard)Game.getInstance().getPlayerTableCards().get(Game.getInstance().getPlayerTableCards().size() - 1)).getKeyword() == EKeyword.COOLDOWN) {
@@ -303,11 +303,11 @@ public class Game {
             System.out.printf("P%s placed %s\n", turn,  Game.getInstance().getPlayerTableCards().get(Game.getInstance().getPlayerTableCards().size() - 1).getName());
         } else {
             if (queryHandler.fetchCheckCardType(index) == 0) {
-                var card = queryHandler.fetchCreatureCardId(index);
+                BasicCreatureCard card = queryHandler.fetchCreatureCardId(index);
                 //Game.getInstance().enemyHand --;
                 Game.getInstance().getEnemyTableCards().add(card);
             } else if (queryHandler.fetchCheckCardType(index) == 1) {
-                var card = (SpecialAbilityCreatureCard) queryHandler.fetchSpecialAbilityCreatureCardId(index);
+                SpecialAbilityCreatureCard card = queryHandler.fetchSpecialAbilityCreatureCardId(index);
                 //Game.getInstance().enemyHand --;
                 Game.getInstance().getEnemyTableCards().add(card);
             }
@@ -436,7 +436,7 @@ public class Game {
         turn = Integer.parseInt(chunks[3]);
         round = Integer.parseInt(chunks[1]);
         
-        for(var card: playerTableCards) {
+        for(BasicCard card: playerTableCards) {
             if(card instanceof SpecialAbilityCreatureCard && ((SpecialAbilityCreatureCard) card).getKeyword() == EKeyword.COOLDOWN && ((SpecialAbilityCreatureCard) card).getAbilityValue() > 0) {
                 System.out.println(((SpecialAbilityCreatureCard) card).getAbilityValue());
                 ((SpecialAbilityCreatureCard)card).decrementAbilityValue();

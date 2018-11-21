@@ -10,9 +10,12 @@ public class Main2 extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent menu = FXMLLoader.load(getClass().getResource("../GUI/menu.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("menu.fxml"));
+        Parent root = (Parent) fxmlLoader.load();
+        
+        //Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("menu.fxml"));
         primaryStage.setTitle("Candy Wars");
-        primaryStage.setScene(new Scene(menu, 1280, 720));
+        primaryStage.setScene(new Scene(root, 1280, 720));
         primaryStage.show();
     }
 
@@ -22,10 +25,10 @@ public class Main2 extends Application {
     }
 
 
-    public void renderGame(Stage gameStage) throws Exception {
+   /* public void renderGame(Stage gameStage) throws Exception {
         Parent game = FXMLLoader.load(getClass().getResource("../GUI/game.fxml"));
         gameStage.setTitle("Candy Wars");
         gameStage.setScene(new Scene(game, 1280, 720));
         gameStage.show();
-    }
+    }*/
 }
