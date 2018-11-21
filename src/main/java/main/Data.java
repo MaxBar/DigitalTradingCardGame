@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Data {
-    List<Card> playerHand = new ArrayList<>();
-    List<Card> playerTable = new ArrayList<>();
-    List<Card> enemyHand = new ArrayList<>();
-    List<Card> enemyTable = new ArrayList<>();
+    public List<Card> playerHand = new ArrayList<>();
+    public List<Card> playerTable = new ArrayList<>();
+    public List<Card> enemyHand = new ArrayList<>();
+    public List<Card> enemyTable = new ArrayList<>();
 
-    Data(){
+    public void Data(){
         playerHand.add(new Card(1, "Salt Fisk"));
         playerHand.add(new Card(2, "Fidelur"));
         playerHand.add(new Card(3, "Häxvrål"));

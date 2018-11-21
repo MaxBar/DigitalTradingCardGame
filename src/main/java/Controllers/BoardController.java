@@ -30,7 +30,7 @@ public class BoardController {
     @FXML Label enemyGraveyardNr;
 
     doSomething(){
-        playerHand.
+        playerHand.getChildren().add()
     }
 
 }
