@@ -16,27 +16,27 @@ import java.util.List;
 public class QueryHandler {
 
     public void saveWinner(int id) {
-        String query = "UPDATE Player SET Wins = Wins + 1 WHERE id = " + id;
+        String query = "UPDATE Player SET wins = wins + 1, score = score + 3 WHERE id = " + id;
         Statement st;
 
-        try {
+        /*try {
             st = Database.con.createStatement();
             st.executeUpdate(query);
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public void saveLoser(int id) {
-        String query = "UPDATE Player SET Lost = Lost + 1 WHERE id = " + id;
+        String query = "UPDATE Player SET loss = loss + 1 WHERE id = " + id;
         Statement st;
 
-        try {
+        /*try {
             st = Database.con.createStatement();
             st.executeUpdate(query);
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public int fetchPlayerId(String email) {

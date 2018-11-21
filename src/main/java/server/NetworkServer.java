@@ -22,7 +22,7 @@ public class NetworkServer {
     private ArrayList<DatagramPacket> clientIP = new ArrayList<>();
     
     private NetworkServer() throws SocketException{
-        int port = 25565;
+        int port = 150;
         socket = new DatagramSocket(port);
         socket.setSoTimeout(500);
         
@@ -103,8 +103,9 @@ public class NetworkServer {
     private void handleMessages(DatagramPacket clientRequest) throws IOException, InterruptedException {
         String clientMsg = new String(clientRequest.getData(), 0, clientRequest.getLength());
         
+        //TODO FIX NEW WAY TO STORE IP
         if(!clientIP.isEmpty()) {
-            for(int i = 0; i < clientIP.size(); ++i) {
+            for(int i = 0; i < 2; ++i) {//clientIP.size()
                 if(!clientIP.get(i).getAddress().equals(clientRequest.getAddress())) {
                     clientIP.add(clientRequest);
                 }
@@ -114,26 +115,7 @@ public class NetworkServer {
         }
         
         msgQueue.addLast(clientMsg);
-        /*if(clientIP.get(0).getAddress().equals(clientRequest.getAddress())) {
-            msgQueue.addLast("Linn: " + clientMsg);
-        } else {
-            msgQueue.addLast("John: " + clientMsg);
-        }*/
         Server.getInstance().receiveCommand(msgQueue.takeFirst());
-        /*if(clientIP.size() == 1) {
-            sendMsgToClient(Server.getInstance().getCommand(), clientIP.get(0));
-        } else {
-            sendMsgToClient(Server.getInstance().getCommand(), clientIP.get(0));
-            sendMsgToClient(Server.getInstance().getCommand(), clientIP.get(1));
-        }*/
-        
-        
-        /*if(clientIP.size() >= 2) {
-            sendMsgToClient(msgQueue.getFirst(), clientIP.get(0));
-            sendMsgToClient(msgQueue.takeFirst(), clientIP.get(1));
-        } else {
-            sendMsgToClient(msgQueue.takeFirst(), clientIP.get(0));
-        }*/
         
         System.out.println(clientMsg);
     }

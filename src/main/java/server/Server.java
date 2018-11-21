@@ -341,7 +341,7 @@ public class Server {
         
         //if (board.getTurn() == board.PLAYER_A) {
             if (enemyPlayerTurn.getTable().size() == 0) {
-                if (!player.getIsConsumed()) {
+                if (playerTurn.getTable().get(index) != null && !player.getIsConsumed()) {
                     player.setIsConsumed(true);
                     enemyPlayerTurn.decrementHealth(player.getAttack());
                     //Should we return a string, example: SUCCESS PLAYER ALIVE/SUCCESS PLAYER DEAD?
@@ -564,11 +564,6 @@ public class Server {
 
 
     public void endTurn() {
-
-        //if (board.getTurn() == board.PLAYER_A) {
-            /*for (int i = 0; i < board.getPlayers()[board.getTurn()].getTable().size(); i++) {
-                board.getPlayers()[board.getTurn()].getTable().get(i).setIsConsumed(false);
-            }*/
         for(BasicCard card : board.getPlayers()[board.getTurn()].getTable()) {
             if (card instanceof SpecialAbilityCreatureCard && ((SpecialAbilityCreatureCard) card).getKeyword() == EKeyword.COOLDOWN && ((SpecialAbilityCreatureCard) card).getAbilityValue() > 0) {
                 ((SpecialAbilityCreatureCard) card).decrementAbilityValue();
@@ -583,7 +578,6 @@ public class Server {
         try {
             network.sendMsgToClient(String.format("ROUND %s TURN %s", board.getRound(), board.getTurn()), network.getClientIP().get(board.getTurn()));
             network.sendMsgToClient(String.format("ROUND %s TURN %s", board.getRound(), board.getTurn()), network.getClientIP().get(board.checkTurnCombat()));
-            //network.sendMsgToClient(String.format("ROUND %s TURN %s", board.getRound(), board.getTurn()), network.getClientIP().get(1));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -596,15 +590,6 @@ public class Server {
             queryHandler.saveWinner(enemyPlayerTurn.getId());
             quitGame();
         }
-
-        /*} else {
-            for (int i = 0; i < board.getPlayerBTableCards().size(); i++) {
-                board.getPlayerBTableCards().get(i).setIsConsumed(false);
-            }
-            board.setTurn(board.PLAYER_A);
-
-            board.setRound();
-        }*/
     }
 
 
