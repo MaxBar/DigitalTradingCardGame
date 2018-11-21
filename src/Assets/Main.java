@@ -1,4 +1,4 @@
-package GUI;
+package Assets;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,7 +9,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent menu = FXMLLoader.load(getClass().getResource("menu.fxml"));
+        Parent menu = FXMLLoader.load(getClass().getResource("../GUI/menu.fxml"));
         primaryStage.setTitle("Candy Wars");
         primaryStage.setScene(new Scene(menu, 1280, 720));
         primaryStage.show();

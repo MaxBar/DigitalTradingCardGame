@@ -1,8 +1,6 @@
 package GUI;
-import Assets.Player;
-import GUI.Main;
+import Assets.Main;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
 
