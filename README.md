@@ -1,1 +1,2 @@
-# DigitalTradingCardGame
+# CardGame-Client
+# CardGame-Client
