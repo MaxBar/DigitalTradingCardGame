@@ -1,4 +1,4 @@
-package Assets;
+package Assets.card;
 public class BasicMagicCard extends BasicCard {
     private String abilityDescription;
     private int abilityValue;

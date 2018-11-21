@@ -1,4 +1,6 @@
-package Assets;
+package Assets.card;
+
+import Assets.card.BasicCreatureCard;
 
 public class SpecialAbilityCreatureCard extends BasicCreatureCard {
 

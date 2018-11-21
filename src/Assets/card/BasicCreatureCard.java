@@ -1,4 +1,5 @@
-package Assets;
+package Assets.card;
+
 public class BasicCreatureCard extends BasicCard {
     private int health;
     private int attack;

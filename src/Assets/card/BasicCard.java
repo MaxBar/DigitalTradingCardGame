@@ -1,4 +1,4 @@
-package Assets;
+package Assets.card;
 
 public class BasicCard {
     public int id;
