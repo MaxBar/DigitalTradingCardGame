@@ -10,13 +10,15 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.MenuController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="Controllers.MenuController">
     <children>
+        <!--
         <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@img/background.jpg" />
             </image>
         </ImageView>
+        -->
         <GridPane alignment="CENTER" layoutX="559.0" layoutY="264.0" prefHeight="193.0" prefWidth="162.0">
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -27,17 +29,17 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Button id="quitGame" fx:id="quitButton" mnemonicParsing="false" onAction="#handleQuitButton" prefHeight="48.0" prefWidth="162.0" stylesheets="@button-styles.css" text="Quit Game" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                <Button id="quitGame" fx:id="quitButton" mnemonicParsing="false" onAction="#handleQuitButton" prefHeight="48.0" prefWidth="162.0" text="Quit Game" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                     <font>
                         <Font name="Segoe UI" size="17.0" />
                     </font>
                 </Button>
-                <Button id="highscore" mnemonicParsing="false" prefHeight="48.0" prefWidth="162.0" stylesheets="@button-styles.css" text="Highscore" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                <Button id="highscore" mnemonicParsing="false" prefHeight="48.0" prefWidth="162.0"  text="Highscore" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                     <font>
                         <Font name="Segoe UI" size="17.0" />
                     </font>
                 </Button>
-                <Button id="startgame" fx:id="startButton" mnemonicParsing="false" onAction="#handleStartButton" prefHeight="48.0" prefWidth="162.0" stylesheets="@button-styles.css" text="Start Game" textFill="#494949" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                <Button id="startgame" fx:id="startButton" mnemonicParsing="false" onAction="#handleStartButton" prefHeight="48.0" prefWidth="162.0"  text="Start Game" textFill="#494949" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                     <font>
                         <Font name="Segoe UI" size="17.0" />
                     </font>
