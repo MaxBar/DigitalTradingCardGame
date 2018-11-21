@@ -25,10 +25,10 @@ public class Main2 extends Application {
     }
 
 
-   /* public void renderGame(Stage gameStage) throws Exception {
-        Parent game = FXMLLoader.load(getClass().getResource("../GUI/game.fxml"));
+   public void renderGame(Stage gameStage) throws Exception {
+        Parent game = FXMLLoader.load(getClass().getResource("board.fxml"));
         gameStage.setTitle("Candy Wars");
         gameStage.setScene(new Scene(game, 1280, 720));
         gameStage.show();
-    }*/
+    }
 }
