@@ -208,7 +208,7 @@ public class Game {
     }
 
     private void incrementGraveyard(String serverOutput) {
-        if(Integer.parseInt(serverOutput.substring(1, 2)) == turn) {
+        if(Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn()) {
             ++playerGraveyard;
         } else {
             ++enemyGraveyard;
