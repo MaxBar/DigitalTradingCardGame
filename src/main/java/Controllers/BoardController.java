@@ -57,7 +57,8 @@ public class BoardController {
             ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardName")))).setText(newCard.get(i).getName());
             ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardManaCost")))).setText(String.valueOf(newCard.get(i).getId()));
             ((ImageView) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardImg")))).setImage(new Image(newCard.get(i).getUrl()));
-            
+            int cardIndex= i;
+
 
             playerHand.getChildren().add(cardPane);
         }
