@@ -293,6 +293,7 @@ public class Game {
                 var card = player.getHand().get(index);
                 player.getHand().remove(index);
                 Game.getInstance().getPlayerTableCards().add(card);
+                player.setMana(Integer.parseInt(chunks[4]));
             } else if (player.getHand().get(index) instanceof SpecialAbilityCreatureCard) {
                 var card = (SpecialAbilityCreatureCard) player.getHand().get(index);
                 player.getHand().remove(index);
@@ -300,6 +301,7 @@ public class Game {
                 if(((SpecialAbilityCreatureCard)Game.getInstance().getPlayerTableCards().get(Game.getInstance().getPlayerTableCards().size() - 1)).getKeyword() == EKeyword.COOLDOWN) {
                     ((SpecialAbilityCreatureCard) Game.getInstance().getPlayerTableCards().get(Game.getInstance().getPlayerTableCards().size() - 1)).decrementAbilityValue();
                 }
+                player.setMana(Integer.parseInt(chunks[4]));
             }
             System.out.printf("P%s placed %s\n", turn,  Game.getInstance().getPlayerTableCards().get(Game.getInstance().getPlayerTableCards().size() - 1).getName());
         } else {
@@ -307,10 +309,12 @@ public class Game {
                 var card = queryHandler.fetchCreatureCardId(index);
                 //Game.getInstance().enemyHand --;
                 Game.getInstance().getEnemyTableCards().add(card);
+                enemyMana = Integer.parseInt(chunks[4]);
             } else if (queryHandler.fetchCheckCardType(index) == 1) {
                 var card = (SpecialAbilityCreatureCard) queryHandler.fetchSpecialAbilityCreatureCardId(index);
                 //Game.getInstance().enemyHand --;
                 Game.getInstance().getEnemyTableCards().add(card);
+                enemyMana = Integer.parseInt(chunks[4]);
             }
             System.out.printf("P%s placed %s\n", turn,  Game.getInstance().getEnemyTableCards().get(Game.getInstance().getEnemyTableCards().size() - 1).getName());
         }
