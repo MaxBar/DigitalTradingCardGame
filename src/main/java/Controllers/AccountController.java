@@ -8,13 +8,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import main.Main2;
-
+import repository.QueryHandler;
 
 
 public class AccountController {
     String name;
     String email;
     String password;
+    QueryHandler queryHandler = new QueryHandler();
 
     @FXML
     private TextField accountName;
@@ -39,7 +40,17 @@ public class AccountController {
         name = accountName.getText();
         email = accountEmail.getText();
         password = accountPassword.getText();
-        System.out.println(name);
+        if(queryHandler.checkPlayerEmail(email)) {
+            System.out.println(name);
+        }
+        else {
+            System.out.println("No email found");
+        }
     }
+    boolean checkIfEmailExists(){
+        return queryHandler.checkPlayerEmail(email);
+
+    }
+
 
 }

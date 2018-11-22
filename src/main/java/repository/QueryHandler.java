@@ -13,6 +13,26 @@ import java.util.List;
 
 public class QueryHandler {
 
+    public boolean checkPlayerEmail(String email){
+        String query = "SELECT id FROM Player WHERE Player.email = '" + email + "'";
+        Statement st;
+        ResultSet rs = null;
+        try {
+            st = Database.con.createStatement();
+            rs = st.executeQuery(query);
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        try {
+            if (!rs.next()){
+            return false;
+            }
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
     public int fetchPlayerId(String email) {
         String query = "SELECT id FROM Player WHERE Player.email = '" + email + "'";
         int playerId = 0;
