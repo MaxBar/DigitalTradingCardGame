@@ -290,9 +290,10 @@ public class Server {
             BasicCard card = player.getHand().get(index);
 
             if (player.getMana() >= card.getManaCost()) {
+                player.setMana(player.getMana() - card.getManaCost());
                 try {
-                    network.sendMsgToClient(String.format("P%s PLACE_CREATURE_SUCCESS %s", board.getTurn(), index),network.getClientIP().get(board.getTurn()));
-                    network.sendMsgToClient(String.format("P%s PLACE_CREATURE_SUCCESS %s", board.getTurn(), card.getId()),network.getClientIP().get(board.checkTurnCombat()));
+                    network.sendMsgToClient(String.format("P%s PLACE_CREATURE_SUCCESS %s MP %s", board.getTurn(), index, player.getMana()),network.getClientIP().get(board.getTurn()));
+                    network.sendMsgToClient(String.format("P%s PLACE_CREATURE_SUCCESS %s MP %s", board.getTurn(), card.getId(), player.getMana()),network.getClientIP().get(board.checkTurnCombat()));
                     network.sendMsgToClient(String.format("ENEMY_HAND DECREMENT"), network.getClientIP().get(board.checkTurnCombat()));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -331,7 +332,7 @@ public class Server {
         Player enemyPlayerTurn = board.getPlayers()[board.checkTurnCombat()];
     
         BasicCreatureCard player = null;
-        if(playerTurn.getTable().size() >= (index + 1)) {
+        if(playerTurn.getTable().size() > index) {
             player = ((BasicCreatureCard) playerTurn.getTable().get(index));
         } else {
             network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE CREATURE_OUT_OF_BOUNDS", playerTurn), network.getClientIP().get(board.getTurn()));
