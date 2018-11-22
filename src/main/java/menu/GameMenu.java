@@ -133,7 +133,8 @@ public class GameMenu {
         int choice;
         sc.nextLine();
         choice = sc.nextInt() - 1;
-        if (choice == game.getPlayer().getHand().size() + 1) {
+        if (choice == -1 || choice > game.getPlayer().getHand().size()) {
+            System.err.println("No such card on hand");
             return;
         }
         if(choice < game.getPlayer().getHand().size()){
@@ -182,8 +183,8 @@ public class GameMenu {
         System.out.printf("%s) Back\n", game.getPlayerTableCards().size() + 1);
 
         int choice = sc.nextInt() - 1;
-        if (choice == game.getPlayerTableCards().size()) {
-            System.out.println("inget");
+        if (choice == -1 || choice > game.getPlayerTableCards().size()) {
+            System.err.println("No such card to attack with");
         } else if(choice < game.getPlayerTableCards().size() && game.getEnemyTableCards().size() > 0){
            NetworkClient.getInstance().sendMessageToServer(String.format("ATTACK P%s ENEMY_CREATURE %s", Game.getInstance().getTurn(), choice));
         }else{
