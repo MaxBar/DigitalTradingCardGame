@@ -245,4 +245,15 @@ public class QueryHandler {
         }
         return ids;
     }
+    
+    public void saveNewUser(String email, String name) {
+        String Save = "INSERT INTO Player VALUES(NULL, '" + name + "', '" + email + "', 0, 0, 0, 0)";
+        Statement st;
+        try {
+            st = Database.con.createStatement();
+            st.executeUpdate(Save);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

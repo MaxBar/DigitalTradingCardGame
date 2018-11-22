@@ -4,19 +4,27 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
 import main.Main;
 import main.Main2;
+import repository.QueryHandler;
+
 
 public class MenuController {
-
+    QueryHandler queryHandler = new QueryHandler();
+    @FXML
+    TextField email;
     
     @FXML
     void handleStartButton() throws Exception {
-
-        renderGame();
+        if(queryHandler.checkPlayerEmail(email.getText())) {
+            renderGame();
+        } else {
+            System.out.println("No such email found");
+        }
     }
     
     @FXML

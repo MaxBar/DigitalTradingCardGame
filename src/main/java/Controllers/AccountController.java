@@ -1,6 +1,6 @@
 package Controllers;
 
-import com.sun.xml.internal.bind.v2.model.core.ID;
+//import com.sun.xml.internal.bind.v2.model.core.ID;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -41,9 +41,10 @@ public class AccountController {
         email = accountEmail.getText();
         password = accountPassword.getText();
         if(queryHandler.checkPlayerEmail(email)) {
-            System.out.println(name);
+            System.out.println("Email already exists");
         }
         else {
+            queryHandler.saveNewUser(email, name);
             System.out.println("No email found");
         }
     }
