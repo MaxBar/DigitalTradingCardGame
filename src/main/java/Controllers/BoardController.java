@@ -24,7 +24,7 @@ public class BoardController {
     AnchorPane cardPane;
     public List<Card> newCard= Arrays.asList(
             new Card(5, "Gröt", "/img/background.jpg"),
-            new Card(2, "Mullvad", "/img/candycard.jpg")
+            new Card(5, "Mullvad", "/img/candycard.jpg")
     );
 
 
@@ -52,11 +52,13 @@ public class BoardController {
 
     void doSomething() throws IOException {
 
-        for (int i = 0; i < 2 ; i++) {
+        for (int i = 0; i < newCard.size() ; i++) {
             cardPane = FXMLLoader.load(getClass().getResource("/card.fxml"));
             ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardName")))).setText(newCard.get(i).getName());
             ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardManaCost")))).setText(String.valueOf(newCard.get(i).getId()));
             ((ImageView) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardImg")))).setImage(new Image(newCard.get(i).getUrl()));
+            
+
             playerHand.getChildren().add(cardPane);
         }
         //Plats i HBoxen
