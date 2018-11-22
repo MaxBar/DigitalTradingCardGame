@@ -19,9 +19,9 @@
             <Font size="36.0" />
          </font>
       </Text>
-      <TextField layoutX="557.0" layoutY="209.0" promptText="Name" />
-      <TextField layoutX="557.0" layoutY="281.0" promptText="Email" />
-      <TextField layoutX="557.0" layoutY="347.0" promptText="Password" />
-      <Button layoutX="611.0" layoutY="420.0" mnemonicParsing="false" text="Submit" onAction="#handleSubmitButton" />
+      <TextField id="accountName" fx:id="accountName" layoutX="557.0" layoutY="209.0" promptText="Name" />
+      <TextField id="accountEmail" fx:id="accountEmail" layoutX="557.0" layoutY="281.0"  promptText="Email" />
+      <TextField id="accountPassword" fx:id="accountPassword" layoutX="557.0" layoutY="347.0"  promptText="Password" />
+      <Button layoutX="611.0" layoutY="420.0" mnemonicParsing="false" onAction="#handleSubmitButton" text="Submit" />
     </children>
 </Pane>
