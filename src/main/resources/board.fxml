@@ -33,7 +33,7 @@
                   <Image url="@img/candycard.jpg" />
                </image>
             </ImageView>
-            <Label fx:id="playerGraveyardNr" layoutX="42.0" layoutY="47.0" text="Label" />
+            <Label fx:id="playerGraveyardNr" layoutX="42.0" layoutY="47.0" text="Graveyard" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="playerDeck" layoutX="1086.0" layoutY="594.0" prefHeight="122.0" prefWidth="111.0">
@@ -43,7 +43,7 @@
                   <Image url="@img/candycard.jpg" />
                </image>
             </ImageView>
-            <Label fx:id="playerDeckNr" layoutX="42.0" layoutY="47.0" text="Label" />
+            <Label fx:id="playerDeckNr" layoutX="42.0" layoutY="47.0" text="Deck" />
          </children>
       </AnchorPane>
       <HBox fx:id="enemyHand" layoutX="369.0" layoutY="6.0" prefHeight="122.0" prefWidth="717.0" />
