@@ -12,6 +12,8 @@ import main.Main;
 import main.Main2;
 import repository.QueryHandler;
 
+import java.io.IOException;
+
 
 public class MenuController {
     QueryHandler queryHandler = new QueryHandler();
@@ -25,6 +27,14 @@ public class MenuController {
         } else {
             System.out.println("No such email found");
         }
+    }
+    
+    @FXML
+    void handleHighscoreButton() throws IOException {
+        Pane game = FXMLLoader.load(getClass().getResource("/highscore.fxml"));
+        Main2.primaryStage.setTitle("Candy Wars");
+        Main2.primaryStage.setScene(new Scene(game, 1280, 720));
+        Main2.primaryStage.show();
     }
     
     @FXML
