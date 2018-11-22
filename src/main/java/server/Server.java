@@ -341,7 +341,7 @@ public class Server {
         
         //if (board.getTurn() == board.PLAYER_A) {
             if (enemyPlayerTurn.getTable().size() == 0) {
-                if (!player.getIsConsumed()) {
+                if (playerTurn.getTable().get(index) != null && !player.getIsConsumed()) {
                     player.setIsConsumed(true);
                     enemyPlayerTurn.decrementHealth(player.getAttack());
                     //Should we return a string, example: SUCCESS PLAYER ALIVE/SUCCESS PLAYER DEAD?
@@ -351,6 +351,8 @@ public class Server {
                         //return "P" + board.checkTurnCombat() + "_PLAYER " + enemyPlayerTurn.getHealth();
                     } else {
                         System.out.printf("Player %s died, %s won!\n", enemyPlayerTurn.getName(), playerTurn.getName());
+                        queryHandler.saveWinner(playerTurn.getId());
+                        queryHandler.saveLoser(enemyPlayerTurn.getId());
                         network.sendMsgToClient(String.format("P%s ATTACK_RESULT_SUCCESS P%s_DEAD", board.getTurn(), board.checkTurnCombat()), network.getClientIP().get(board.getTurn()));
                         network.sendMsgToClient(String.format("P%s ATTACK_RESULT_SUCCESS P%s_DEAD", board.getTurn(), board.checkTurnCombat()), network.getClientIP().get(board.checkTurnCombat()));
                         //System.out.printf("Player %s died, %s won!\n", enemyPlayerTurn.getName(), playerTurn.getName());
@@ -562,11 +564,6 @@ public class Server {
 
 
     public void endTurn() {
-
-        //if (board.getTurn() == board.PLAYER_A) {
-            /*for (int i = 0; i < board.getPlayers()[board.getTurn()].getTable().size(); i++) {
-                board.getPlayers()[board.getTurn()].getTable().get(i).setIsConsumed(false);
-            }*/
         for(BasicCard card : board.getPlayers()[board.getTurn()].getTable()) {
             if (card instanceof SpecialAbilityCreatureCard && ((SpecialAbilityCreatureCard) card).getKeyword() == EKeyword.COOLDOWN && ((SpecialAbilityCreatureCard) card).getAbilityValue() > 0) {
                 ((SpecialAbilityCreatureCard) card).decrementAbilityValue();
@@ -581,19 +578,18 @@ public class Server {
         try {
             network.sendMsgToClient(String.format("ROUND %s TURN %s", board.getRound(), board.getTurn()), network.getClientIP().get(board.getTurn()));
             network.sendMsgToClient(String.format("ROUND %s TURN %s", board.getRound(), board.getTurn()), network.getClientIP().get(board.checkTurnCombat()));
-            //network.sendMsgToClient(String.format("ROUND %s TURN %s", board.getRound(), board.getTurn()), network.getClientIP().get(1));
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Player playerTurn = board.getPlayers()[board.getTurn()];
+        Player enemyPlayerTurn = board.getPlayers()[board.checkTurnCombat()];
 
-        /*} else {
-            for (int i = 0; i < board.getPlayerBTableCards().size(); i++) {
-                board.getPlayerBTableCards().get(i).setIsConsumed(false);
-            }
-            board.setTurn(board.PLAYER_A);
-
-            board.setRound();
-        }*/
+        if(board.getPlayers()[board.getTurn()].getHand().size() == 0 && board.getPlayers()[board.getTurn()].getDeck().size() == 0) {
+            System.out.printf("Player %s lost, no cards left, %s won!\n", playerTurn.getName(), enemyPlayerTurn.getName());
+            queryHandler.saveLoser(playerTurn.getId());
+            queryHandler.saveWinner(enemyPlayerTurn.getId());
+            quitGame();
+        }
     }
 
 
