@@ -29,23 +29,30 @@ public class BoardController {
     int choicePlayerCard;
     ArrayList<AnchorPane> hbox = new ArrayList<>();
     public ArrayList<Card> playerHandCards = new ArrayList<>( Arrays.asList(
-            new Card(5, "Gröt", "/img/background.jpg"),
-            new Card(5, "Mullvad", "/img/candycard.jpg"),
-            new Card(5, "djungelvrål", "/img/candycard.jpg"),
-            new Card(5, "godis", "/img/candycard.jpg")
+            new Card("Marshmallow",4,"/img/candycard.jpg", "","","Can do something",2, 2,1),
+            new Card("Djungelvrål",4,"/img/djungelvral.jpg", "DIRECTATTACK", "","Can do something",2, 2,1),
+            new Card("Ferrari",4,"/img/ferrari.jpg","DIRECTATTACK", "","Can do something",2, 2,1),
+            new Card("Mars",4,"/img/mars.jpg","DIRECTATTACK", "","Can do something",2, 2,1),
+            new Card("Plopp",4,"/img/plopp.jpg","DIRECTATTACK", "","Can do something",2, 2,1)
     ));
     public ArrayList<Card> enemyHandCards= new ArrayList<>( Arrays.asList(
-            new Card(5, "Gröt", "/img/background.jpg"),
-            new Card(5, "Mullvad", "/img/candycard.jpg"),
-            new Card(5, "djungelvrål", "/img/candycard.jpg"),
-            new Card(5, "godis", "/img/candycard.jpg")
+            new Card("Marshmallow",4,"/img/candycard.jpg", "DIRECTATTACK","","Can do something",2, 2,1),
+            new Card("Djungelvrål",4,"/img/djungelvral.jpg", "DIRECTATTACK", "","Can do something",2, 2,1),
+            new Card("Ferrari",4,"/img/ferrari.jpg","DIRECTATTACK", "","Can do something",2, 2,1),
+            new Card("Mars",4,"/img/mars.jpg","DIRECTATTACK", "","Can do something",2, 2,1),
+            new Card("Plopp",4,"/img/plopp.jpg","DIRECTATTACK", "","Can do something",2, 2,1)
+
+
     ));
     public List<Card> playerTableCards = new ArrayList<>();
     public List<Card> enemyTableCards = new ArrayList<>( Arrays.asList(
-            new Card(5, "Gröt", "/img/background.jpg"),
-            new Card(5, "Mullvad", "/img/candycard.jpg"),
-            new Card(5, "djungelvrål", "/img/candycard.jpg"),
-            new Card(5, "godis", "/img/candycard.jpg")
+            new Card("Marshmallow",4,"/img/candycard.jpg", "DIRECTATTACK","","Can do something",2, 2,1),
+            new Card("Djungelvrål",4,"/img/djungelvral.jpg", "DIRECTATTACK", "","Can do something",2, 2,1),
+            new Card("Ferrari",4,"/img/ferrari.jpg","DIRECTATTACK", "","Can do something",2, 2,1),
+            new Card("Mars",4,"/img/mars.jpg","DIRECTATTACK", "","Can do something",2, 2,1),
+            new Card("Plopp",4,"/img/plopp.jpg","DIRECTATTACK", "","Can do something",2, 2,1)
+
+
     ));
 
     @FXML HBox playerHand;
@@ -120,9 +127,15 @@ public class BoardController {
             btn.setOpacity(0);
             // playerHandCards.get(i).setId(i);
             cardPane = FXMLLoader.load(getClass().getResource("/card.fxml"));
-            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardName")))).setText(playerHandCards.get(i).getName());
-            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardManaCost")))).setText(String.valueOf(playerHandCards.get(i).getId()));
-            ((ImageView) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardImg")))).setImage(new Image(playerHandCards.get(i).getUrl()));
+            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardName")))).setText("Card Name: " +playerHandCards.get(i).getName());
+            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardManaCost")))).setText("Mana Cost: "+String.valueOf(playerHandCards.get(i).getManaCost()));
+            ((ImageView) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardImg")))).setImage(new Image(playerHandCards.get(i).getImage()));
+            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#ability")))).setText("Ability: " + playerHandCards.get(i).getAbility());
+            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#special")))).setText("Special: " + playerHandCards.get(i).getSpecial());
+            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#abilityDescription")))).setText("Description: " + playerHandCards.get(i).getFlavourText());
+            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#ap")))).setText("AP: " + String.valueOf(playerHandCards.get(i).getAttack()));
+            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#dp")))).setText("DP: " +String.valueOf(playerHandCards.get(i).getDefense()));
+            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#hp")))).setText("HP: " +String.valueOf(playerHandCards.get(i).getHealth()));
             cardPane.getChildren().add(btn);
 
             hbox.add(cardPane);
@@ -133,8 +146,6 @@ public class BoardController {
             btn.setOnAction(new EventHandler<ActionEvent>() {
 
                 public void handle(ActionEvent event) {
-
-                    System.out.println(finalI);
                     playerTableCards.add(playerHandCards.get(finalI));
                     playerHandCards.remove(finalI);
                     try {
@@ -151,20 +162,23 @@ public class BoardController {
     //Draw Player Table
     void drawTable() throws IOException{
         playerTable.getChildren().clear();
-        drawPlayerHandCards();
         for (int i = 0; i < playerTableCards.size(); i++) {
 
             btn = new Button("" + i);
             btn.setPrefSize(190, 200);
             btn.setOpacity(0);
             cardPane = FXMLLoader.load(getClass().getResource("/card.fxml"));
-            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardName")))).setText(playerTableCards.get(i).getName());
-            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardManaCost")))).setText(String.valueOf(playerTableCards.get(i).getId()));
-            ((ImageView) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardImg")))).setImage(new Image(playerTableCards.get(i).getUrl()));
+            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardName")))).setText("Card Name: " +playerTableCards.get(i).getName());
+            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardManaCost")))).setText("Mana Cost: "+String.valueOf(playerTableCards.get(i).getManaCost()));
+            ((ImageView) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardImg")))).setImage(new Image(playerTableCards.get(i).getImage()));
+            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#ability")))).setText("Ability: " + playerTableCards.get(i).getAbility());
+            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#special")))).setText("Special: " + playerTableCards.get(i).getSpecial());
+            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#abilityDescription")))).setText("Description: " + playerTableCards.get(i).getFlavourText());
+            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#ap")))).setText("AP: " + String.valueOf(playerTableCards.get(i).getAttack()));
+            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#dp")))).setText("DP: " +String.valueOf(playerTableCards.get(i).getDefense()));
+            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#hp")))).setText("HP: " +String.valueOf(playerTableCards.get(i).getHealth()));
 
             cardPane.getChildren().add(btn);
-
-
 
             int finalI = i;
             btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -194,17 +208,21 @@ public class BoardController {
 
     void drawEnemyTable() throws IOException{
         enemyTable.getChildren().clear();
-        drawPlayerHandCards();
         for (int i = 0; i < enemyTableCards.size(); i++) {
 
             btn = new Button("" + i);
             btn.setPrefSize(190, 200);
             btn.setOpacity(0);
             cardPane = FXMLLoader.load(getClass().getResource("/card.fxml"));
-            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardName")))).setText(enemyTableCards.get(i).getName());
-            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardManaCost")))).setText(String.valueOf(enemyTableCards.get(i).getId()));
-            ((ImageView) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardImg")))).setImage(new Image(enemyTableCards.get(i).getUrl()));
-
+            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardName")))).setText("Card Name: " +enemyTableCards.get(i).getName());
+            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardManaCost")))).setText("Mana Cost: "+String.valueOf(enemyTableCards.get(i).getManaCost()));
+            ((ImageView) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardImg")))).setImage(new Image(enemyTableCards.get(i).getImage()));
+            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#ability")))).setText("Ability: " + enemyTableCards.get(i).getAbility());
+            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#special")))).setText("Special: " + enemyTableCards.get(i).getSpecial());
+            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#abilityDescription")))).setText("Description: " + enemyTableCards.get(i).getFlavourText());
+            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#ap")))).setText("AP: " + String.valueOf(enemyTableCards.get(i).getAttack()));
+            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#dp")))).setText("DP: " +String.valueOf(enemyTableCards.get(i).getDefense()));
+            ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#hp")))).setText("HP: " +String.valueOf(enemyTableCards.get(i).getHealth()));
             cardPane.getChildren().add(btn);
 
 
