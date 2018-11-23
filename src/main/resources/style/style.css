@@ -1,0 +1,17 @@
+#cardImg {
+    -fx-background-image: url(img/candycard.jpg);
+    -fx-background-size: 500px 120px;
+}
+
+AnchorPane {
+    -fx-border-width: 4px;
+    -fx-border-radius: 1px;
+    -fx-border-color: BLACK;
+    -fx-background-color: lightgrey;
+}
+
+AnchorPane:hover {
+    -fx-scale-x: 1.3px;
+    -fx-scale-y: 1.3px;
+
+}

@@ -29,10 +29,10 @@ public class BoardController {
     int choiceTableCard;
     ArrayList<AnchorPane> hbox = new ArrayList<>();
     public ArrayList<Card> newCard= new ArrayList<>( Arrays.asList(
-            new Card(5, "Gröt", "/img/background.jpg"),
-            new Card(5, "Mullvad", "/img/candycard.jpg"),
-            new Card(5, "djungelvrål", "/img/candycard.jpg"),
-            new Card(5, "godis", "/img/candycard.jpg")
+            new Card(0, "Plopp", "/img/plopp.jpg"),
+            new Card(1, "Ferrari", "/img/ferrari.jpg"),
+            new Card(2, "Djungelvrål", "/img/djungelvral.jpg"),
+            new Card(3, "Mintkyss", "/img/mintKyss.jpg")
     ));
     public List<Card> tableCard= new ArrayList<>();
 
@@ -71,7 +71,7 @@ public class BoardController {
             ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardName")))).setText(newCard.get(i).getName());
             ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardManaCost")))).setText(String.valueOf(newCard.get(i).getId()));
             ((ImageView) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardImg")))).setImage(new Image(newCard.get(i).getUrl()));
-
+            cardPane.setId(Integer.toString(newCard.get(i).id));
             cardPane.getChildren().add(btn);
 
             hbox.add(cardPane);
@@ -88,6 +88,7 @@ public class BoardController {
                                   //  System.out.println(tableCard.size());
                                     newCard.remove(finalI);
                                     System.out.println(tableCard.get(tableCard.size()-1).getName());
+
                                     try {
                                         drawTable();
                                     } catch (IOException e) {
