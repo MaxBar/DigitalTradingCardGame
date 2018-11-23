@@ -84,7 +84,6 @@ public class BoardController {
             ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardName")))).setText(playerHandCards.get(i).getName());
             ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardManaCost")))).setText(String.valueOf(playerHandCards.get(i).getId()));
             ((ImageView) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardImg")))).setImage(new Image(playerHandCards.get(i).getUrl()));
-
             cardPane.getChildren().add(btn);
 
             hbox.add(cardPane);
