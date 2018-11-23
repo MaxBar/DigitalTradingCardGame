@@ -1,5 +1,6 @@
 package Controllers;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -12,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import main.Card;
+import player.Player;
 //import main.Data;
 
 import java.io.IOException;
@@ -64,11 +66,48 @@ public class BoardController {
 
 
     public void initialize() throws IOException{
+        updateAll();
+
+
+
+    }
+    void updateAll() throws IOException{
+
+
         drawPlayerHandCards();
+        drawTable();
         drawEnemyHand();
         drawEnemyTable();
+        updatePlayerHealth();
+        updateEnemyHealth();
+        updatePlayerMana();
+        updateEnemyMana();
 
+    }
 
+    private void updatePlayerHealth() {
+        int getPlayerHp = 10;
+        double hp = ((double)getPlayerHp/20);
+        playerHP.setProgress(hp);
+    }
+
+    void updatePlayerMana() throws IOException{
+        int getPlayerMana = 20;
+        double mp = ((double)getPlayerMana/20);
+        playerMana.setProgress(mp);
+
+    }
+
+    private void updateEnemyMana() throws IOException{
+        int getPlayerMana = 20;
+        double mp = ((double)getPlayerMana/20);
+        enemyMana.setProgress(mp);
+
+    }
+    void updateEnemyHealth() throws IOException{
+        int getEnemyHP = 20;
+        double hp = ((double)getEnemyHP/20);
+        enemyHP.setProgress(hp);
 
     }
 
@@ -79,7 +118,7 @@ public class BoardController {
             btn = new Button(""+i);
             btn.setPrefSize(190, 200);
             btn.setOpacity(0);
-           // playerHandCards.get(i).setId(i);
+            // playerHandCards.get(i).setId(i);
             cardPane = FXMLLoader.load(getClass().getResource("/card.fxml"));
             ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardName")))).setText(playerHandCards.get(i).getName());
             ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardManaCost")))).setText(String.valueOf(playerHandCards.get(i).getId()));
@@ -93,18 +132,18 @@ public class BoardController {
             int finalI = i;
             btn.setOnAction(new EventHandler<ActionEvent>() {
 
-                                public void handle(ActionEvent event) {
+                public void handle(ActionEvent event) {
 
-                                    System.out.println(finalI);
-                                    playerTableCards.add(playerHandCards.get(finalI));
-                                    playerHandCards.remove(finalI);
-                                    try {
-                                        drawTable();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
+                    System.out.println(finalI);
+                    playerTableCards.add(playerHandCards.get(finalI));
+                    playerHandCards.remove(finalI);
+                    try {
+                        updateAll();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
-                                }});
+                }});
 
             playerHand.getChildren().add(i,cardPane);
         }
@@ -175,16 +214,16 @@ public class BoardController {
             btn.setOnAction(new EventHandler<ActionEvent>() {
 
                 public void handle(ActionEvent event) {
-                        if(choicePlayerCard>-1) {
-                            choiceEnemyCard = finalI;
-                            System.out.printf("%s attacked %s OMFG \n", choicePlayerCard, choiceEnemyCard);
+                    if(choicePlayerCard>-1) {
+                        choiceEnemyCard = finalI;
+                        System.out.printf("%s attacked %s OMFG \n", choicePlayerCard, choiceEnemyCard);
 
-                            choicePlayerCard = -10;
-                            choiceEnemyCard = -10;
-                        }
+                        choicePlayerCard = -10;
+                        choiceEnemyCard = -10;
+                    }
 
                     try {
-                        drawTable();
+                        updateAll();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
