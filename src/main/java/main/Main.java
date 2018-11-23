@@ -31,7 +31,7 @@ public class Main {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            
+
             inputThread.start();
             
             while(true){

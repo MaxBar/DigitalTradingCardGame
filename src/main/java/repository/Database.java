@@ -41,6 +41,7 @@ public class Database {
             // hostname
             String strRemoteHost = "my62b.sqlserver.se";
             // local port number use to bind SSH tunnel
+            //int nLocalPort = 3306;
             int nLocalPort = 3306;
             // remote port number of your database
             int nRemotePort = 3306;

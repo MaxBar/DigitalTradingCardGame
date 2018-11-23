@@ -4,6 +4,7 @@ import card.BasicCreatureCard;
 import card.BasicMagicCard;
 import card.EKeyword;
 import card.SpecialAbilityCreatureCard;
+import player.Highscore;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,6 +13,53 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QueryHandler {
+    
+    public ArrayList<Highscore> highscorePlayers() {
+        String query = "SELECT * FROM Player LIMIT 10";
+        Statement st;
+        ResultSet rs = null;
+        ArrayList<Highscore> highscores = new ArrayList<>();
+        
+        try {
+            st = Database.con.createStatement();
+            rs = st.executeQuery(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        try {
+            while(rs.next()) {
+                highscores.add(new Highscore(rs.getString("name"),
+                        rs.getInt("win"),
+                        rs.getInt("draw"),
+                        rs.getInt("loss"),
+                        rs.getInt("score")));
+            }
+        } catch (SQLException e) {
+            e.getStackTrace();
+        }
+        return highscores;
+    }
+
+    public boolean checkPlayerEmail(String email){
+        String query = "SELECT id FROM Player WHERE Player.email = '" + email + "'";
+        Statement st;
+        ResultSet rs = null;
+        try {
+            st = Database.con.createStatement();
+            rs = st.executeQuery(query);
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        try {
+            if (!rs.next()){
+            return false;
+            }
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
 
     public int fetchPlayerId(String email) {
         String query = "SELECT id FROM Player WHERE Player.email = '" + email + "'";
@@ -224,5 +272,16 @@ public class QueryHandler {
             e.printStackTrace();
         }
         return ids;
+    }
+    
+    public void saveNewUser(String email, String name) {
+        String Save = "INSERT INTO Player VALUES(NULL, '" + name + "', '" + email + "', 0, 0, 0, 0)";
+        Statement st;
+        try {
+            st = Database.con.createStatement();
+            st.executeUpdate(Save);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
