@@ -1,4 +1,4 @@
-package main;
+package player;
 
 public class Highscore {
 
