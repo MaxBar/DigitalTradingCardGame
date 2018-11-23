@@ -25,7 +25,7 @@ public class Main2 extends Application {
         }
 
         Main2.primaryStage = primaryStage;
-        Parent root = FXMLLoader.load(getClass().getResource("/menu.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/board.fxml"));
         primaryStage.setTitle("Candy Wars");
         primaryStage.setScene(new Scene(root, 1920, 1080));
         primaryStage.setMaximized(true);
