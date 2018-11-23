@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 
-<AnchorPane fx:id="handCardAnchor" prefHeight="222.0" prefWidth="157.0" style="-fx-background-image: GREY;" stylesheets="@style/style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="handCardAnchor" prefHeight="222.0" prefWidth="157.0" style="-fx-background-image: GREY;" stylesheets="@style/style.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
 
    <children>
       <ImageView fx:id="cardImg" fitHeight="116.0" fitWidth="157.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true" />
