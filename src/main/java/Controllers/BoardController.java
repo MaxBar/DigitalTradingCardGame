@@ -112,6 +112,7 @@ public class BoardController {
         updateEnemyMana();
         updateDeck();
         updateGraveyard();
+        end();
     }
 
     private void updateGraveyard() {
