@@ -20,14 +20,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 public class BoardController {
     //public Data data = new Data();
     AnchorPane cardPane;
     Button btn;
     int choiceEnemyCard;
     int choicePlayerCard;
-    ArrayList<AnchorPane> hbox = new ArrayList<>();
+    int choicePlayerHand;
     public ArrayList<Card> playerHandCards = new ArrayList<>( Arrays.asList(
             new Card("Marshmallow",4,"/img/candycard.jpg", "","","Can do something",2, 2,1),
             new Card("Djungelvrål",4,"/img/djungelvral.jpg", "DIRECTATTACK", "","Can do something",2, 2,1),
@@ -35,14 +34,36 @@ public class BoardController {
             new Card("Mars",4,"/img/mars.jpg","DIRECTATTACK", "","Can do something",2, 2,1),
             new Card("Plopp",4,"/img/plopp.jpg","DIRECTATTACK", "","Can do something",2, 2,1)
     ));
+
     public ArrayList<Card> enemyHandCards= new ArrayList<>( Arrays.asList(
             new Card("Marshmallow",4,"/img/candycard.jpg", "DIRECTATTACK","","Can do something",2, 2,1),
             new Card("Djungelvrål",4,"/img/djungelvral.jpg", "DIRECTATTACK", "","Can do something",2, 2,1),
             new Card("Ferrari",4,"/img/ferrari.jpg","DIRECTATTACK", "","Can do something",2, 2,1),
             new Card("Mars",4,"/img/mars.jpg","DIRECTATTACK", "","Can do something",2, 2,1),
             new Card("Plopp",4,"/img/plopp.jpg","DIRECTATTACK", "","Can do something",2, 2,1)
+    ));
 
+    public ArrayList<Card> playerDeck = new ArrayList<>( Arrays.asList(
+            new Card("Marshmallow",4,"/img/candycard.jpg", "DIRECTATTACK","","Can do something",2, 2,1),
+            new Card("Ferrari",4,"/img/ferrari.jpg","DIRECTATTACK", "","Can do something",2, 2,1),
+            new Card("Mars",4,"/img/mars.jpg","DIRECTATTACK", "","Can do something",2, 2,1),
+            new Card("Plopp",4,"/img/plopp.jpg","DIRECTATTACK", "","Can do something",2, 2,1)
+    ));
 
+    public ArrayList<Card> playerGY = new ArrayList<>( Arrays.asList(
+            new Card("Plopp",4,"/img/plopp.jpg","DIRECTATTACK", "","Can do something",2, 2,1)
+    ));
+
+    public ArrayList<Card> enemyDeck = new ArrayList<>( Arrays.asList(
+            new Card("Ferrari",4,"/img/ferrari.jpg","DIRECTATTACK", "","Can do something",2, 2,1),
+            new Card("Mars",4,"/img/mars.jpg","DIRECTATTACK", "","Can do something",2, 2,1),
+            new Card("Plopp",4,"/img/plopp.jpg","DIRECTATTACK", "","Can do something",2, 2,1)
+    ));
+
+    public ArrayList<Card> enemyGY = new ArrayList<>( Arrays.asList(
+            new Card("Marshmallow",4,"/img/candycard.jpg", "DIRECTATTACK","","Can do something",2, 2,1),
+            new Card("Mars",4,"/img/mars.jpg","DIRECTATTACK", "","Can do something",2, 2,1),
+            new Card("Plopp",4,"/img/plopp.jpg","DIRECTATTACK", "","Can do something",2, 2,1)
     ));
     public List<Card> playerTableCards = new ArrayList<>();
     public List<Card> enemyTableCards = new ArrayList<>( Arrays.asList(
@@ -66,15 +87,15 @@ public class BoardController {
     @FXML ProgressBar playerMana;
     @FXML ProgressBar enemyHP;
     @FXML ProgressBar enemyMana;
-    @FXML Label playerGraveyardNr;
-    @FXML Label playerDeckNr;
-    @FXML Label enemyDeckNr;
-    @FXML Label enemyGraveyardNr;
+    @FXML Label playerGraveyardCard;
+    @FXML Label playerDeckCard;
+    @FXML Label enemyDeckCard;
+    @FXML Label enemyGraveyardCard;
 
 
     public void initialize() throws IOException{
         updateAll();
-
+        end();
 
 
     }
@@ -89,7 +110,33 @@ public class BoardController {
         updateEnemyHealth();
         updatePlayerMana();
         updateEnemyMana();
+        updateDeck();
+        updateGraveyard();
+        end();
+    }
 
+    private void updateGraveyard() {
+        playerGraveyardCard.setText("Grave:"+String.valueOf(playerGY.size()));
+        enemyGraveyardCard.setText("Grave:"+String.valueOf(enemyGY.size()));
+    }
+
+    private void updateDeck() {
+                playerDeckCard.setText("Deck:"+String.valueOf(playerDeck.size()));
+                enemyDeckCard.setText("Deck:"+String.valueOf(enemyDeck.size()));
+    }
+
+    private void end() throws IOException{
+        endTurnButton.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                //TODO send message to Server about switching round
+                System.out.println("Server its time to switch turn!");
+                try {
+                    updateAll();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }});
     }
 
     private void updatePlayerHealth() {
@@ -138,7 +185,6 @@ public class BoardController {
             ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#hp")))).setText("HP: " +String.valueOf(playerHandCards.get(i).getHealth()));
             cardPane.getChildren().add(btn);
 
-            hbox.add(cardPane);
 
 
 
@@ -147,6 +193,9 @@ public class BoardController {
 
                 public void handle(ActionEvent event) {
                     playerTableCards.add(playerHandCards.get(finalI));
+                    choicePlayerHand = finalI;
+                    //TODO Server message!
+                    System.out.println("Server message picked" +choicePlayerHand);
                     playerHandCards.remove(finalI);
                     try {
                         updateAll();
