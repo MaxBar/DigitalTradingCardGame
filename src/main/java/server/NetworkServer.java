@@ -22,7 +22,7 @@ public class NetworkServer {
     private ArrayList<DatagramPacket> clientIP = new ArrayList<>();
     
     private NetworkServer() throws SocketException{
-        int port = 150;
+        int port = 25565;
         socket = new DatagramSocket(port);
         socket.setSoTimeout(500);
         
