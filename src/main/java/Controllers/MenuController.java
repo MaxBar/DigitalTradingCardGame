@@ -1,5 +1,6 @@
 package Controllers;
 
+import NetworkClient.NetworkClient;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -23,6 +24,8 @@ public class MenuController {
     @FXML
     void handleStartButton() throws Exception {
         if(queryHandler.checkPlayerEmail(email.getText())) {
+            NetworkClient.getInstance().sendMessageToServer("LOGIN " + email.getText());
+            System.out.println("LOGIN " + email.getText());
             renderGame();
         } else {
             System.out.println("No such email found");
