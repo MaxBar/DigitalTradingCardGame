@@ -40,7 +40,7 @@ public class Main2 extends Application {
                 String text = client.pollMessage();
                 if(text != null){
                     Game.getInstance().receiveCommand(text);
-                    //System.out.println(text);
+                    System.out.println(text);
                 }else{
                     break;
                 }
