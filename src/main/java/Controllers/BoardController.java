@@ -76,17 +76,27 @@ public class BoardController {
 
     ));
 
+    //HBOX
     @FXML HBox playerHand;
     @FXML HBox playerTable;
-
     @FXML HBox enemyHand;
     @FXML HBox enemyTable;
-    @FXML Button endTurnButton;
-    @FXML Button optionButton;
+    //PlayerBox
+    @FXML AnchorPane playerBox;
+    @FXML AnchorPane enemyBox;
+    //LABELS
+    @FXML Label playerHpLabel;
+    @FXML Label playerMpLabel;
+    @FXML Label enemyHpLabel;
+    @FXML Label enemyMpLabel;
+    //Progressbar
     @FXML ProgressBar playerHP;
     @FXML ProgressBar playerMana;
     @FXML ProgressBar enemyHP;
     @FXML ProgressBar enemyMana;
+
+    @FXML Button endTurnButton;
+    @FXML Button optionButton;
     @FXML Label playerGraveyardCard;
     @FXML Label playerDeckCard;
     @FXML Label enemyDeckCard;
@@ -96,6 +106,7 @@ public class BoardController {
     public void initialize() throws IOException{
         updateAll();
         end();
+        enemyAttack();
 
 
     }
@@ -113,7 +124,32 @@ public class BoardController {
         updateDeck();
         updateGraveyard();
         end();
+
     }
+    private void enemyAttack() throws IOException{
+        btn = new Button();
+        btn.setPrefSize(200, 206);
+        btn.setOpacity(0);
+        enemyBox.getChildren().add(btn);
+        btn.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                //TODO send message to Server attacking enemy player, Needs to know if enemy is 0 or 1
+                if(choicePlayerCard>-1) {
+                    System.out.printf("You attack with %s on enemy", choicePlayerHand //needs to know turn so correct message to server will be send
+                    );
+
+                    choicePlayerCard = -10;
+                    choiceEnemyCard = -10;
+                }
+                try {
+                    updateAll();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }});
+    }
+
 
     private void updateGraveyard() {
         playerGraveyardCard.setText("Grave:"+String.valueOf(playerGY.size()));
@@ -143,25 +179,29 @@ public class BoardController {
         int getPlayerHp = 10;
         double hp = ((double)getPlayerHp/20);
         playerHP.setProgress(hp);
+        playerHpLabel.setText("HP: " + getPlayerHp);
     }
 
     void updatePlayerMana() throws IOException{
         int getPlayerMana = 20;
         double mp = ((double)getPlayerMana/20);
         playerMana.setProgress(mp);
+        playerMpLabel.setText("MP: " + getPlayerMana);
 
     }
 
     private void updateEnemyMana() throws IOException{
-        int getPlayerMana = 20;
-        double mp = ((double)getPlayerMana/20);
+        int getEnemyMana = 20;
+        double mp = ((double)getEnemyMana/20);
         enemyMana.setProgress(mp);
+        enemyMpLabel.setText("MP: " + getEnemyMana);
 
     }
     void updateEnemyHealth() throws IOException{
         int getEnemyHP = 20;
         double hp = ((double)getEnemyHP/20);
         enemyHP.setProgress(hp);
+        enemyHpLabel.setText("HP: " + getEnemyHP);
 
     }
 
@@ -173,7 +213,7 @@ public class BoardController {
             btn.setPrefSize(190, 200);
             btn.setOpacity(0);
             // playerHandCards.get(i).setId(i);
-            cardPane = FXMLLoader.load(getClass().getResource("/card.fxml"));
+            cardPane = FXMLLoader.load(getClass().getResource("/cardMini.fxml"));
             ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardName")))).setText("Card Name: " +playerHandCards.get(i).getName());
             ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardManaCost")))).setText("Mana Cost: "+String.valueOf(playerHandCards.get(i).getManaCost()));
             ((ImageView) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardImg")))).setImage(new Image(playerHandCards.get(i).getImage()));
