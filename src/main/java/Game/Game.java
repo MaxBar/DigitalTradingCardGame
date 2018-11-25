@@ -1,5 +1,6 @@
 package Game;
 
+import Controllers.MenuController;
 import NetworkClient.NetworkClient;
 import card.BasicCard;
 import card.BasicCreatureCard;
@@ -415,7 +416,6 @@ public class Game {
     
     private void sendStart() {
         try {
-            gameMenu.startGame();
             NetworkClient.getInstance().sendMessageToServer("STARTED");
         } catch (IOException e) {
             e.printStackTrace();

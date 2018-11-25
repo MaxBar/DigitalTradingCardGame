@@ -1,6 +1,7 @@
 package Controllers;
 
 import NetworkClient.NetworkClient;
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -9,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
+import javafx.util.Duration;
 import main.Main;
 import main.Main2;
 import repository.QueryHandler;
@@ -26,10 +28,39 @@ public class MenuController {
         if(queryHandler.checkPlayerEmail(email.getText())) {
             NetworkClient.getInstance().sendMessageToServer("LOGIN " + email.getText());
             System.out.println("LOGIN " + email.getText());
-            renderGame();
+            Thread t = new Thread(() -> {
+                while(true) {
+                    if(NetworkClient.getInstance().pollMessage().equals("STARTED")); {
+                        try {
+                            renderGame();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        /*try {
+                            startGame();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }*/
+                        break;
+                    }
+                }
+            });
+            //renderGame();
         } else {
             System.out.println("No such email found");
         }
+    }
+    
+    public void startGame() throws Exception {
+        PauseTransition pause = new PauseTransition(Duration.seconds(1));
+        pause.setOnFinished(event -> {
+            try {
+                renderGame();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        pause.play();
     }
     
     @FXML
