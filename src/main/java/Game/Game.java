@@ -6,6 +6,7 @@ import card.BasicCard;
 import card.BasicCreatureCard;
 import card.EKeyword;
 import card.SpecialAbilityCreatureCard;
+import javafx.application.Platform;
 import menu.GameMenu;
 //import net.bytebuddy.implementation.bytecode.Duplication;
 import player.Player;
@@ -140,7 +141,11 @@ public class Game {
     
     public void receiveCommand(String serverOutput) throws IOException {
         if(serverOutput.startsWith("LOGIN")) {
-            login(serverOutput);
+            try {
+                login(serverOutput);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else if(serverOutput.substring(3).startsWith("DEALT_CARDS") && (Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn())) {
             dealtCards(serverOutput);
         } else if(serverOutput.equals("STARTED")) {
@@ -395,7 +400,7 @@ public class Game {
         GameMenu.printBoard();
     }
 
-    private void login(String serverOutput) {
+    private void login(String serverOutput) throws Exception {
         String [] chunks = serverOutput.split (" ");
         String start = "";
         if(chunks[1].equals("john@hotmail.se")) {
@@ -414,8 +419,19 @@ public class Game {
         }
     }
     
-    private void sendStart() {
+    private void sendStart() throws Exception {
         try {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        MenuController.renderGame();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    //update application thread
+                }
+            });
             NetworkClient.getInstance().sendMessageToServer("STARTED");
         } catch (IOException e) {
             e.printStackTrace();

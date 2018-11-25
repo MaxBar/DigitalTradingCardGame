@@ -91,6 +91,7 @@ public class Main2 extends Application {
                     if (text != null) {
                         try {
                             Game.getInstance().receiveCommand(text);
+                            System.out.println(text);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

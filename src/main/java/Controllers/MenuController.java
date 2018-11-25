@@ -20,6 +20,7 @@ import java.io.IOException;
 
 public class MenuController {
     QueryHandler queryHandler = new QueryHandler();
+    
     @FXML
     TextField email;
     
@@ -28,7 +29,7 @@ public class MenuController {
         if(queryHandler.checkPlayerEmail(email.getText())) {
             NetworkClient.getInstance().sendMessageToServer("LOGIN " + email.getText());
             System.out.println("LOGIN " + email.getText());
-            Thread t = new Thread(() -> {
+            /*Thread t = new Thread(() -> {
                 while(true) {
                     if(NetworkClient.getInstance().pollMessage().equals("STARTED")); {
                         try {
@@ -36,15 +37,18 @@ public class MenuController {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        /*try {
+                        try {
                             startGame();
                         } catch (Exception e) {
                             e.printStackTrace();
-                        }*/
+                        }
                         break;
+                        
                     }
                 }
             });
+            
+            t.join();*/
             //renderGame();
         } else {
             System.out.println("No such email found");
@@ -76,8 +80,8 @@ public class MenuController {
         Platform.exit();
         
     }
-    public void renderGame() throws Exception {
-        Pane game = FXMLLoader.load(getClass().getResource("/board.fxml"));
+    public static void renderGame() throws Exception {
+        Pane game = FXMLLoader.load(MenuController.class.getResource("/board.fxml"));
         Main2.primaryStage.setTitle("Candy Wars");
         Main2.primaryStage.setScene(new Scene(game, 1280, 720));
         Main2.primaryStage.show();
