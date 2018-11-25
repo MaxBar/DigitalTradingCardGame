@@ -400,7 +400,7 @@ public class Game {
         GameMenu.printBoard();
     }
 
-    private void login(String serverOutput) throws Exception {
+    private void login(String serverOutput) {
         String [] chunks = serverOutput.split (" ");
         String start = "";
         if(chunks[1].equals("john@hotmail.se")) {
@@ -419,18 +419,15 @@ public class Game {
         }
     }
     
-    private void sendStart() throws Exception {
+    private void sendStart() {
         try {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        MenuController.renderGame();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    //update application thread
+            Platform.runLater(() -> {
+                try {
+                    MenuController.renderGame();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+                //update application thread
             });
             NetworkClient.getInstance().sendMessageToServer("STARTED");
         } catch (IOException e) {

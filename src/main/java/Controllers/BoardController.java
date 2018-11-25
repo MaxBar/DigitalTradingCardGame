@@ -97,7 +97,7 @@ public class BoardController {
 
 
     public void initialize() throws IOException{
-        NetworkClient.getInstance().sendMessageToServer("STARTED");
+        //NetworkClient.getInstance().sendMessageToServer("STARTED");
         updateAll();
         end();
 
