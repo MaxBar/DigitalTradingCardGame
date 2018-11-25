@@ -12,6 +12,8 @@ import repository.QueryHandler;
 import NetworkClient.NetworkClient;
 import Game.Game;
 
+import java.io.IOException;
+
 public class Main2 extends Application {
     public static Stage primaryStage;
     private static NetworkClient client;
@@ -36,7 +38,9 @@ public class Main2 extends Application {
             e.printStackTrace();
         }
 
-            while(true){
+        inputThread.start();
+
+            /*while(true){
                 String text = client.pollMessage();
                 if(text != null){
                     Game.getInstance().receiveCommand(text);
@@ -44,7 +48,7 @@ public class Main2 extends Application {
                 }else{
                     break;
                 }
-            }
+            }*/
 
         Main2.primaryStage = primaryStage;
         Parent root = FXMLLoader.load(getClass().getResource("/menu.fxml"));
@@ -55,6 +59,24 @@ public class Main2 extends Application {
         primaryStage.show();
 
     }
+
+    private static Thread inputThread = new Thread() {
+        public void run() {
+            while(true){
+                String text = client.pollMessage();
+                if(text != null){
+                    try {
+                        Game.getInstance().receiveCommand(text);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println(text);
+                }else{
+                    break;
+                }
+            }
+        }
+    };
 
 
     public static void main(String[] args) {
