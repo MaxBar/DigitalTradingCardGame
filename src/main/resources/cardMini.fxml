@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="handCardAnchor" minHeight="-Infinity" minWidth="-Infinity" prefHeight="141.0" prefWidth="100.0" style="-fx-background-image: GREY;" stylesheets="@style/style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="handCardAnchor" minHeight="-Infinity" minWidth="-Infinity" prefHeight="141.0" prefWidth="100.0" style="-fx-background-image: GREY;" stylesheets="@style/miniCardStyle.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
 
    <children>
       <ImageView fx:id="cardImg" fitHeight="40.0" fitWidth="92.0" layoutX="4.0" layoutY="26.0" nodeOrientation="INHERIT" pickOnBounds="true">

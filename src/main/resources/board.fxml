@@ -128,6 +128,6 @@
       <HBox fx:id="enemyTable" layoutX="364.0" layoutY="220.0" prefHeight="170.0" prefWidth="717.0" />
       <HBox fx:id="enemyHand" layoutX="364.0" layoutY="23.0" prefHeight="139.0" prefWidth="841.0" />
       <HBox fx:id="playerTable" prefHeight="170.0" prefWidth="717.0" />
-      <HBox fx:id="playerHand" layoutX="373.0" layoutY="927.0" prefHeight="139.0" prefWidth="841.0" spacing="5.0" />
+      <HBox fx:id="playerHand" layoutX="372.0" layoutY="890.0" prefHeight="139.0" prefWidth="841.0" spacing="5.0" />
    </children>
 </Pane>
