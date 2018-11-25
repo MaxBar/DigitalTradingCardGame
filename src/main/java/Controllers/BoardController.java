@@ -1,5 +1,7 @@
 package Controllers;
 
+import Game.Game;
+import NetworkClient.NetworkClient;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -22,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 public class BoardController {
     //public Data data = new Data();
+    Game game = Game.getInstance();
     AnchorPane cardPane;
     Button btn;
     int choiceEnemyCard;
@@ -94,6 +97,7 @@ public class BoardController {
 
 
     public void initialize() throws IOException{
+        NetworkClient.getInstance().sendMessageToServer("STARTED");
         updateAll();
         end();
 

@@ -38,7 +38,6 @@ public class Main2 extends Application {
             e.printStackTrace();
         }
 
-        inputThread.start();
 
             /*while(true){
                 String text = client.pollMessage();
@@ -49,30 +48,55 @@ public class Main2 extends Application {
                     break;
                 }
             }*/
+    
+            /*while(true) {
+                while (true) {
+                    System.out.println("hej");
+                    String text = client.pollMessage();
+                    if (text != null) {
+                        try {
+                            Game.getInstance().receiveCommand(text);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        System.out.println(text);
+                    } else {
+                        break;
+                    }
+                }
+            }*/
 
-        Main2.primaryStage = primaryStage;
+        /*Main2.primaryStage = primaryStage;
         Parent root = FXMLLoader.load(getClass().getResource("/menu.fxml"));
         primaryStage.setTitle("Candy Wars");
         primaryStage.setScene(new Scene(root, 1920, 1080));
         primaryStage.setMaximized(true);
         primaryStage.setFullScreen(true);
-        primaryStage.show();
+        primaryStage.show();*/
+    
+        inputThread.start();
 
     }
 
     private static Thread inputThread = new Thread() {
         public void run() {
-            while(true){
-                String text = client.pollMessage();
-                if(text != null){
+            while (true) {
+                while (true) {
                     try {
-                        Game.getInstance().receiveCommand(text);
-                    } catch (IOException e) {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    System.out.println(text);
-                }else{
-                    break;
+                    String text = client.pollMessage();
+                    if (text != null) {
+                        try {
+                            Game.getInstance().receiveCommand(text);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        break;
+                    }
                 }
             }
         }
@@ -80,6 +104,7 @@ public class Main2 extends Application {
 
 
     public static void main(String[] args) {
+        //inputThread.start();
         launch(args);
     }
 

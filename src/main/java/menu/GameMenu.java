@@ -6,12 +6,32 @@ import card.BasicCard;
 import card.BasicCreatureCard;
 import card.BasicMagicCard;
 import card.SpecialAbilityCreatureCard;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import main.Main2;
 import player.Player;
 
 import java.io.IOException;
 import java.util.Scanner;
 
 public class GameMenu {
+    
+    public static Stage primaryStage;
+    
+    public void startGame() throws IOException {
+        GameMenu.primaryStage = primaryStage;
+        Parent root = FXMLLoader.load(getClass().getResource("/menu.fxml"));
+        primaryStage.setTitle("Candy Wars");
+        primaryStage.setScene(new Scene(root, 1920, 1080));
+        primaryStage.setMaximized(true);
+        primaryStage.setFullScreen(true);
+        primaryStage.show();
+    }
+    
+    
+    
     //Player player  = Game.getInstance();
     Game game = Game.getInstance();
     public Thread rootMenu = new Thread() {

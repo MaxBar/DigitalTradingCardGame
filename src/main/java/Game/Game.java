@@ -415,6 +415,7 @@ public class Game {
     
     private void sendStart() {
         try {
+            gameMenu.startGame();
             NetworkClient.getInstance().sendMessageToServer("STARTED");
         } catch (IOException e) {
             e.printStackTrace();
