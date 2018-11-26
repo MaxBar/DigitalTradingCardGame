@@ -68,16 +68,17 @@ public class BoardController {
 
     @FXML
     public void updateAll() throws IOException {
-        drawPlayerHandCards();
-        drawPlayerTableCards();
-        drawEnemyHand();
-        drawEnemyTableCards();
         updatePlayerHealth();
         updateEnemyHealth();
         updatePlayerMana();
         updateEnemyMana();
         updateDeck();
         updateGraveyard();
+        drawPlayerHandCards();
+        drawPlayerTableCards();
+        drawEnemyHand();
+        drawEnemyTableCards();
+
         endTurn();
     }
 
