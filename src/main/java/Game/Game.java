@@ -176,7 +176,7 @@ public class Game {
             useSuccess(serverOutput);
         }else if(serverOutput.substring(3).startsWith("USE_MAGIC_CREATURE_FAILURE") && Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn()){
             useFailure(serverOutput);
-        }else if (serverOutput.substring(3).startsWith("ATTACK_RESULT_FAILURE")){
+        }else if (serverOutput.substring(3).startsWith("ATTACK_RESULT_FAILURE") && Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn()){
             attackFailure(serverOutput);
         }else if (serverOutput.substring(3).startsWith("ATTACK_RESULT_SUCCESS")){
             attackSuccess(serverOutput);
