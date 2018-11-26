@@ -60,6 +60,7 @@ public class BoardController {
     @FXML Label playerDeckCard;
     @FXML Label enemyDeckCard;
     @FXML Label enemyGraveyardCard;
+    @FXML Label gameOverLabel;
 
 
     @FXML
@@ -87,8 +88,12 @@ public class BoardController {
         drawEnemyHand();
         drawEnemyTableCards();
         drawWhosTurn();
-
         endTurn();
+
+    }
+
+    public void gameOver(String wonOrLost) {
+            gameOverLabel.setText(wonOrLost);
     }
 
     private void drawWhosTurn() {
@@ -158,14 +163,15 @@ public class BoardController {
 
     void updatePlayerMana() throws IOException {
         if (game.getPlayer() != null) {
-            double mp = ((double) game.getPlayer().getMana() / 20);
+            //TODO Set player maxMana
+            double mp = ((double) game.getPlayer().getMana() /game.getRound());
             playerMana.setProgress(mp);
             playerMpLabel.setText("MP: " + game.getPlayer().getMana());
         }
     }
 
     private void updateEnemyMana() throws IOException {
-        double mp = ((double)game.getEnemyMana()/20);
+        double mp = ((double)game.getEnemyMana()/game.getRound());
         enemyMana.setProgress(mp);
         enemyMpLabel.setText("MP: " + game.getEnemyMana());
     }
@@ -189,16 +195,16 @@ public class BoardController {
                 btn.setOpacity(0);
                 // playerHandCards.get(i).setId(i);
                 cardPane = FXMLLoader.load(getClass().getResource("/cardMini.fxml"));
-                ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardName")))).setText("Card Name: " + game.getPlayer().getHand().get(i).getName());
-                ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardManaCost")))).setText("Mana Cost: " + String.valueOf(game.getPlayer().getHand().get(i).getManaCost()));
+                ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardName")))).setText( game.getPlayer().getHand().get(i).getName());
+                ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardManaCost")))).setText("MC: " + String.valueOf(game.getPlayer().getHand().get(i).getManaCost()));
                 //((ImageView) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardImg")))).setImage(new Image(game.getPlayer().getHand().get(i).getImage()));
                 if (game.getPlayer().getHand().get(i) instanceof BasicMagicCard) {
-                    ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#ability")))).setText("Ability: " + ((BasicMagicCard) game.getPlayer().getHand().get(i)).getKeyword().name());
-                    ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#abilityDescription")))).setText("Description: " + ((BasicMagicCard) game.getPlayer().getHand().get(i)).getAbilityDescription());
+                    ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#ability")))).setText(((BasicMagicCard) game.getPlayer().getHand().get(i)).getKeyword().name());
+                    ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#abilityDescription")))).setText(((BasicMagicCard) game.getPlayer().getHand().get(i)).getAbilityDescription());
 
                 } else if (game.getPlayer().getHand().get(i) instanceof SpecialAbilityCreatureCard) {
-                    ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#special")))).setText("Special: " + ((SpecialAbilityCreatureCard) game.getPlayer().getHand().get(i)).getKeyword().name());
-                    ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#abilityDescription")))).setText("Description: " + ((SpecialAbilityCreatureCard) game.getPlayer().getHand().get(i)).getAbilityDescription());
+                    ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#special")))).setText(((SpecialAbilityCreatureCard) game.getPlayer().getHand().get(i)).getKeyword().name());
+                    ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#abilityDescription")))).setText(((SpecialAbilityCreatureCard) game.getPlayer().getHand().get(i)).getAbilityDescription());
                 }
                 if (game.getPlayer().getHand().get(i) instanceof BasicMagicCard) {
 
@@ -252,13 +258,13 @@ public class BoardController {
                 btn.setPrefSize(190, 200);
                 btn.setOpacity(0);
                 cardPane = FXMLLoader.load(getClass().getResource("/card.fxml"));
-                ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardName")))).setText("Card Name: " + game.getPlayerTableCards().get(i).getName());
-                ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardManaCost")))).setText("Mana Cost: " + String.valueOf(game.getPlayerTableCards().get(i).getManaCost()));
+                ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardName")))).setText(game.getPlayerTableCards().get(i).getName());
+                ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardManaCost")))).setText("MC: " + String.valueOf(game.getPlayerTableCards().get(i).getManaCost()));
                 //((ImageView) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardImg")))).setImage(new Image(game.getPlayerTableCards().get(i).getImage()));
                 //((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#ability")))).setText("Ability: " + game.getPlayerTableCards().get(i).getAbility());
                 if (game.getPlayerTableCards().get(i) instanceof SpecialAbilityCreatureCard) {
-                    ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#special")))).setText("Special: " + ((SpecialAbilityCreatureCard) game.getPlayerTableCards().get(i)).getKeyword().name());
-                    ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#abilityDescription")))).setText("Description: " + ((SpecialAbilityCreatureCard) game.getPlayerTableCards().get(i)).getAbilityDescription());
+                    ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#special")))).setText(((SpecialAbilityCreatureCard) game.getPlayerTableCards().get(i)).getKeyword().name());
+                    ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#abilityDescription")))).setText(((SpecialAbilityCreatureCard) game.getPlayerTableCards().get(i)).getAbilityDescription());
 
                 }
                 ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#ap")))).setText("AP: " + String.valueOf(((BasicCreatureCard) game.getPlayerTableCards().get(i)).getAttack()));
@@ -304,13 +310,13 @@ public class BoardController {
                 btn.setPrefSize(190, 200);
                 btn.setOpacity(0);
                 cardPane = FXMLLoader.load(getClass().getResource("/card.fxml"));
-                ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardName")))).setText("Card Name: " + game.getEnemyTableCards().get(i).getName());
-                ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardManaCost")))).setText("Mana Cost: " + String.valueOf(game.getEnemyTableCards().get(i).getManaCost()));
+                ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardName")))).setText(game.getEnemyTableCards().get(i).getName());
+                ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardManaCost")))).setText("MC: " + String.valueOf(game.getEnemyTableCards().get(i).getManaCost()));
                 //((ImageView) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardImg")))).setImage(new Image(game.getEnemyTableCards().get(i).getImage()));
                 //((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#ability")))).setText("Ability: " + game.getPlayerTableCards().get(i).getAbility());
                 if (game.getEnemyTableCards().get(i) instanceof SpecialAbilityCreatureCard) {
-                    ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#special")))).setText("Special: " + ((SpecialAbilityCreatureCard) game.getEnemyTableCards().get(i)).getKeyword().name());
-                    ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#abilityDescription")))).setText("Description: " + ((SpecialAbilityCreatureCard) game.getEnemyTableCards().get(i)).getAbilityDescription());
+                    ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#special")))).setText(((SpecialAbilityCreatureCard) game.getEnemyTableCards().get(i)).getKeyword().name());
+                    ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#abilityDescription")))).setText(((SpecialAbilityCreatureCard) game.getEnemyTableCards().get(i)).getAbilityDescription());
 
                 }
                 ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#ap")))).setText("AP: " + String.valueOf(((BasicCreatureCard) game.getEnemyTableCards().get(i)).getAttack()));
