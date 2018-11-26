@@ -1,5 +1,6 @@
 package Game;
 
+import Controllers.BoardController;
 import Controllers.MenuController;
 import NetworkClient.NetworkClient;
 import card.BasicCard;
@@ -7,6 +8,8 @@ import card.BasicCreatureCard;
 import card.EKeyword;
 import card.SpecialAbilityCreatureCard;
 import javafx.application.Platform;
+import javafx.stage.Stage;
+import main.Main2;
 import menu.GameMenu;
 //import net.bytebuddy.implementation.bytecode.Duplication;
 import player.Player;
@@ -63,7 +66,12 @@ public class Game {
     private int enemyDeck = 20;
     private int enemyHealth = 20;
     private int enemyMana = 1;
-    
+
+    BoardController boardController;
+
+    public void setBoardController(BoardController boardController) {
+        this.boardController = boardController;
+    }
     private Game() {
         //gameMenu = new GameMenu();
         queryHandler = new QueryHandler();
@@ -195,7 +203,14 @@ public class Game {
         } else {
             ((BasicCreatureCard)enemyTableCards.get(Integer.parseInt(chunks[2]))).setHealth(Integer.parseInt(chunks[3]));
         }
-        GameMenu.printBoard();
+        Platform.runLater(() -> {
+            try {
+                boardController.updateAll();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        });
     }
 
     private void removeFromTable(String serverOutput) {
@@ -205,7 +220,14 @@ public class Game {
         } else {
             enemyTableCards.remove(Integer.parseInt(chunks[2]));
         }
-        GameMenu.printBoard();
+        Platform.runLater(() -> {
+            try {
+                boardController.updateAll();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        });
     }
 
     private void changeConsumed(int index) {
@@ -218,7 +240,14 @@ public class Game {
         } else {
             ++enemyGraveyard;
         }
-        GameMenu.printBoard();
+        Platform.runLater(() -> {
+            try {
+                boardController.updateAll();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        });
     }
 
     // TODO REMOVE GRAVEYARD INCREMENT AND MOVE IT CHANGE ON STRING RECEIVE FROM SERVER
@@ -256,7 +285,14 @@ public class Game {
         } else if (queryHandler.fetchCheckCardType(id) == 1) {
             player.getHand().add(queryHandler.fetchSpecialAbilityCreatureCardId(id));
         }*/
-        GameMenu.printBoard();
+        Platform.runLater(() -> {
+            try {
+                boardController.updateAll();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        });
     }
     
     private void dealtCards(String serverOutput) {
@@ -282,12 +318,24 @@ public class Game {
         for(int i = 0; i < player.getHand().size(); ++i) {
             System.out.println(player.getHand().get(i));
         }
-        try {
+
+
+            Platform.runLater(() -> {
+                try {
+                    boardController.updateAll();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            });
+
+
+        /*try {
             gameMenu = new GameMenu();
             gameMenu.rootMenu.start();
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     private void placeSuccess(String serverOutput){
@@ -319,7 +367,15 @@ public class Game {
             }
             System.out.printf("P%s placed %s\n", turn,  Game.getInstance().getEnemyTableCards().get(Game.getInstance().getEnemyTableCards().size() - 1).getName());
         }
-        GameMenu.printBoard();
+
+            Platform.runLater(() -> {
+                try {
+                    boardController.updateAll();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            });
     }
 
     private void placeFailure(String serverOutput){
@@ -397,7 +453,15 @@ public class Game {
                         ((BasicCreatureCard)playerTableCards.get(Integer.parseInt(enemyCard[2]))).getHealth());
             }
         }
-        GameMenu.printBoard();
+
+        Platform.runLater(() -> {
+            try {
+                boardController.updateAll();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        });
     }
 
     private void login(String serverOutput) {
@@ -421,14 +485,17 @@ public class Game {
     
     private void sendStart() {
         try {
-            Platform.runLater(() -> {
-                try {
-                    MenuController.renderGame();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                //update application thread
-            });
+            try {
+                Platform.runLater( () -> {
+                    try {
+                        MenuController.renderGame();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             NetworkClient.getInstance().sendMessageToServer("STARTED");
         } catch (IOException e) {
             e.printStackTrace();

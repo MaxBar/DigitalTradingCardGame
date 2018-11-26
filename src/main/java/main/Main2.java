@@ -1,5 +1,7 @@
 package main;
 
+import Controllers.BoardController;
+import Controllers.MenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -47,6 +49,15 @@ public class Main2 extends Application {
         primaryStage.show();
         inputThread.start();
 
+
+
+
+
+        /*FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.load(MenuController.class.getResource("/board.fxml"));
+        boardController = (BoardController)fxmlLoader.getController();
+        Game.getInstance().setBoardController(boardController, Main2.primaryStage);
+*/
     }
 
     private static Thread inputThread = new Thread() {
@@ -79,7 +90,4 @@ public class Main2 extends Application {
         //inputThread.start();
         launch(args);
     }
-
-
-
 }
