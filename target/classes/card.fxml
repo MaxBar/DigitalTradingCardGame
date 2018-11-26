@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="handCardAnchor" prefHeight="222.0" prefWidth="157.0" style="-fx-background-image: GREY;" stylesheets="@style/style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fx:id="cardImg" fitHeight="116.0" fitWidth="157.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="cardName" layoutX="4.0" layoutY="5.0" />
+      <Label fx:id="cardManaCost" layoutX="138.0" layoutY="5.0" />
+      <Label fx:id="ability" layoutX="5.0" layoutY="23.0" />
+      <Label fx:id="ap" layoutX="10.0" layoutY="200.0" />
+      <Label fx:id="dp" layoutX="38.0" layoutY="200.0" />
+      <Label fx:id="hp" layoutX="137.0" layoutY="199.0" />
+      <Label fx:id="special" layoutX="5.0" layoutY="161.0" />
+   </children>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+</AnchorPane>
