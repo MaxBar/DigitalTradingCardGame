@@ -463,29 +463,54 @@ public class Game {
             String[] playerCard = chunks[2].split("_");
             String[] enemyCard = chunks[6].split("_");
             
+            int playerHP = Integer.parseInt(chunks[4]);
+            int enemyHP = Integer.parseInt(chunks[8]);
+            int playerIndex = Integer.parseInt(playerCard[1]);
+            int enemyIndex = Integer.parseInt(enemyCard[2]);
+                System.out.println(serverOutput);
+            
+            
+            //Player attack
             if(serverOutput.startsWith("P" + player.getPlayerTurn())) {
-                ((BasicCreatureCard)playerTableCards.get(Integer.parseInt(playerCard[1]))).setHealth(Integer.parseInt(chunks[4]));
+                ((BasicCreatureCard)playerTableCards.get(playerIndex)).setHealth(playerHP);//Integer.parseInt(playerCard[1]))).setHealth(Integer.parseInt(chunks[4]));
                 System.out.printf("Your card %s took damage and have HP: %s",
-                        playerTableCards.get(Integer.parseInt(playerCard[1])).getName(),
-                        ((BasicCreatureCard)playerTableCards.get(Integer.parseInt(playerCard[1]))).getHealth());
+                        playerTableCards.get(playerIndex).getName(),//Integer.parseInt(playerCard[1])).getName(),
+                        ((BasicCreatureCard)playerTableCards.get(playerIndex)).getHealth());//Integer.parseInt(playerCard[1]))).getHealth());
+                ((BasicCreatureCard)enemyTableCards.get(enemyIndex)).setHealth(enemyHP);
+                System.out.println(((BasicCreatureCard) enemyTableCards.get(enemyIndex)).getHealth());
+                System.out.println(((BasicCreatureCard)playerTableCards.get(playerIndex)).getHealth());
             } else if(serverOutput.startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {
-                ((BasicCreatureCard)enemyTableCards.get(Integer.parseInt(enemyCard[2]))).setHealth(Integer.parseInt(chunks[8]));
+                ((BasicCreatureCard)enemyTableCards.get(playerIndex)).setHealth(playerHP);//Integer.parseInt(enemyCard[2]))).setHealth(Integer.parseInt(chunks[8]));
+                ((BasicCreatureCard)playerTableCards.get(enemyIndex)).setHealth(enemyHP);
+                System.out.println(((BasicCreatureCard) playerTableCards.get(enemyIndex)).getHealth());
+                System.out.println(((BasicCreatureCard)enemyTableCards.get(playerIndex)).getHealth());
                 System.out.printf("Your card %s took damage and have HP: %s",
-                        enemyTableCards.get(Integer.parseInt(enemyCard[2])).getName(),
-                        ((BasicCreatureCard)enemyTableCards.get(Integer.parseInt(enemyCard[2]))).getHealth());
+                        enemyTableCards.get(enemyIndex).getName(),//Integer.parseInt(enemyCard[2])).getName(),
+                        ((BasicCreatureCard)enemyTableCards.get(enemyIndex)).getHealth());//Integer.parseInt(enemyCard[2]))).getHealth());
             }
-
+            
+            /*playerHP = Integer.parseInt(chunks[8]);
+            enemyHP = Integer.parseInt(chunks[4]);
+            playerIndex = Integer.parseInt(enemyCard[2]);
+            enemyIndex = Integer.parseInt(playerCard[1]);
+    
+                //playerCard = chunks[6].split("_");
+                //enemyCard = chunks[2].split("_");
+            
+            //Enemy attack
             if(enemyCard[0].startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {
-                ((BasicCreatureCard)enemyTableCards.get(Integer.parseInt(enemyCard[2]))).setHealth(Integer.parseInt(chunks[8]));
+                ((BasicCreatureCard)enemyTableCards.get(enemyIndex)).setHealth(enemyHP);//Integer.parseInt(enemyCard[1]))).setHealth(Integer.parseInt(chunks[4]));
                 System.out.printf("Enemy card %s took damage and have HP: %s",
-                        enemyTableCards.get(Integer.parseInt(enemyCard[2])).getName(),
-                        ((BasicCreatureCard)enemyTableCards.get(Integer.parseInt(enemyCard[2]))).getHealth());
-            } else if (enemyCard[0].startsWith("P" + player.getPlayerTurn())) {
-                ((BasicCreatureCard)playerTableCards.get(Integer.parseInt(playerCard[1]))).setHealth(Integer.parseInt(chunks[4]));
+                        enemyTableCards.get(enemyIndex).getName(),//Integer.parseInt(enemyCard[1])).getName(),
+                        ((BasicCreatureCard)enemyTableCards.get(enemyIndex)).getHealth());//Integer.parseInt(enemyCard[1]))).getHealth());
+            } else if (playerCard[0].startsWith("P" + player.getPlayerTurn())) {
+                ((BasicCreatureCard)playerTableCards.get(playerIndex)).setHealth(playerHP);//Integer.parseInt(playerCard[2]))).setHealth(Integer.parseInt(chunks[8]));
                 System.out.printf("Enemy card %s took damage and have HP: %s",
-                        playerTableCards.get(Integer.parseInt(playerCard[1])).getName(),
-                        ((BasicCreatureCard)playerTableCards.get(Integer.parseInt(playerCard[1]))).getHealth());
-            }
+                        playerTableCards.get(playerIndex).getName(),//Integer.parseInt(playerCard[2])).getName(),
+                        ((BasicCreatureCard)playerTableCards.get(playerIndex)).getHealth());//Integer.parseInt(playerCard[2]))).getHealth());
+            }*/
+            
+            
         } else if (chunks[2].startsWith("P" + player.getPlayerTurn())) {
             player.setHealth(Integer.parseInt(chunks[4]));
             System.out.printf("Player %s took damage and has HP: %s\n", player.getName(), Integer.parseInt(chunks[4]));
