@@ -25,6 +25,9 @@ public class Game {
     
     QueryHandler queryHandler;
     private int started = 0;
+    
+    public String loginName;
+    public String enemyName;
     private GameMenu gameMenu;
     // Player
     private Player player;
@@ -442,10 +445,10 @@ public class Game {
                         playerTableCards.get(Integer.parseInt(playerCard[1])).getName(),
                         ((BasicCreatureCard)playerTableCards.get(Integer.parseInt(playerCard[1]))).getHealth());
             } else if(serverOutput.startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {
-                ((BasicCreatureCard)enemyTableCards.get(Integer.parseInt(playerCard[1]))).setHealth(Integer.parseInt(chunks[4]));
+                ((BasicCreatureCard)enemyTableCards.get(Integer.parseInt(enemyCard[2]))).setHealth(Integer.parseInt(chunks[8]));
                 System.out.printf("Your card %s took damage and have HP: %s",
-                        enemyTableCards.get(Integer.parseInt(playerCard[1])).getName(),
-                        ((BasicCreatureCard)enemyTableCards.get(Integer.parseInt(playerCard[1]))).getHealth());
+                        enemyTableCards.get(Integer.parseInt(enemyCard[2])).getName(),
+                        ((BasicCreatureCard)enemyTableCards.get(Integer.parseInt(enemyCard[2]))).getHealth());
             }
 
             if(enemyCard[0].startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {
@@ -454,10 +457,10 @@ public class Game {
                         enemyTableCards.get(Integer.parseInt(enemyCard[2])).getName(),
                         ((BasicCreatureCard)enemyTableCards.get(Integer.parseInt(enemyCard[2]))).getHealth());
             } else if (enemyCard[0].startsWith("P" + player.getPlayerTurn())) {
-                ((BasicCreatureCard)playerTableCards.get(Integer.parseInt(enemyCard[2]))).setHealth(Integer.parseInt(chunks[8]));
+                ((BasicCreatureCard)playerTableCards.get(Integer.parseInt(playerCard[1]))).setHealth(Integer.parseInt(chunks[4]));
                 System.out.printf("Enemy card %s took damage and have HP: %s",
-                        playerTableCards.get(Integer.parseInt(enemyCard[2])).getName(),
-                        ((BasicCreatureCard)playerTableCards.get(Integer.parseInt(enemyCard[2]))).getHealth());
+                        playerTableCards.get(Integer.parseInt(playerCard[1])).getName(),
+                        ((BasicCreatureCard)playerTableCards.get(Integer.parseInt(playerCard[1]))).getHealth());
             }
         }
 
@@ -474,7 +477,7 @@ public class Game {
     private void login(String serverOutput) {
         String [] chunks = serverOutput.split (" ");
         String start = "";
-        if(chunks[1].equals("john@hotmail.se")) {
+        if(chunks[1].equals(loginName)) {//chunks[1].equals("john@hotmail.se")) {
             int playerId = Integer.parseInt(chunks[2].substring(3));
             int playerTurn = Integer.parseInt(chunks[3].substring(7));
             String playerName = chunks[4].substring(5);
@@ -484,6 +487,7 @@ public class Game {
                 sendStart();
             }
         } else {
+            enemyName = chunks[4].substring(5);
             if(chunks.length > 5) {
                 sendStart();
             }

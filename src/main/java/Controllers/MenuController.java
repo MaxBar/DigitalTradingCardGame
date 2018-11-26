@@ -30,6 +30,7 @@ public class MenuController {
         if(queryHandler.checkPlayerEmail(email.getText())) {
             NetworkClient.getInstance().sendMessageToServer("LOGIN " + email.getText());
             System.out.println("LOGIN " + email.getText());
+            Game.getInstance().loginName = email.getText();
             /*Thread t = new Thread(() -> {
                 while(true) {
                     if(NetworkClient.getInstance().pollMessage().equals("STARTED")); {
