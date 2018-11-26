@@ -290,7 +290,7 @@ public class Server {
             BasicCard card = player.getHand().get(index);
 
             if (player.getMana() >= card.getManaCost()) {
-                player.setMana(player.getMana() - card.getManaCost());
+                //player.setMana(player.getMana() - card.getManaCost());
                 try {
                     network.sendMsgToClient(String.format("P%s PLACE_CREATURE_SUCCESS %s MP %s", board.getTurn(), index, player.getMana()),network.getClientIP().get(board.getTurn()));
                     network.sendMsgToClient(String.format("P%s PLACE_CREATURE_SUCCESS %s MP %s", board.getTurn(), card.getId(), player.getMana()),network.getClientIP().get(board.checkTurnCombat()));
@@ -362,7 +362,7 @@ public class Server {
                     network.sendMsgToClient(String.format("P%s CONSUMED_TRUE_ %s", board.getTurn(), index), network.getClientIP().get(board.getTurn()));
                 } else {
                     network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE CREATURE_%s_IS_CONSUMED", board.getTurn(), index),  network.getClientIP().get(board.getTurn()));
-                    network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE CREATURE_%s_IS_CONSUMED", board.getTurn(), index),  network.getClientIP().get(board.checkTurnCombat()));
+                    //network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE CREATURE_%s_IS_CONSUMED", board.getTurn(), index),  network.getClientIP().get(board.checkTurnCombat()));
                     //return "P" + board.getTurn() + " CREATURE " + index + " IS_CONSUMED";
                 }
             } else {
@@ -431,36 +431,6 @@ public class Server {
             network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE NO_ENEMY_CARDS_ON_TABLE", board.getTurn()),network.getClientIP().get(board.checkTurnCombat()));
             //return returnString + " FAILED NO_ENEMY_CREATURES";
         }
-        
-        
-    
-
-
-        /*if (board.getTurn() == board.PLAYER_A) {
-            // Player A turn
-            if (playerARoll > playerBRoll) {
-                dmg = playerARoll - playerBRoll;
-                System.out.println(dmg);
-                ((BasicCreatureCard) board.getPlayerBTableCards().get(defendingCreatureIndex)).setHealth((((BasicCreatureCard) board.getPlayerBTableCards().get(defendingCreatureIndex)).getHealth() - dmg));
-                return checkCreatureAlive(defendingCreatureIndex, board.PLAYER_B) ? attackMsg + success : successMsg + success;
-            } else {
-                dmg = playerBRoll - playerARoll;
-                System.out.println(dmg);
-                ((BasicCreatureCard) board.getPlayerATableCards().get(attackingCreatureIndex)).setHealth((((BasicCreatureCard) board.getPlayerATableCards().get(attackingCreatureIndex)).getHealth() - dmg));
-                return checkCreatureAlive(attackingCreatureIndex, board.PLAYER_A) ? attackMsg + fail : successMsg + fail;
-            }
-        } else {
-            // Player B turn
-            if (playerARoll > playerBRoll) {
-                dmg = playerARoll - playerBRoll;
-                ((BasicCreatureCard) board.getPlayerBTableCards().get(attackingCreatureIndex)).setHealth((((BasicCreatureCard) board.getPlayerBTableCards().get(attackingCreatureIndex)).getHealth() - dmg));
-                return checkCreatureAlive(attackingCreatureIndex, board.PLAYER_B) ? attackMsg + fail : successMsg + fail;
-            } else {
-                dmg = playerBRoll - playerARoll;
-                ((BasicCreatureCard) board.getPlayerATableCards().get(defendingCreatureIndex)).setHealth((((BasicCreatureCard) board.getPlayerATableCards().get(defendingCreatureIndex)).getHealth() - dmg));
-                return checkCreatureAlive(defendingCreatureIndex, board.PLAYER_A) ? attackMsg + success : successMsg + success;
-            }
-        }*/
     }
     
     private void useEnemyCreature(int index) throws IOException {
@@ -475,6 +445,7 @@ public class Server {
                     network.sendMsgToClient(String.format("P%s GRAVEYARD INCREMENT", board.getTurn()), network.getClientIP().get(board.getTurn()));
                     network.sendMsgToClient(String.format("P%s GRAVEYARD INCREMENT", board.getTurn()), network.getClientIP().get(board.checkTurnCombat()));
                     network.sendMsgToClient(String.format("P%s USE_MAGIC_CREATURE_SUCCESS %s", board.getTurn(), index), network.getClientIP().get(board.getTurn()));
+                    network.sendMsgToClient(String.format("ENEMY_MANA %s", player.getMana()), network.getClientIP().get(board.checkTurnCombat()));
                     int lastIndex = (enemyPlayer.getTable().size() - 1);
                     int dmg = ((BasicMagicCard) player.getHand().get(index)).getAbilityValue();
                     ((BasicCreatureCard) enemyPlayer.getTable().get(lastIndex)).decrementHealth(dmg);
