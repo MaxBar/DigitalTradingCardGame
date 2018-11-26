@@ -444,7 +444,7 @@ public class Game {
         //    player.setHealth(Integer.parseInt(chunks[4]));
         //    System.out.printf("Player %s took damage and has HP: %s\n", player.getName(), Integer.parseInt(chunks[4]));
         //} else
-            if (innerChunks[1].startsWith("DEAD") && chunks[2].startsWith("P" + player.getPlayerTurn())) {
+            /*if (innerChunks[1].startsWith("DEAD") && chunks[2].startsWith("P" + player.getPlayerTurn())) {
                 //TODO Add loss to highscore (in player)
                 System.out.println("You died, GAME OVER!");
                 boardController.gameOver("You died, GAME OVER!");
@@ -454,7 +454,7 @@ public class Game {
                 System.out.println("Enemy player died, YOU WON!");
                 boardController.gameOver("Enemy player died, YOU WON!");
                 System.exit(0);
-            }
+            }*/
          //else if(chunks[2].startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {//Game.getInstance().checkCombatTurn())) {
             //enemyHealth = Integer.parseInt(chunks[4]);
             //System.out.printf("Enemy Player took damage and has HP: %s\n", Integer.parseInt(chunks[4]));
