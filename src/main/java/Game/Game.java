@@ -381,7 +381,7 @@ public class Game {
                 }
                 player.setMana(Integer.parseInt(chunks[4]));
             }
-            
+
             System.out.printf("P%s placed %s\n", turn,  Game.getInstance().getPlayerTableCards().get(Game.getInstance().getPlayerTableCards().size() - 1).getName());
         } else {
             if (queryHandler.fetchCheckCardType(index) == 0) {
