@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="handCardAnchor" minHeight="-Infinity" minWidth="-Infinity" prefHeight="141.0" prefWidth="100.0" style="-fx-background-image: GREY;" stylesheets="@style/miniCardStyle.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+
+   <children>
+      <ImageView fx:id="cardImg" fitHeight="40.0" fitWidth="92.0" layoutX="4.0" layoutY="26.0" nodeOrientation="INHERIT" pickOnBounds="true">
+         <effect>
+            <Glow />
+         </effect></ImageView>
+      <Label fx:id="cardName" layoutX="7.0" layoutY="6.0" text="name">
+         <font>
+            <Font size="6.0" />
+         </font></Label>
+      <Label fx:id="cardManaCost" layoutX="66.0" layoutY="5.0" text="Manacost">
+         <font>
+            <Font size="6.0" />
+         </font></Label>
+      <Label fx:id="ability" layoutX="6.0" layoutY="17.0" text="Ability">
+         <font>
+            <Font size="6.0" />
+         </font></Label>
+      <Label fx:id="ap" layoutX="11.0" layoutY="122.0" text="ap">
+         <font>
+            <Font size="6.0" />
+         </font></Label>
+      <Label fx:id="dp" layoutX="36.0" layoutY="122.0" text="dp">
+         <font>
+            <Font size="6.0" />
+         </font></Label>
+      <Label fx:id="hp" layoutX="68.0" layoutY="122.0" text="hp">
+         <font>
+            <Font size="6.0" />
+         </font></Label>
+      <Label fx:id="special" layoutX="7.0" layoutY="100.0" prefHeight="20.0" prefWidth="22.0" text="special">
+         <font>
+            <Font size="6.0" />
+         </font></Label>
+      <Label fx:id="abilityDescription" alignment="CENTER" layoutX="3.0" layoutY="68.0" prefHeight="36.0" prefWidth="94.0" text="descripto">
+         <font>
+            <Font size="6.0" />
+         </font></Label>
+   </children>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+</AnchorPane>

@@ -38,35 +38,6 @@ public class Main2 extends Application {
             e.printStackTrace();
         }
 
-
-            /*while(true){
-                String text = client.pollMessage();
-                if(text != null){
-                    Game.getInstance().receiveCommand(text);
-                    System.out.println(text);
-                }else{
-                    break;
-                }
-            }*/
-    
-            /*while(true) {
-                while (true) {
-                    System.out.println("hej");
-                    String text = client.pollMessage();
-                    if (text != null) {
-                        try {
-                            Game.getInstance().receiveCommand(text);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        System.out.println(text);
-                    } else {
-                        break;
-                    }
-                }
-            }*/
-
-        
     Main2.primaryStage = primaryStage;
         Parent root = FXMLLoader.load(getClass().getResource("/menu.fxml"));
         primaryStage.setTitle("Candy Wars");
