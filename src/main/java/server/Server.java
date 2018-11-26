@@ -65,7 +65,7 @@ public class Server {
         int attackCreatureEnd = 26;
         if (input.startsWith("ATTACK")) {
             if (input.substring(attackStart).startsWith("P" + board.getTurn() + " ENEMY_CREATURE")) {
-               attackEnemyCreature(Integer.parseInt(input.substring(attackCreature, attackCreatureEnd)), Integer.parseInt(input.substring(28, 29)));// board.getPlayers()[board.checkTurnCombat()].getTable().size() - 1);//, Integer.parseInt(input.substring(defendCheck)));
+               attackEnemyCreature(Integer.parseInt(input.substring(attackCreature, attackCreatureEnd)), Integer.parseInt(input.substring(27, 28)));// board.getPlayers()[board.checkTurnCombat()].getTable().size() - 1);//, Integer.parseInt(input.substring(defendCheck)));
             } else if (input.substring(attackStart).startsWith("P" + board.getTurn() + " ENEMY_PLAYER")) {
                 attackEnemyPlayer(Integer.parseInt(input.substring(cardIndex)));
             }
