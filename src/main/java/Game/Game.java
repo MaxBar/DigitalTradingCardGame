@@ -196,7 +196,21 @@ public class Game {
             removeFromTable(serverOutput);
         }else if (serverOutput.substring(3).startsWith("CREATURE_HP")) {
             changeCreatureHp(serverOutput);
+        } else if(serverOutput.startsWith("ENEMY_MANA")) {
+            enemyMana = Integer.parseInt(serverOutput.substring(11));
         }
+        platform();
+    }
+    
+    private void platform() {
+        Platform.runLater(() -> {
+            try {
+                boardController.updateAll();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        
+        });
     }
 
     private void changeCreatureHp(String serverOutput) {
@@ -206,14 +220,14 @@ public class Game {
         } else {
             ((BasicCreatureCard)enemyTableCards.get(Integer.parseInt(chunks[2]))).setHealth(Integer.parseInt(chunks[3]));
         }
-        Platform.runLater(() -> {
+        /*Platform.runLater(() -> {
             try {
                 boardController.updateAll();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-        });
+        });*/
     }
 
     private void removeFromTable(String serverOutput) {
@@ -223,14 +237,14 @@ public class Game {
         } else {
             enemyTableCards.remove(Integer.parseInt(chunks[2]));
         }
-        Platform.runLater(() -> {
+        /*Platform.runLater(() -> {
             try {
                 boardController.updateAll();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-        });
+        });*/
     }
 
     private void changeConsumed(int index) {
@@ -243,28 +257,29 @@ public class Game {
         } else {
             ++enemyGraveyard;
         }
-        Platform.runLater(() -> {
+        /*Platform.runLater(() -> {
             try {
                 boardController.updateAll();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-        });
+        });*/
     }
 
     // TODO REMOVE GRAVEYARD INCREMENT AND MOVE IT CHANGE ON STRING RECEIVE FROM SERVER
-    private void useSuccess(String serverOutput){
+    private void useSuccess(String serverOutput) {
         String[] chunks = serverOutput.split(" ");
         System.out.printf("You used %s\n", player.getHand().get(Integer.parseInt(chunks[2])).getName());
         player.getHand().remove(Integer.parseInt(chunks[2]));
-        Platform.runLater(() -> {
+        /*Platform.runLater(() -> {
             try {
                 boardController.updateAll();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        });
+
+        });*/
         //Game.getInstance().incrementPlayerGraveyard();
 
     }
@@ -295,14 +310,14 @@ public class Game {
         } else if (queryHandler.fetchCheckCardType(id) == 1) {
             player.getHand().add(queryHandler.fetchSpecialAbilityCreatureCardId(id));
         }*/
-        Platform.runLater(() -> {
+        /*Platform.runLater(() -> {
             try {
                 boardController.updateAll();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-        });
+        });*/
     }
     
     private void dealtCards(String serverOutput) {
@@ -330,14 +345,14 @@ public class Game {
         }
 
 
-            Platform.runLater(() -> {
-                try {
-                    boardController.updateAll();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            /*Platform.runLater(() -> {
+            try {
+                boardController.updateAll();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-            });
+        });*/
 
 
         /*try {
@@ -364,6 +379,7 @@ public class Game {
                     ((SpecialAbilityCreatureCard) Game.getInstance().getPlayerTableCards().get(Game.getInstance().getPlayerTableCards().size() - 1)).decrementAbilityValue();
                 }
             }
+            player.setMana(player.getMana() - player.getHand().get(index).getManaCost());
             System.out.printf("P%s placed %s\n", turn,  Game.getInstance().getPlayerTableCards().get(Game.getInstance().getPlayerTableCards().size() - 1).getName());
         } else {
             if (queryHandler.fetchCheckCardType(index) == 0) {
@@ -375,17 +391,18 @@ public class Game {
                 //Game.getInstance().enemyHand --;
                 Game.getInstance().getEnemyTableCards().add(card);
             }
+            enemyMana -= enemyTableCards.get(index).getManaCost();
             System.out.printf("P%s placed %s\n", turn,  Game.getInstance().getEnemyTableCards().get(Game.getInstance().getEnemyTableCards().size() - 1).getName());
         }
 
-            Platform.runLater(() -> {
-                try {
-                    boardController.updateAll();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            /*Platform.runLater(() -> {
+            try {
+                boardController.updateAll();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-            });
+        });*/
     }
 
     private void placeFailure(String serverOutput){
@@ -419,10 +436,11 @@ public class Game {
         String[] chunks = serverOutput.split(" ");
         String[] innerChunks = chunks[2].split("_");
 
-        if (chunks[2].startsWith("P" + player.getPlayerTurn())) {
-            player.setHealth(Integer.parseInt(chunks[4]));
-            System.out.printf("Player %s took damage and has HP: %s\n", player.getName(), Integer.parseInt(chunks[4]));
-        } else if(innerChunks.length > 1) {
+        //if (chunks[2].startsWith("P" + player.getPlayerTurn())) {
+        //    player.setHealth(Integer.parseInt(chunks[4]));
+        //    System.out.printf("Player %s took damage and has HP: %s\n", player.getName(), Integer.parseInt(chunks[4]));
+        //} else
+        if(innerChunks.length > 1) {
             if (innerChunks[1].startsWith("DEAD") && chunks[2].startsWith("P" + player.getPlayerTurn())) {
             //TODO Add loss to highscore (in player)
             System.out.println("You died, GAME OVER!");
@@ -434,10 +452,11 @@ public class Game {
                 boardController.gameOver("Enemy player died, YOU WON!");
                 System.exit(0);
             }
-        } else if(chunks[2].startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {//Game.getInstance().checkCombatTurn())) {
-            enemyHealth = Integer.parseInt(chunks[4]);
-            System.out.printf("Enemy Player took damage and has HP: %s\n", Integer.parseInt(chunks[4]));
-        } else if (chunks[2].startsWith("CARD")) {
+        } //else if(chunks[2].startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {//Game.getInstance().checkCombatTurn())) {
+            //enemyHealth = Integer.parseInt(chunks[4]);
+            //System.out.printf("Enemy Player took damage and has HP: %s\n", Integer.parseInt(chunks[4]));
+        //}
+        else if (chunks[2].startsWith("CARD")) {
             String[] playerCard = chunks[2].split("_");
             String[] enemyCard = chunks[6].split("_");
             
@@ -464,16 +483,22 @@ public class Game {
                         playerTableCards.get(Integer.parseInt(playerCard[1])).getName(),
                         ((BasicCreatureCard)playerTableCards.get(Integer.parseInt(playerCard[1]))).getHealth());
             }
+        } else if (chunks[2].startsWith("P" + player.getPlayerTurn())) {
+            player.setHealth(Integer.parseInt(chunks[4]));
+            System.out.printf("Player %s took damage and has HP: %s\n", player.getName(), Integer.parseInt(chunks[4]));
+        } else if(chunks[2].startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {//Game.getInstance().checkCombatTurn())) {
+            enemyHealth = Integer.parseInt(chunks[4]);
+            System.out.printf("Enemy Player took damage and has HP: %s\n", Integer.parseInt(chunks[4]));
         }
 
-        Platform.runLater(() -> {
+        /*Platform.runLater(() -> {
             try {
                 boardController.updateAll();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-        });
+        });*/
     }
 
     private void login(String serverOutput) {
@@ -553,12 +578,13 @@ public class Game {
             System.out.printf("---------- %s's TURN ----------\n", player.getName());
         }
 
-        Platform.runLater(() -> {
+        /*Platform.runLater(() -> {
             try {
                 boardController.updateAll();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        });
+
+        });*/
     }
 }
