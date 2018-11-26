@@ -48,8 +48,8 @@
             </Label>
          </children>
       </AnchorPane>
-      <Line endX="1150.0" layoutX="622.0" layoutY="540.0" startX="-470.0" />
-      <Button fx:id="endTurnButton" layoutX="1767.0" layoutY="520.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="111.0" text="END TURN" />
+      <Line endX="982.0" layoutX="622.0" layoutY="540.0" startX="-470.0" />
+      <Button fx:id="endTurnButton" layoutX="1574.0" layoutY="522.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="111.0" text="END TURN" />
       <ProgressBar fx:id="playerHP" layoutX="14.0" layoutY="968.0" prefWidth="200.0" progress="0.0" style="-fx-background-color: BLUE;" />
       <ProgressBar fx:id="playerMana" layoutX="14.0" layoutY="1010.0" prefWidth="200.0" progress="0.0" style="-fx-background-color: RED;" />
       <ProgressBar fx:id="enemyHP" layoutX="14.0" layoutY="49.0" prefWidth="200.0" progress="0.0" style="-fx-background-color: BLUE;" />
@@ -129,5 +129,15 @@
       <HBox fx:id="enemyHand" layoutX="364.0" layoutY="23.0" prefHeight="139.0" prefWidth="841.0" />
       <HBox fx:id="playerTable" layoutX="372.0" layoutY="665.0" prefHeight="170.0" prefWidth="717.0" />
       <HBox fx:id="playerHand" layoutX="372.0" layoutY="890.0" prefHeight="139.0" prefWidth="841.0" spacing="5.0" />
+      <Label fx:id="enemyLabelTurn" layoutX="28.0" layoutY="421.0">
+         <font>
+            <Font size="46.0" />
+         </font>
+      </Label>
+      <Label fx:id="playerLabelTurn" layoutX="28.0" layoutY="588.0">
+         <font>
+            <Font size="46.0" />
+         </font>
+      </Label>
    </children>
 </Pane>

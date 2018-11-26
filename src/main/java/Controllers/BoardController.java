@@ -50,6 +50,10 @@ public class BoardController {
     @FXML ProgressBar enemyHP;
     @FXML ProgressBar enemyMana;
 
+    @FXML Label labelTurn;
+    @FXML Label playerLabelTurn;
+    @FXML Label enemyLabelTurn;
+
     @FXML Button endTurnButton;
     @FXML Button optionButton;
     @FXML Label playerGraveyardCard;
@@ -72,14 +76,30 @@ public class BoardController {
         updateEnemyHealth();
         updatePlayerMana();
         updateEnemyMana();
+        drawPlayerHandCards();
+        drawPlayerTableCards();
+        drawEnemyHand();
+        drawEnemyTableCards();
         updateDeck();
         updateGraveyard();
         drawPlayerHandCards();
         drawPlayerTableCards();
         drawEnemyHand();
         drawEnemyTableCards();
+        drawWhosTurn();
 
         endTurn();
+    }
+
+    private void drawWhosTurn() {
+        if(game.getPlayer().getPlayerTurn() == game.getTurn()){
+            playerLabelTurn.setText("YOUR TURN");
+            enemyLabelTurn.setText("");
+        } else {
+            enemyLabelTurn.setText("ENEMY TURN");
+            playerLabelTurn.setText("");
+        }
+
     }
 
     public void setStage(Stage stage) {
