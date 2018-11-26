@@ -60,6 +60,7 @@ public class BoardController {
     @FXML Label playerDeckCard;
     @FXML Label enemyDeckCard;
     @FXML Label enemyGraveyardCard;
+    @FXML Label gameOverLabel;
 
 
     @FXML
@@ -88,6 +89,11 @@ public class BoardController {
         drawEnemyTableCards();
         drawWhosTurn();
         endTurn();
+
+    }
+
+    public void gameOver(String wonOrLost) {
+            gameOverLabel.setText(wonOrLost);
     }
 
     private void drawWhosTurn() {
