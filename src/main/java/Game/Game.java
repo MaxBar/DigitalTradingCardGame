@@ -501,7 +501,7 @@ public class Game {
         }*/else if (chunks[2].startsWith("P" + player.getPlayerTurn())) {
     
     
-            if (innerChunks[1].startsWith("DEAD") && chunks[2].startsWith("P" + player.getPlayerTurn())) {
+            if (innerChunks.length > 1 && innerChunks[1].startsWith("DEAD") && chunks[2].startsWith("P" + player.getPlayerTurn())) {
                 //TODO Add loss to highscore (in player)
                 System.out.println("You died, GAME OVER!");
                 boardController.gameOver("You died, GAME OVER!");
@@ -514,7 +514,7 @@ public class Game {
         } else if(chunks[2].startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {//Game.getInstance().checkCombatTurn())) {
     
     
-            if (innerChunks[1].startsWith("DEAD") && chunks[2].startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {
+            if (innerChunks.length > 1 && innerChunks[1].startsWith("DEAD") && chunks[2].startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {
                 //TODO Add win to highscore (in player)
                 System.out.println("Enemy player died, YOU WON!");
                 boardController.gameOver("Enemy player died, YOU WON!");
