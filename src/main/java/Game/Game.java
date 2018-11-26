@@ -255,6 +255,13 @@ public class Game {
         String[] chunks = serverOutput.split(" ");
         System.out.printf("You used %s\n", player.getHand().get(Integer.parseInt(chunks[2])).getName());
         player.getHand().remove(Integer.parseInt(chunks[2]));
+        Platform.runLater(() -> {
+            try {
+                boardController.updateAll();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         //Game.getInstance().incrementPlayerGraveyard();
 
     }
@@ -539,5 +546,13 @@ public class Game {
         if (turn == player.getPlayerTurn()) {
             System.out.printf("---------- %s's TURN ----------\n", player.getName());
         }
+
+        Platform.runLater(() -> {
+            try {
+                boardController.updateAll();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }
