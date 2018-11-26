@@ -1,10 +1,12 @@
 package Game;
 
+import Controllers.MenuController;
 import NetworkClient.NetworkClient;
 import card.BasicCard;
 import card.BasicCreatureCard;
 import card.EKeyword;
 import card.SpecialAbilityCreatureCard;
+import javafx.application.Platform;
 import menu.GameMenu;
 //import net.bytebuddy.implementation.bytecode.Duplication;
 import player.Player;
@@ -139,7 +141,11 @@ public class Game {
     
     public void receiveCommand(String serverOutput) throws IOException {
         if(serverOutput.startsWith("LOGIN")) {
-            login(serverOutput);
+            try {
+                login(serverOutput);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else if(serverOutput.substring(3).startsWith("DEALT_CARDS") && (Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn())) {
             dealtCards(serverOutput);
         } else if(serverOutput.equals("STARTED")) {
@@ -415,6 +421,14 @@ public class Game {
     
     private void sendStart() {
         try {
+            Platform.runLater(() -> {
+                try {
+                    MenuController.renderGame();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                //update application thread
+            });
             NetworkClient.getInstance().sendMessageToServer("STARTED");
         } catch (IOException e) {
             e.printStackTrace();
