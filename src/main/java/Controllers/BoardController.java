@@ -183,7 +183,6 @@ public class BoardController {
     }
 
     void drawPlayerHandCards() throws IOException {
-        System.out.println("Player hand " + playerHand);
         if (playerHand != null) {
             playerHand.getChildren().clear();
         }
