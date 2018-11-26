@@ -287,7 +287,7 @@ public class BoardController {
                 ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardManaCost")))).setText("Mana Cost: " + String.valueOf(game.getEnemyTableCards().get(i).getManaCost()));
                 //((ImageView) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#cardImg")))).setImage(new Image(game.getEnemyTableCards().get(i).getImage()));
                 //((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#ability")))).setText("Ability: " + game.getPlayerTableCards().get(i).getAbility());
-                if (game.getPlayerTableCards().get(i) instanceof SpecialAbilityCreatureCard) {
+                if (game.getEnemyTableCards().get(i) instanceof SpecialAbilityCreatureCard) {
                     ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#special")))).setText("Special: " + ((SpecialAbilityCreatureCard) game.getEnemyTableCards().get(i)).getKeyword().name());
                     ((Label) cardPane.getChildren().get(cardPane.getChildren().indexOf(cardPane.lookup("#abilityDescription")))).setText("Description: " + ((SpecialAbilityCreatureCard) game.getEnemyTableCards().get(i)).getAbilityDescription());
 

@@ -91,6 +91,8 @@ public class MenuController {
         BoardController boardController = loader.getController();
         Game.getInstance().setBoardController(boardController);
         Main2.primaryStage.setScene(new Scene(pane, 1920, 1080));
+        Main2.primaryStage.setMaximized(true);
+        Main2.primaryStage.setFullScreen(true);
         Main2.primaryStage.show();
 
 
