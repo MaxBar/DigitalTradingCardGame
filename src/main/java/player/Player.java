@@ -14,8 +14,6 @@ public class Player {
     private int health;
     private int mana = 2;
     private List<BasicCard> hand;
-    //private Server server = Server.getInstance();
-    //private Server server = new Server();
 
     public Player(int id, String name, int playerTurn) {
         this.id = id;
@@ -24,7 +22,6 @@ public class Player {
         this.health = 20;
         this.mana = 1;
         this.hand = new ArrayList<>();
-        //this.server = new Server();
     }
   
     // Getters & Setters
@@ -79,64 +76,4 @@ public class Player {
     public void setHand(List<BasicCard> hand) {
         this.hand = hand;
     }
-    
-    public void receiveCommand(String serverOutput) {
-        if(serverOutput.startsWith("LOGIN")) {
-        
-        }
-    }
-
-    // Player Functions
-    /*public void receiveCard(int id) {
-        DummyDB db = new DummyDB();
-
-        for (BasicCard card: db.database) {
-            if(id == card.getId()){
-                hand.add(card);
-            }
-
-        }
-
-    }
-
-    public void receiveStartCards(int[] arrayOfId) {
-            for (int j = 0; j < 5; j++){
-                receiveCard(arrayOfId[j]);
-            }
-    }
-
-    public void drawCard() {
-    }
-
-    public void useCard() {
-    }
-
-    public void placeCard(int handIndex){
-        server.receiveCommand("PLACE_CARD " + handIndex);
-    }
-
-    public void attackCreature(int friendlyBoardIndex, int enemyBoardIndex){
-        server.receiveCommand("ATTACK " + friendlyBoardIndex + " ON ENEMY_CREATURE " + enemyBoardIndex);
-    }
-
-    public void attackPlayer(int friendlyBoardIndex) {
-        server.receiveCommand("ATTACK " + friendlyBoardIndex + " ON ENEMY_PLAYER");
-    }
-    public void decreaseMana(int manaCost){
-
-        mana =- manaCost;
-        
-    }
-
-    public int randomizeCreatureHp() {
-        return 0;
-    }
-
-    public void finishTurn() {
-        server.receiveCommand("END_TURN");
-    }
-
-    public void quitGame() {
-        server.receiveCommand("QUIT_GAME");
-    }*/
 }

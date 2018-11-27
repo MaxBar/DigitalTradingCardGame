@@ -65,7 +65,6 @@ public class BoardController {
 
     @FXML
     public void initialize() throws IOException{
-        //NetworkClient.getInstance().sendMessageToServer("STARTED");
         updateAll();
         endTurn();
         attackEnemyPlayer();
@@ -93,7 +92,7 @@ public class BoardController {
     }
 
     public void gameOver(String wonOrLost) {
-            gameOverLabel.setText(wonOrLost);
+        gameOverLabel.setText(wonOrLost);
     }
 
     private void drawWhosTurn() {
@@ -125,6 +124,8 @@ public class BoardController {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        choicePlayerCard = -1;
+                        choiceEnemyCard = -1;
                     }
                 }
             }});
@@ -136,8 +137,8 @@ public class BoardController {
     }
 
     private void updateDeck() {
-                playerDeckCard.setText("Deck:"+String.valueOf(game.getPlayerDeck()));
-                enemyDeckCard.setText("Deck:"+String.valueOf(game.getEnemyDeck()));
+        playerDeckCard.setText("Deck:"+String.valueOf(game.getPlayerDeck()));
+        enemyDeckCard.setText("Deck:"+String.valueOf(game.getEnemyDeck()));
     }
 
     private void endTurn() throws IOException{
@@ -240,8 +241,6 @@ public class BoardController {
                         }
                     }
                 });
-
-
                 playerHand.getChildren().add(i, cardPane);
 
             }
@@ -335,6 +334,8 @@ public class BoardController {
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
+                                choicePlayerCard = -1;
+                                choiceEnemyCard = -1;
                             }
                         }
                     }
