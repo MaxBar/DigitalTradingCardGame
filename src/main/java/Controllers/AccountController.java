@@ -29,13 +29,15 @@ public class AccountController {
         saveEnteredDetails();
         renderMenu();
 
-}
+    }
+
     public void renderMenu() throws Exception {
         Pane game = FXMLLoader.load(getClass().getResource("/menu.fxml"));
         Main2.primaryStage.setTitle("Candy Wars");
         Main2.primaryStage.setScene(new Scene(game, 1280, 720));
         Main2.primaryStage.show();
     }
+
     void saveEnteredDetails(){
         name = accountName.getText();
         email = accountEmail.getText();
@@ -48,10 +50,9 @@ public class AccountController {
             System.out.println("No email found");
         }
     }
+
     boolean checkIfEmailExists(){
         return queryHandler.checkPlayerEmail(email);
 
     }
-
-
 }

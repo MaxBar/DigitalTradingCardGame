@@ -1,5 +1,6 @@
 package Game;
 
+import Controllers.BoardController;
 import Controllers.MenuController;
 import NetworkClient.NetworkClient;
 import card.BasicCard;
@@ -7,7 +8,6 @@ import card.BasicCreatureCard;
 import card.EKeyword;
 import card.SpecialAbilityCreatureCard;
 import javafx.application.Platform;
-import menu.GameMenu;
 //import net.bytebuddy.implementation.bytecode.Duplication;
 import player.Player;
 import repository.QueryHandler;
@@ -15,14 +15,15 @@ import repository.QueryHandler;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class Game {
     private static Game instance = null;
     
     QueryHandler queryHandler;
     private int started = 0;
-    private GameMenu gameMenu;
+    
+    public String loginName;
+    public String enemyName;
     // Player
     private Player player;
     private List<BasicCard> playerTableCards = new ArrayList<>();
@@ -63,9 +64,13 @@ public class Game {
     private int enemyDeck = 20;
     private int enemyHealth = 20;
     private int enemyMana = 1;
-    
+
+    BoardController boardController;
+
+    public void setBoardController(BoardController boardController) {
+        this.boardController = boardController;
+    }
     private Game() {
-        //gameMenu = new GameMenu();
         queryHandler = new QueryHandler();
         playerTableCards = new ArrayList<>();
         enemyTableCards = new ArrayList<>();
@@ -96,12 +101,7 @@ public class Game {
         } else {
             return turn;
         }
-        //return turn == playerTurn ? 1 : playerTurn;
     }
-
-    /*public void setPlayer(Player player) {
-        this.player = player;
-    }*/
     
     public int getPlayerGraveyard() {
         return playerGraveyard;
@@ -165,7 +165,7 @@ public class Game {
             useSuccess(serverOutput);
         }else if(serverOutput.substring(3).startsWith("USE_MAGIC_CREATURE_FAILURE") && Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn()){
             useFailure(serverOutput);
-        }else if (serverOutput.substring(3).startsWith("ATTACK_RESULT_FAILURE")){
+        }else if (serverOutput.substring(3).startsWith("ATTACK_RESULT_FAILURE") && Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn()){
             attackFailure(serverOutput);
         }else if (serverOutput.substring(3).startsWith("ATTACK_RESULT_SUCCESS")){
             attackSuccess(serverOutput);
@@ -185,7 +185,20 @@ public class Game {
             removeFromTable(serverOutput);
         }else if (serverOutput.substring(3).startsWith("CREATURE_HP")) {
             changeCreatureHp(serverOutput);
+        } else if(serverOutput.startsWith("ENEMY_MANA")) {
+            enemyMana = Integer.parseInt(serverOutput.substring(11));
         }
+        platform();
+    }
+    
+    private void platform() {
+        Platform.runLater(() -> {
+            try {
+                boardController.updateAll();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private void changeCreatureHp(String serverOutput) {
@@ -195,7 +208,6 @@ public class Game {
         } else {
             ((BasicCreatureCard)enemyTableCards.get(Integer.parseInt(chunks[2]))).setHealth(Integer.parseInt(chunks[3]));
         }
-        GameMenu.printBoard();
     }
 
     private void removeFromTable(String serverOutput) {
@@ -205,7 +217,6 @@ public class Game {
         } else {
             enemyTableCards.remove(Integer.parseInt(chunks[2]));
         }
-        GameMenu.printBoard();
     }
 
     private void changeConsumed(int index) {
@@ -213,22 +224,19 @@ public class Game {
     }
 
     private void incrementGraveyard(String serverOutput) {
-        if(Integer.parseInt(serverOutput.substring(1, 2)) == turn) {
+        if(Integer.parseInt(serverOutput.substring(1, 2)) == player.getPlayerTurn()) {
             ++playerGraveyard;
         } else {
             ++enemyGraveyard;
         }
-        GameMenu.printBoard();
     }
 
-    // TODO REMOVE GRAVEYARD INCREMENT AND MOVE IT CHANGE ON STRING RECEIVE FROM SERVER
-    private void useSuccess(String serverOutput){
+    private void useSuccess(String serverOutput) {
         String[] chunks = serverOutput.split(" ");
         System.out.printf("You used %s\n", player.getHand().get(Integer.parseInt(chunks[2])).getName());
         player.getHand().remove(Integer.parseInt(chunks[2]));
-        //Game.getInstance().incrementPlayerGraveyard();
-
     }
+
     private void useFailure(String serverOutput){
         String[] chunks = serverOutput.split(" ");
         if(chunks[2].equals("NO_MANA")) {
@@ -240,7 +248,6 @@ public class Game {
 
     private void dealtCard(String serverOutput) {
         String[] chunks = serverOutput.split(" ");
-        //int id = Integer.parseInt(chunks[1]);
         String[] innerChunks = chunks[1].split("_");
 
         if (innerChunks[0].startsWith("S")) {
@@ -250,43 +257,22 @@ public class Game {
         }else if (innerChunks[0].startsWith("M")) {
             player.getHand().add(queryHandler.fetchMagicCardId(Integer.parseInt(innerChunks[1])));
         }
-        /*
-        if (queryHandler.fetchCheckCardType(id) == 0) {
-            player.getHand().add(queryHandler.fetchCreatureCardId(id));
-        } else if (queryHandler.fetchCheckCardType(id) == 1) {
-            player.getHand().add(queryHandler.fetchSpecialAbilityCreatureCardId(id));
-        }*/
-        GameMenu.printBoard();
     }
     
     private void dealtCards(String serverOutput) {
         String cards = serverOutput.substring(15);
         String[] chunks = cards.split(", ");
+
         for(int i = 0; i < chunks.length; ++i) {
             String[] innerChunks = chunks[i].split("_");
 
             if (chunks[i].startsWith("S")) {
                 player.getHand().add(queryHandler.fetchSpecialAbilityCreatureCardId(Integer.parseInt(innerChunks[1])));
-            }else if (chunks[i].startsWith("B")) {
+            } else if (chunks[i].startsWith("B")) {
                 player.getHand().add(queryHandler.fetchCreatureCardId(Integer.parseInt(innerChunks[1])));
-            }else if (chunks[i].startsWith("M")) {
+            } else if (chunks[i].startsWith("M")) {
                 player.getHand().add(queryHandler.fetchMagicCardId(Integer.parseInt(innerChunks[1])));
             }
-            /*cardIndices[i] = Integer.parseInt(chunks[i]);
-            if (queryHandler.fetchCheckCardType(cardIndices[i]) == 0) {
-                player.getHand().add(queryHandler.fetchCreatureCardId(cardIndices[i]));
-            } else if (queryHandler.fetchCheckCardType(cardIndices[i]) == 1) {
-                player.getHand().add(queryHandler.fetchSpecialAbilityCreatureCardId(cardIndices[i]));
-            }*/
-        }
-        for(int i = 0; i < player.getHand().size(); ++i) {
-            System.out.println(player.getHand().get(i));
-        }
-        try {
-            gameMenu = new GameMenu();
-            gameMenu.rootMenu.start();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -298,6 +284,7 @@ public class Game {
                 BasicCreatureCard card = (BasicCreatureCard)player.getHand().get(index);
                 player.getHand().remove(index);
                 Game.getInstance().getPlayerTableCards().add(card);
+                player.setMana(Integer.parseInt(chunks[4]));
             } else if (player.getHand().get(index) instanceof SpecialAbilityCreatureCard) {
                 SpecialAbilityCreatureCard card = (SpecialAbilityCreatureCard) player.getHand().get(index);
                 player.getHand().remove(index);
@@ -305,21 +292,19 @@ public class Game {
                 if(((SpecialAbilityCreatureCard)Game.getInstance().getPlayerTableCards().get(Game.getInstance().getPlayerTableCards().size() - 1)).getKeyword() == EKeyword.COOLDOWN) {
                     ((SpecialAbilityCreatureCard) Game.getInstance().getPlayerTableCards().get(Game.getInstance().getPlayerTableCards().size() - 1)).decrementAbilityValue();
                 }
+                player.setMana(Integer.parseInt(chunks[4]));
             }
-            System.out.printf("P%s placed %s\n", turn,  Game.getInstance().getPlayerTableCards().get(Game.getInstance().getPlayerTableCards().size() - 1).getName());
         } else {
             if (queryHandler.fetchCheckCardType(index) == 0) {
                 BasicCreatureCard card = queryHandler.fetchCreatureCardId(index);
-                //Game.getInstance().enemyHand --;
                 Game.getInstance().getEnemyTableCards().add(card);
+                enemyMana = Integer.parseInt(chunks[4]);
             } else if (queryHandler.fetchCheckCardType(index) == 1) {
                 SpecialAbilityCreatureCard card = queryHandler.fetchSpecialAbilityCreatureCardId(index);
-                //Game.getInstance().enemyHand --;
                 Game.getInstance().getEnemyTableCards().add(card);
+                enemyMana = Integer.parseInt(chunks[4]);
             }
-            System.out.printf("P%s placed %s\n", turn,  Game.getInstance().getEnemyTableCards().get(Game.getInstance().getEnemyTableCards().size() - 1).getName());
         }
-        GameMenu.printBoard();
     }
 
     private void placeFailure(String serverOutput){
@@ -353,57 +338,47 @@ public class Game {
         String[] chunks = serverOutput.split(" ");
         String[] innerChunks = chunks[2].split("_");
 
-        if (chunks[2].startsWith("P" + player.getPlayerTurn())) {
-            player.setHealth(Integer.parseInt(chunks[4]));
-            System.out.printf("Player %s took damage and has HP: %s\n", player.getName(), Integer.parseInt(chunks[4]));
-        } else if(innerChunks.length > 1) {
-            if (innerChunks[1].startsWith("DEAD") && chunks[2].startsWith("P" + player.getPlayerTurn())) {
-            //TODO Add loss to highscore (in player)
-            System.out.println("You died, GAME OVER!");
-            System.exit(0);
-            } else if(innerChunks[1].startsWith("DEAD") && chunks[2].startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {
-                //TODO Add win to highscore (in player)
-                System.out.println("Enemy player died, YOU WON!");
-                System.exit(0);
-            }
-        } else if(chunks[2].startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {//Game.getInstance().checkCombatTurn())) {
-            enemyHealth = Integer.parseInt(chunks[4]);
-            System.out.printf("Enemy Player took damage and has HP: %s\n", Integer.parseInt(chunks[4]));
-        } else if (chunks[2].startsWith("CARD")) {
+        if (chunks[2].startsWith("CARD")) {
             String[] playerCard = chunks[2].split("_");
             String[] enemyCard = chunks[6].split("_");
             
-            if(serverOutput.startsWith("P" + player.getPlayerTurn())) {
-                ((BasicCreatureCard)playerTableCards.get(Integer.parseInt(playerCard[1]))).setHealth(Integer.parseInt(chunks[4]));
-                System.out.printf("Your card %s took damage and have HP: %s",
-                        playerTableCards.get(Integer.parseInt(playerCard[1])).getName(),
-                        ((BasicCreatureCard)playerTableCards.get(Integer.parseInt(playerCard[1]))).getHealth());
-            } else if(serverOutput.startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {
-                ((BasicCreatureCard)enemyTableCards.get(Integer.parseInt(playerCard[1]))).setHealth(Integer.parseInt(chunks[4]));
-                System.out.printf("Your card %s took damage and have HP: %s",
-                        enemyTableCards.get(Integer.parseInt(playerCard[1])).getName(),
-                        ((BasicCreatureCard)enemyTableCards.get(Integer.parseInt(playerCard[1]))).getHealth());
-            }
+            int playerHP = Integer.parseInt(chunks[4]);
+            int enemyHP = Integer.parseInt(chunks[8]);
+            int playerIndex = Integer.parseInt(playerCard[1]);
+            int enemyIndex = Integer.parseInt(enemyCard[2]);
 
-            if(enemyCard[0].startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {
-                ((BasicCreatureCard)enemyTableCards.get(Integer.parseInt(enemyCard[2]))).setHealth(Integer.parseInt(chunks[8]));
-                System.out.printf("Enemy card %s took damage and have HP: %s",
-                        enemyTableCards.get(Integer.parseInt(enemyCard[2])).getName(),
-                        ((BasicCreatureCard)enemyTableCards.get(Integer.parseInt(enemyCard[2]))).getHealth());
-            } else if (enemyCard[0].startsWith("P" + player.getPlayerTurn())) {
-                ((BasicCreatureCard)playerTableCards.get(Integer.parseInt(enemyCard[2]))).setHealth(Integer.parseInt(chunks[8]));
-                System.out.printf("Enemy card %s took damage and have HP: %s",
-                        playerTableCards.get(Integer.parseInt(enemyCard[2])).getName(),
-                        ((BasicCreatureCard)playerTableCards.get(Integer.parseInt(enemyCard[2]))).getHealth());
+            if(serverOutput.startsWith("P" + player.getPlayerTurn())) {
+                ((BasicCreatureCard)playerTableCards.get(playerIndex)).setHealth(playerHP);
+                ((BasicCreatureCard)enemyTableCards.get(enemyIndex)).setHealth(enemyHP);
+            } else if(serverOutput.startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {
+                ((BasicCreatureCard)enemyTableCards.get(playerIndex)).setHealth(playerHP);
+                ((BasicCreatureCard)playerTableCards.get(enemyIndex)).setHealth(enemyHP);
+            }
+        } else if (chunks[2].startsWith("P" + player.getPlayerTurn())) {
+            if (innerChunks.length > 1 && innerChunks[1].startsWith("DEAD") && chunks[2].startsWith("P" + player.getPlayerTurn())) {
+                System.out.println("You died, GAME OVER!");
+                boardController.gameOver("You died, GAME OVER!");
+                System.exit(0);
+            } else {
+                player.setHealth(Integer.parseInt(chunks[4]));
+                System.out.printf("Player %s took damage and has HP: %s\n", player.getName(), Integer.parseInt(chunks[4]));
+            }
+        } else if(chunks[2].startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {
+            if (innerChunks.length > 1 && innerChunks[1].startsWith("DEAD") && chunks[2].startsWith("P" + checkCombatTurn(player.getPlayerTurn()))) {
+                System.out.println("Enemy player died, YOU WON!");
+                boardController.gameOver("Enemy player died, YOU WON!");
+                System.exit(0);
+            } else {
+                enemyHealth = Integer.parseInt(chunks[4]);
+                System.out.printf("Enemy Player took damage and has HP: %s\n", Integer.parseInt(chunks[4]));
             }
         }
-        GameMenu.printBoard();
     }
 
     private void login(String serverOutput) {
         String [] chunks = serverOutput.split (" ");
         String start = "";
-        if(chunks[1].equals("john@hotmail.se")) {
+        if(chunks[1].equals(loginName)) {
             int playerId = Integer.parseInt(chunks[2].substring(3));
             int playerTurn = Integer.parseInt(chunks[3].substring(7));
             String playerName = chunks[4].substring(5);
@@ -413,6 +388,7 @@ public class Game {
                 sendStart();
             }
         } else {
+            enemyName = chunks[4].substring(5);
             if(chunks.length > 5) {
                 sendStart();
             }
@@ -421,14 +397,17 @@ public class Game {
     
     private void sendStart() {
         try {
-            Platform.runLater(() -> {
-                try {
-                    MenuController.renderGame();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                //update application thread
-            });
+            try {
+                Platform.runLater( () -> {
+                    try {
+                        MenuController.renderGame();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             NetworkClient.getInstance().sendMessageToServer("STARTED");
         } catch (IOException e) {
             e.printStackTrace();
@@ -439,7 +418,6 @@ public class Game {
         try {
             NetworkClient.getInstance().sendMessageToServer("START_CARDS");
             NetworkClient.getInstance().sendMessageToServer("END_TURN");
-            //gameMenu.rootMenu();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -460,10 +438,7 @@ public class Game {
                 card.setIsConsumed(false);
             }
         }
-        
-        /*for (BasicCard card : playerTableCards) {
-            card.setIsConsumed(false);
-        }*/
+
         if(round > 0){
             NetworkClient.getInstance().sendMessageToServer(String.format("P%s_DRAW", player.getPlayerTurn()));
         }

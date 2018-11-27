@@ -14,35 +14,35 @@
          <effect>
             <Glow />
          </effect></ImageView>
-      <Label fx:id="cardName" layoutX="7.0" layoutY="6.0" text="name">
+      <Label fx:id="cardName" layoutX="7.0" layoutY="6.0">
          <font>
             <Font size="6.0" />
          </font></Label>
-      <Label fx:id="cardManaCost" layoutX="66.0" layoutY="5.0" text="Manacost">
+      <Label fx:id="cardManaCost" layoutX="66.0" layoutY="5.0">
          <font>
             <Font size="6.0" />
          </font></Label>
-      <Label fx:id="ability" layoutX="6.0" layoutY="17.0" text="Ability">
+      <Label fx:id="ability" layoutX="6.0" layoutY="17.0">
          <font>
             <Font size="6.0" />
          </font></Label>
-      <Label fx:id="ap" layoutX="11.0" layoutY="122.0" text="ap">
+      <Label fx:id="ap" layoutX="11.0" layoutY="122.0">
          <font>
             <Font size="6.0" />
          </font></Label>
-      <Label fx:id="dp" layoutX="36.0" layoutY="122.0" text="dp">
+      <Label fx:id="dp" layoutX="36.0" layoutY="122.0">
          <font>
             <Font size="6.0" />
          </font></Label>
-      <Label fx:id="hp" layoutX="68.0" layoutY="122.0" text="hp">
+      <Label fx:id="hp" layoutX="68.0" layoutY="122.0">
          <font>
             <Font size="6.0" />
          </font></Label>
-      <Label fx:id="special" layoutX="7.0" layoutY="100.0" prefHeight="20.0" prefWidth="22.0" text="special">
+      <Label fx:id="special" layoutX="7.0" layoutY="100.0" prefHeight="20.0" prefWidth="22.0">
          <font>
             <Font size="6.0" />
          </font></Label>
-      <Label fx:id="abilityDescription" alignment="CENTER" layoutX="3.0" layoutY="68.0" prefHeight="36.0" prefWidth="94.0" text="descripto">
+      <Label fx:id="abilityDescription" alignment="CENTER" layoutX="3.0" layoutY="68.0" prefHeight="36.0" prefWidth="94.0">
          <font>
             <Font size="6.0" />
          </font></Label>

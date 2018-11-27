@@ -1,5 +1,7 @@
 package main;
 
+import Controllers.BoardController;
+import Controllers.MenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -38,7 +40,7 @@ public class Main2 extends Application {
             e.printStackTrace();
         }
 
-    Main2.primaryStage = primaryStage;
+        Main2.primaryStage = primaryStage;
         Parent root = FXMLLoader.load(getClass().getResource("/menu.fxml"));
         primaryStage.setTitle("Candy Wars");
         primaryStage.setScene(new Scene(root, 1920, 1080));
@@ -46,7 +48,6 @@ public class Main2 extends Application {
         primaryStage.setFullScreen(true);
         primaryStage.show();
         inputThread.start();
-
     }
 
     private static Thread inputThread = new Thread() {
@@ -54,7 +55,7 @@ public class Main2 extends Application {
             while (true) {
                 while (true) {
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(50);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -76,10 +77,6 @@ public class Main2 extends Application {
 
 
     public static void main(String[] args) {
-        //inputThread.start();
         launch(args);
     }
-
-
-
 }

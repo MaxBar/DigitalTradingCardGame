@@ -27,4 +27,8 @@ public class BasicMagicCard extends BasicCard {
     public void setAbilityValue(int abilityValue) {
         this.abilityValue = abilityValue;
     }
+
+    public EKeyword getKeyword() {
+        return keyword;
+    }
 }
