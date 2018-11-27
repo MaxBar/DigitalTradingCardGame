@@ -1,12 +1,7 @@
 package player;
 
 import card.BasicCard;
-import card.BasicCreatureCard;
-import repository.DummyDB;
-
-import java.net.DatagramSocket;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,18 +26,7 @@ public class Player {
         this.hand = new ArrayList<>();
         this.table = new ArrayList<>();
         this.graveyard = new ArrayList<>();
-        deck = new ArrayList<>();/*(Arrays.asList(
-                new BasicCreatureCard(1, "Marshmallow", "White soft treat", "does not exist yet", 0, 1, 2, 1, 2),
-                new BasicCreatureCard(2, "Plopp", "Chocolate with gooey caramel center", "does not exist", 0, 2, 1, 1, 2),
-                new BasicCreatureCard(3, "Smash", "Crispy chocolate treat", "does not exist yet", 0, 5, 1, 1, 2),
-                new BasicCreatureCard(4, "Crazy face", "Sour chewy candy", "does not exist yet", 0, 1, 1, 1, 2),
-                new BasicCreatureCard(5, "Djungelvrål", "Licorice candy that makes you scream", "does not exist yet", 0, 2, 2, 1, 2),
-                new BasicCreatureCard(6, "Nick's", "Sugar-free candy", "does not exist yet", 0, 3, 3, 1, 2),
-                new BasicCreatureCard(7, "Daim", "Chocolate with hard filling", "does not exist yet", 0, 3, 5, 1, 2),
-                new BasicCreatureCard(8, "Bounty", "Chocolate with coconut filling", "does not exist yet", 0, 2, 1, 1, 2),
-                new BasicCreatureCard(9, "Hubba Bubba", "Sweet chewing-gum", "does not exist yet", 0, 3, 3, 1, 2),
-                new BasicCreatureCard(10, "Raisin", "Dried up grapes pretending to be candy", "does not exist yet", 0, 1, 1, 1, 2))
-        );*/
+        deck = new ArrayList<>();
         Collections.shuffle(deck);
     }
     
@@ -118,56 +102,6 @@ public class Player {
     public void setDeck(List<BasicCard> deck) {
         this.deck = deck;
     }
-
-    /*// Player Functions
-    public void receiveCard(int id) {
-        DummyDB db = new DummyDB();
-
-        for (BasicCard card: db.database) {
-            if(id == card.getId()){
-                hand.add(card);
-            }
-
-        }
-
-    }
-
-    public void receiveStartCards(int[] arrayOfId) {
-            for (int j = 0; j < 5; j++){
-                receiveCard(arrayOfId[j]);
-            }
-    }
-
-    public void drawCard() {
-    }
-
-    public void useCard() {
-    }
-
-    public void placeCard(int handIndex){
-        server.receiveCommand("PLACE_CARD " + handIndex);
-    }
-
-    public void attackCreature(int friendlyBoardIndex, int enemyBoardIndex){
-        server.receiveCommand("ATTACK " + friendlyBoardIndex + " ON ENEMY_CREATURE " + enemyBoardIndex);
-    }
-
-    public void attackPlayer(int friendlyBoardIndex) {
-        server.receiveCommand("ATTACK " + friendlyBoardIndex + " ON ENEMY_PLAYER");
-    }
-
-
-    public int randomizeCreatureHp() {
-        return 0;
-    }
-
-    public void finishTurn() {
-        server.receiveCommand("END_TURN");
-    }
-
-    public void quitGame() {
-        server.receiveCommand("QUIT_GAME");
-    }*/
 
     public void decreaseMana(int manaCost){
 

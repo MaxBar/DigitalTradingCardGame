@@ -6,9 +6,7 @@ import player.Player;
 import repository.QueryHandler;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -17,24 +15,16 @@ public class Server {
 
     // Fields
     private static Server server = null;
-    
-    //private String command;
     private SecureRandom sRandom = new SecureRandom();
     private QueryHandler queryHandler = new QueryHandler();
     private boolean started = false;
     private boolean isDeckPopulated = false;
     private int playersCon;
-    //private Game game = Game.getInstance();
-    public Board board = new Board();
-    NetworkServer network = NetworkServer.getInstance();
+    private Board board = new Board();
+    private NetworkServer network = NetworkServer.getInstance();
 
     private Server() {
         playersCon = 0;
-        //game.setPlayerADeck(board.getPlayerADeck().size());
-        //game.setPlayerBDeck(board.getPlayerBDeck().size());
-        //shuffleDeck(board.getPlayerADeck());
-        //shuffleDeck(board.getPlayerBDeck());
-        this.board = board;
     }
 
     public static Server getInstance() {
@@ -43,29 +33,15 @@ public class Server {
         }
         return server;
     }
-
-    //endregion
-
-    // server.Server functions1
-    /*public String getCommand() {
-        return command;
-    }
-
-    public void setCommand(String command) {
-        this.command = command;
-    }*/
     
-    public void receiveCommand(String input) throws IOException {
-        //int secondaryCheck = 12;
+    void receiveCommand(String input) throws IOException {
         int attackStart = 7;
-        //int attackEnd = 8;
-        int defendCheck = 27;
         int cardIndex = 23;
         int attackCreature = 25;
         int attackCreatureEnd = 26;
         if (input.startsWith("ATTACK")) {
             if (input.substring(attackStart).startsWith("P" + board.getTurn() + " ENEMY_CREATURE")) {
-               attackEnemyCreature(Integer.parseInt(input.substring(attackCreature, attackCreatureEnd)), Integer.parseInt(input.substring(27, 28)));// board.getPlayers()[board.checkTurnCombat()].getTable().size() - 1);//, Integer.parseInt(input.substring(defendCheck)));
+               attackEnemyCreature(Integer.parseInt(input.substring(attackCreature, attackCreatureEnd)), Integer.parseInt(input.substring(27)));// board.getPlayers()[board.checkTurnCombat()].getTable().size() - 1);//, Integer.parseInt(input.substring(defendCheck)));
             } else if (input.substring(attackStart).startsWith("P" + board.getTurn() + " ENEMY_PLAYER")) {
                 attackEnemyPlayer(Integer.parseInt(input.substring(cardIndex)));
             }
@@ -97,12 +73,9 @@ public class Server {
                 isDeckPopulated = true;
             }
             dealCards(board.getTurn());
-            //board.increaseTurn(1);
         } else if (input.startsWith("P" + board.getTurn() + "_DRAW")) {
             System.out.println("I Draw");
             dealTurnCard();
-            //network.sendMsgToClient(String.format("P%s DEALT_CARD %s", board.getTurn(), Integer.toString(dealCard(board.getTurn()))), network.getClientIP().get(board.getTurn()));
-            //+ board.getTurn() + " " + Integer.toString(dealCard(board.getTurn()));
         } else {
 
         }
@@ -120,7 +93,7 @@ public class Server {
         return sRandom.nextInt(max - min + 1) + min;
     }
 
-    public void login(String input) {
+    private void login(String input) {
         String email = input.substring(6);
         String name = retrievePlayerName(email);
         int id = retrievePlayerId(email);
@@ -132,8 +105,6 @@ public class Server {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            //String.format("LOGIN %s ID_%s PLAYER_%s NAME_%s", email, id, pos, name);
         } else {
             int pos = 1;
             board.addPlayer(new Player(id, name), pos);
@@ -153,7 +124,7 @@ public class Server {
         }
     }
 
-    public void populateDecks() {
+    private void populateDecks() {
         int deckId;
         if (board.getPlayers()[0].getId() == 8) {
             deckId = 1;
@@ -204,7 +175,7 @@ public class Server {
     }
 
 
-    public void dealCards(int playerTurn) throws IOException {
+    private void dealCards(int playerTurn) throws IOException {
         int handSize = 5;
         String ids[] = new String[handSize];
 
@@ -213,8 +184,6 @@ public class Server {
                 ids[i] = dealCard();
             }
             StringBuilder id = new StringBuilder();
-            System.out.println(String.valueOf(ids));
-            //String[] temp = Arrays.toString(ids).split("[\\[\\]]")[1].split(", ");
             for (String id1 : ids) {
                 id.append(id1).append(", ");
             }
@@ -224,21 +193,16 @@ public class Server {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //String.format("P%s DEALT_CARDS %s", playerTurn, id.toString());
-            //return "DEALT_CARDS P" + playerTurn + " " + id.toString();
         } else {
             for (int i = 0; i < handSize; i++) {
                 ids[i] = dealCard();
             }
-
-            //System.out.println(Arrays.toString(ids).split("[\\[\\]]")[1].split(", "));
-            //return Arrays.toString(ids).split("[\\[\\]]")[1].split(", ");
         }
 
 
     }
 
-    public String dealCard() throws IOException {
+    private String dealCard() throws IOException {
         String id;
         List<BasicCard> deck = board.getPlayers()[board.getTurn()].getDeck();
         id = Integer.toString(deck.get(deck.size() - 1).id);
@@ -251,16 +215,15 @@ public class Server {
         }
         board.getPlayers()[board.getTurn()].getHand().add(deck.get(deck.size() - 1));
         if(deck.size() > 0) {
-        //if(board.getPlayers()[board.getTurn()].getHand().size() > 0) {
-            network.sendMsgToClient(String.format("ENEMY_HAND INCREMENT"), network.getClientIP().get(board.checkTurnCombat()));
-            network.sendMsgToClient(String.format("ENEMY_DECK DECREMENT"), network.getClientIP().get(board.checkTurnCombat()));
-            network.sendMsgToClient(String.format("PLAYER_DECK DECREMENT"), network.getClientIP().get(board.getTurn()));
+            network.sendMsgToClient("ENEMY_HAND INCREMENT", network.getClientIP().get(board.checkTurnCombat()));
+            network.sendMsgToClient("ENEMY_DECK DECREMENT", network.getClientIP().get(board.checkTurnCombat()));
+            network.sendMsgToClient("PLAYER_DECK DECREMENT", network.getClientIP().get(board.getTurn()));
         }
         deck.remove(deck.size() - 1);
         return id;
     }
     
-    public String dealTurnCard() throws IOException {
+    private String dealTurnCard() throws IOException {
         String id;
         List<BasicCard> deck = board.getPlayers()[board.getTurn()].getDeck();
         id = Integer.toString(deck.get(deck.size() - 1).id);
@@ -273,10 +236,9 @@ public class Server {
         }
         board.getPlayers()[board.getTurn()].getHand().add(deck.get(deck.size() - 1));
         if(deck.size() > 0) {
-        //if(board.getPlayers()[board.getTurn()].getHand().size() > 0) {
-            network.sendMsgToClient(String.format("ENEMY_HAND INCREMENT"), network.getClientIP().get(board.checkTurnCombat()));
-            network.sendMsgToClient(String.format("ENEMY_DECK DECREMENT"), network.getClientIP().get(board.checkTurnCombat()));
-            network.sendMsgToClient(String.format("PLAYER_DECK DECREMENT"), network.getClientIP().get(board.getTurn()));
+            network.sendMsgToClient("ENEMY_HAND INCREMENT", network.getClientIP().get(board.checkTurnCombat()));
+            network.sendMsgToClient("ENEMY_DECK DECREMENT", network.getClientIP().get(board.checkTurnCombat()));
+            network.sendMsgToClient("PLAYER_DECK DECREMENT", network.getClientIP().get(board.getTurn()));
             network.sendMsgToClient(String.format("DRAW_CARD %s", id), network.getClientIP().get(board.getTurn()));
         }
         deck.remove(deck.size() - 1);
@@ -284,17 +246,16 @@ public class Server {
     }
 
 
-    public void placeCard(int index) throws IOException {
+    private void placeCard(int index) throws IOException {
         Player player = board.getPlayers()[board.getTurn()];
         if (player.getTable().size() <= board.maxTableSize) {
             BasicCard card = player.getHand().get(index);
 
             if (player.getMana() >= card.getManaCost()) {
-                //player.setMana(player.getMana() - card.getManaCost());
                 try {
                     network.sendMsgToClient(String.format("P%s PLACE_CREATURE_SUCCESS %s MP %s", board.getTurn(), index, player.getMana()),network.getClientIP().get(board.getTurn()));
                     network.sendMsgToClient(String.format("P%s PLACE_CREATURE_SUCCESS %s MP %s", board.getTurn(), card.getId(), player.getMana()),network.getClientIP().get(board.checkTurnCombat()));
-                    network.sendMsgToClient(String.format("ENEMY_HAND DECREMENT"), network.getClientIP().get(board.checkTurnCombat()));
+                    network.sendMsgToClient("ENEMY_HAND DECREMENT", network.getClientIP().get(board.checkTurnCombat()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -310,19 +271,13 @@ public class Server {
                     ((SpecialAbilityCreatureCard) player.getTable().get(player.getTable().size() - 1)).decrementAbilityValue();
                 }
                 player.getHand().remove(index);
-
-                
-                //return "PLACE P" + board.getTurn() + "_CREATURE " + index;
             } else {
                 network.sendMsgToClient(String.format("P%s PLACE_CREATURE_FAILURE %s NO_MANA", board.getTurn(), index), network.getClientIP().get(board.getTurn()));
-                //network.sendMsgToClient(String.format("P%s PLACE_CREATURE_FAILURE %s NO_MANA", board.getTurn(), index), network.getClientIP().get(board.checkTurnCombat()));
-                //return "PLACE P" + board.getTurn() + "_FAILED NO_MANA";
+                network.sendMsgToClient(String.format("P%s PLACE_CREATURE_FAILURE %s NO_MANA", board.getTurn(), index), network.getClientIP().get(board.checkTurnCombat()));
             }
         } else {
             network.sendMsgToClient(String.format("P%s PLACE_CREATURE_FAILURE %s NO_ROOM", board.getTurn(), index), network.getClientIP().get(board.getTurn()));
         }
-        //network.sendMsgToClient(String.format("P%s PLACE_CREATURE_FAILURE %s NO_ROOM", board.getTurn(), index), network.getClientIP().get(board.checkTurnCombat()));
-        //return "PLACE P" + board.getTurn() + "_FAILED NO_ROOM";
     }
 
 
@@ -337,65 +292,54 @@ public class Server {
         } else {
             network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE CREATURE_OUT_OF_BOUNDS", playerTurn), network.getClientIP().get(board.getTurn()));
             network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE CREATURE_OUT_OF_BOUNDS", playerTurn), network.getClientIP().get(board.checkTurnCombat()));
-            //return returnString + " WRONG_CREATURE";
         }
-        
-        //if (board.getTurn() == board.PLAYER_A) {
+
             if (enemyPlayerTurn.getTable().size() == 0) {
+                assert player != null;
                 if (playerTurn.getTable().get(index) != null && !player.getIsConsumed()) {
                     player.setIsConsumed(true);
                     enemyPlayerTurn.decrementHealth(player.getAttack());
-                    //Should we return a string, example: SUCCESS PLAYER ALIVE/SUCCESS PLAYER DEAD?
+
                     if (checkPlayerAlive(enemyPlayerTurn)) {
                         network.sendMsgToClient(String.format("P%s ATTACK_RESULT_SUCCESS P%s HP %s", board.getTurn(), board.checkTurnCombat(), enemyPlayerTurn.getHealth()), network.getClientIP().get(board.getTurn()));
                         network.sendMsgToClient(String.format("P%s ATTACK_RESULT_SUCCESS P%s HP %s", board.getTurn(), board.checkTurnCombat(), enemyPlayerTurn.getHealth()), network.getClientIP().get(board.checkTurnCombat()));
-                        //return "P" + board.checkTurnCombat() + "_PLAYER " + enemyPlayerTurn.getHealth();
                     } else {
                         System.out.printf("Player %s died, %s won!\n", enemyPlayerTurn.getName(), playerTurn.getName());
                         queryHandler.saveWinner(playerTurn.getId());
                         queryHandler.saveLoser(enemyPlayerTurn.getId());
                         network.sendMsgToClient(String.format("P%s ATTACK_RESULT_SUCCESS P%s_DEAD", board.getTurn(), board.checkTurnCombat()), network.getClientIP().get(board.getTurn()));
                         network.sendMsgToClient(String.format("P%s ATTACK_RESULT_SUCCESS P%s_DEAD", board.getTurn(), board.checkTurnCombat()), network.getClientIP().get(board.checkTurnCombat()));
-                        //System.out.printf("Player %s died, %s won!\n", enemyPlayerTurn.getName(), playerTurn.getName());
-                        //return "P" + board.checkTurnCombat() + "_PLAYER DEAD";
                     }
                     network.sendMsgToClient(String.format("P%s CONSUMED_TRUE_ %s", board.getTurn(), index), network.getClientIP().get(board.getTurn()));
                 } else {
                     network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE CREATURE_%s_IS_CONSUMED", board.getTurn(), index),  network.getClientIP().get(board.getTurn()));
-                    //network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE CREATURE_%s_IS_CONSUMED", board.getTurn(), index),  network.getClientIP().get(board.checkTurnCombat()));
-                    //return "P" + board.getTurn() + " CREATURE " + index + " IS_CONSUMED";
                 }
             } else {
                 network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE CARDS_ON_TABLE", board.checkTurnCombat()), network.getClientIP().get(board.getTurn()));
                 network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE CARDS_ON_TABLE", board.checkTurnCombat()), network.getClientIP().get(board.checkTurnCombat()));
             }
-            //return "P" + board.checkTurnCombat() + "_PLAYER FAIL CARDS_ON_TABLE";
     }
 
-    public void attackEnemyCreature(int attackingCreatureIndex, int defendingCreatureIndex) throws IOException {
-        //String returnString = "ATTACK_RESULT";
+    private void attackEnemyCreature(int attackingCreatureIndex, int defendingCreatureIndex) throws IOException {
         BasicCreatureCard playerCreature = null;
-        // == NOT <= IN IF CONDITION
+
         if(board.getPlayers()[board.getTurn()].getTable().size() >= (attackingCreatureIndex + 1)) {
             playerCreature = ((BasicCreatureCard) board.getPlayers()[board.getTurn()].getTable().get(attackingCreatureIndex));
         } else {
             network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE CREATURE_OUT_OF_BOUNDS", board.getTurn()), network.getClientIP().get(board.getTurn()));
             network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE CREATURE_OUT_OF_BOUNDS", board.getTurn()), network.getClientIP().get(board.checkTurnCombat()));
-            //return returnString + " WRONG_CREATURE";
         }
     
         if (board.getPlayers()[board.checkTurnCombat()].getTable().size() != 0) {
             BasicCreatureCard enemyPlayerCreature = ((BasicCreatureCard) board.getPlayers()[board.checkTurnCombat()].getTable().get(defendingCreatureIndex));
+            assert playerCreature != null;
             if (!playerCreature.getIsConsumed()) {
     
                 playerCreature.decrementHealth(enemyPlayerCreature.getDefense());
                 enemyPlayerCreature.decrementHealth(playerCreature.getAttack());
     
                 playerCreature.setIsConsumed(true);
-    
-    
-                //returnString += " P" + board.getTurn() + "_TABLE " + attackingCreatureIndex + " HP " + player.getHealth();
-                //returnString += " | P" + board.checkTurnCombat() + "_TABLE " + defendingCreatureIndex + " HP " + enemyPlayer.getHealth();
+
                 network.sendMsgToClient(String.format("P%s ATTACK_RESULT_SUCCESS CARD_%s HP %s | P%s_CARD_%s HP %s",
                         board.getTurn(),
                         attackingCreatureIndex,
@@ -413,9 +357,8 @@ public class Server {
     
                 network.sendMsgToClient(String.format("P%s CONSUMED_TRUE  %s", board.getTurn(), attackingCreatureIndex), network.getClientIP().get(board.getTurn()));
     
-                boolean attackingCreature = checkCreatureAlive(attackingCreatureIndex, board.getTurn());
-                boolean defendingCreature = checkCreatureAlive(defendingCreatureIndex, board.checkTurnCombat());
-                //return returnString;
+                checkCreatureAlive(attackingCreatureIndex, board.getTurn());
+                checkCreatureAlive(defendingCreatureIndex, board.checkTurnCombat());
             } else {
                 network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE CREATURE_%s_IS_CONSUMED",
                         board.getTurn(),
@@ -423,13 +366,10 @@ public class Server {
                 network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE CREATURE_%s_IS_CONSUMED",
                         board.getTurn(),
                         attackingCreatureIndex), network.getClientIP().get(board.checkTurnCombat()));
-                //return returnString + " FAILED " + attackingCreatureIndex + " IS_CONSUMED";
             }
         } else {
-
             network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE NO_ENEMY_CARDS_ON_TABLE", board.getTurn()),network.getClientIP().get(board.getTurn()));
             network.sendMsgToClient(String.format("P%s ATTACK_RESULT_FAILURE NO_ENEMY_CARDS_ON_TABLE", board.getTurn()),network.getClientIP().get(board.checkTurnCombat()));
-            //return returnString + " FAILED NO_ENEMY_CREATURES";
         }
     }
     
@@ -462,54 +402,17 @@ public class Server {
         }
     }
 
-/*
-    public void randomizeCreatureHp(int index) {
-        if (board.getTurn() == board.PLAYER_A && board.getPlayerATableCards().size() > 0) {
-            ((BasicCreatureCard) board.getPlayerATableCards().get(board.getPlayerATableCards().size() - 1)).setHealth(rollDice(1, 10));
-
-        } else if (board.getTurn() == board.PLAYER_A && board.getPlayerBTableCards().size() > 0) {
-            ((BasicCreatureCard) board.getPlayerBTableCards().get(board.getPlayerBTableCards().size() - 1)).setHealth(rollDice(1, 10));
-
-        }
-
-    }
-
-    public String healPlayer(String s) {
-        return "";
-    }
-
-    public String healCreature(String s) {
-        return "";
-    }
-*/
-    public boolean checkPlayerAlive(Player p) {
+    private boolean checkPlayerAlive(Player p) {
         return p.getHealth() > 0;
     }
 
-    public boolean checkCreatureAlive(int index, int player) throws IOException {
-        // Player A turn
-        // WRITE TEST FOR THIS FIRST
-        //if (player == board.PLAYER_A) {
-            if (((BasicCreatureCard) board.getPlayers()[player].getTable().get(index)).getHealth() > 0) {
-                return true;
-            } else {
-                moveToGraveyard(index, player);
-                return false;
-            }
-
-            // Player B turn
-        /*} else {
-            if (((BasicCreatureCard) board.getPlayerBTableCards().get(index)).getHealth() > 0) {
-                return true;
-            } else {
-                moveToGraveyard(index, player);
-                return false;
-            }
-        }*/
+    private void checkCreatureAlive(int index, int player) throws IOException {
+        if (((BasicCreatureCard) board.getPlayers()[player].getTable().get(index)).getHealth() <= 0) {
+            moveToGraveyard(index, player);
+        }
     }
 
-    public void moveToGraveyard(int index, int player) throws IOException {
-        //if (player == board.PLAYER_A) {
+    private void moveToGraveyard(int index, int player) throws IOException {
             BasicCard card = board.getPlayers()[player].getTable().get(index);
 
             board.getPlayers()[player].getGraveyard().add(card);
@@ -518,24 +421,9 @@ public class Server {
             network.sendMsgToClient(String.format("P%s REMOVE_FROM_TABLE %s", player, index), network.getClientIP().get(board.checkTurnCombat()));
             network.sendMsgToClient(String.format("P%s GRAVEYARD INCREMENT", player), network.getClientIP().get(board.getTurn()));
             network.sendMsgToClient(String.format("P%s GRAVEYARD INCREMENT", player), network.getClientIP().get(board.checkTurnCombat()));
-
-          /*  game.getPlayerATableCards().remove(index);
-            game.incrementPlayerAGraveyard();*/
-
-        /*} else {
-            BasicCard card = board.getPlayerBTableCards().get(index);
-            board.getPlayerBGraveyard().add(card);
-            board.getPlayerBTableCards().remove(index);
-            game.getPlayerBTableCards().remove(index);
-            game.incrementPlayerBGraveyard();
-
-
-        }*/
-        //System.out.println(playerBTableCards.get(index));
     }
 
-
-    public void endTurn() {
+    private void endTurn() {
         for(BasicCard card : board.getPlayers()[board.getTurn()].getTable()) {
             if (card instanceof SpecialAbilityCreatureCard && ((SpecialAbilityCreatureCard) card).getKeyword() == EKeyword.COOLDOWN && ((SpecialAbilityCreatureCard) card).getAbilityValue() > 0) {
                 ((SpecialAbilityCreatureCard) card).decrementAbilityValue();
@@ -564,14 +452,13 @@ public class Server {
         }
     }
 
-
-    public void shuffleDeck(List<BasicCard> deck) {
+    private void shuffleDeck(List<BasicCard> deck) {
         Collections.shuffle(deck);
 
     }
 
-    public String quitGame() {
-        return String.format("P%s QUIT_GAME", board.getTurn());
+    private void quitGame() {
+        System.out.printf("P%s QUIT_GAME", board.getTurn());
     }
 
 }
